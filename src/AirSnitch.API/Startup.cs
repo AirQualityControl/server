@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AirQ.API
+namespace AirSnitch.API
 {
     public class Startup
     {
@@ -29,7 +29,7 @@ namespace AirQ.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AirQ API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AirSnitch API", Version = "v1" });
             });
         }
 
@@ -40,7 +40,7 @@ namespace AirQ.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AirQ API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AirSnitch API v1"));
             }
 
             app.UseRouting();

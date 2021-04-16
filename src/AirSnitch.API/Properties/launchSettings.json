@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "AirQ.API": {
+    "AirSnitch.API": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

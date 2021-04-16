@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AirQ.API
+namespace AirSnitch.API
 {
     public class Program
     {
