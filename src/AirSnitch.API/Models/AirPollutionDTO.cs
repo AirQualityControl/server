@@ -1,47 +1,47 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace AirSnitch.API.Models
+namespace AirSnitch.Api.Models
 {
     public class AirPollutionDTO
     {
         /// <summary>
         /// AQI value based on US EPA standard
         /// </summary>
-        [JsonPropertyName("aqiusValue")]
+        [JsonProperty("aqiusValue")]
         public int AqiusValue { get; set; }
 
         /// <summary>
         /// Property that indicate data time of current air pollution
         /// </summary>
-        [JsonPropertyName("measurementDateTime")]
+        [JsonProperty("measurementDateTime")]
         public DateTime MeasurementDateTime { get; set; }
 
         /// <summary>
         /// Wind speed (m/s)
         /// </summary>
-        [JsonPropertyName("windSpeed")]
+        [JsonProperty("windSpeed")]
         public int WindSpeed { get; set; }
 
         /// <summary>
         /// humidity percentage value
         /// </summary>
-        [JsonPropertyName("humidity")]
+        [JsonProperty("humidity")]
         public int Humidity { get; set; }
 
         /// <summary>
         /// Temperature value. By default in Celsius
         /// </summary>
-        [JsonPropertyName("temperature")]
+        [JsonProperty("temperature")]
         public int Temperature { get; set; }
 
         /// <summary>
         /// Human oriented message
         /// </summary>
-        [JsonPropertyName("message")]
+        [JsonProperty("message")]
         public string Message { get; set; }
     }
 }

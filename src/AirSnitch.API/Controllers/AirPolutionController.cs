@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AirSnitch.API.Controllers
+namespace AirSnitch.Api.Controllers
 {
     [ApiController]
-    [Route("airpolution")]
+    [Route(ControllersRoutes.AirPolution)]
     public class AirPolutionController : ControllerBase
     {
         [HttpGet]

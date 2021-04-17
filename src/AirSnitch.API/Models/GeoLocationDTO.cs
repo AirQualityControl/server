@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace AirSnitch.API.Models
+namespace AirSnitch.Api.Models
 {
     public class GeoLocationDTO
     {
@@ -12,14 +12,14 @@ namespace AirSnitch.API.Models
         /// Longitude value of the point
         /// Value shout be in range between 0 and 90 degree
         /// </summary>
-        [JsonPropertyName("lng")]
+        [JsonProperty("lng")]
         public double Longitude { get; set; }
 
         /// <summary>
         /// Latitude value of the point
         /// Value should be in range between 0 and 180
         /// </summary>
-        [JsonPropertyName("lat")]
+        [JsonProperty("lat")]
         public double Latitude { get; set; }
 
     }

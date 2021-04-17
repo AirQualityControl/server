@@ -7,20 +7,21 @@ using System.Threading.Tasks;
 namespace AirSnitch.Api.Controllers
 {
     [ApiController]
-    [Route(ControllersRoutes.Dataprovider)]
-    public class DataprovidersController : ControllerBase
+    [Route(ControllersRoutes.City)]
+    public class CityController : ControllerBase
     {
+
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult> Get(int id)
         {
-            return await Task.FromResult(Ok($"Dataprovider stub for id: {id}"));
+            return await Task.FromResult(Ok($"city stub for id: {id}"));
         }
 
         [HttpGet]
         public async Task<ActionResult> GetPaginated(int limit, int offset)
         {
-            return await Task.FromResult(Ok($"Dataprovider collection stub limit: {limit}, offset: {offset}"));
+            return await Task.FromResult(Ok($"city collection stub limit: {limit}, offset: {offset}"));
         }
     }
 }

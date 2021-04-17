@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AirSnitch.Api.Infrastructure.Common;
+using AirSnitch.Api.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AirSnitch.API.Controllers
+namespace AirSnitch.Api.Controllers
 {
     [ApiController]
-    [Route("airmonitoringstations")]
-    public class AirmonitoringStationsController : ControllerBase
+    [Route(ControllersRoutes.AirmonitoringStation)]
+    public class AirmonitoringStationController : ControllerBase
     {
-
         [HttpGet]
         public async Task<ActionResult> GetPaginated(int limit, int offset)
         {
@@ -22,12 +23,20 @@ namespace AirSnitch.API.Controllers
         [Route("{id}")]
         public async Task<ActionResult> GetWithIncludes(int id, [FromQuery] string include)
         {
+            
             if (!String.IsNullOrEmpty(include))
             {
                 return await Task.FromResult(Ok($"stationId = {id} include = " +
                     include.Trim().Split(',').Aggregate((x, y) => $"{x};{y}")));
             }
-            return await Task.FromResult(Ok($"stationId = {id}"));
+            var t = (string)this.RouteData.Values["controller"];
+
+            Dictionary<string, object> includes = new Dictionary<string, object>();
+            includes.Add("airPolution", new AirPollutionDTO { Humidity = 5, Message = "allGood" });
+            includes.Add("city", new CityDTO { Code = "3433", FriendlyName = "fdfdfdf" });
+
+            //return await Task.FromResult(Ok($"stationId = {id}"));
+            return new RestApiResult<string>("test", ControllersRoutes.AirmonitoringStation, includes);
         }
 
         [HttpGet]
