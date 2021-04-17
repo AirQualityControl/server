@@ -7,13 +7,13 @@ using AirSnitch.Api.Infrastructure.PathResolver;
 
 namespace AirSnitch.Api.Models.Responses
 {
-    public class Response<T>
+    public class Response
     {
         [JsonProperty("_links")]
         public Dictionary<string, Resourse> Links { get; set; }
 
         [JsonProperty("values")]
-        public T Values { get; set; }
+        public object Values { get; set; }
 
         [JsonProperty("includes")]
         public Dictionary<string, object> Includes { get; set; }

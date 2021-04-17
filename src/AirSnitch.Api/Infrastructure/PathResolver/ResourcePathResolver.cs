@@ -13,10 +13,13 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
 
         private readonly Dictionary<string, Dictionary<string, Resourse>> _resourseResolutionCache;
 
+        
         public ResourcePathResolver()
         {
             _resourseResolutionCache = new Dictionary<string, Dictionary<string, Resourse>>();
             _bfs = new BFS();
+
+            //TODO: inject graph to resolver Build graph on statup of app 
             _graph = new Graph(6);
             var vertecies = new List<Vertex>
             {
@@ -35,7 +38,7 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
             _graph.AddEdge(vertecies[2], vertecies[3]);
         }
 
-        public Dictionary<string, Resourse> GetPathResourses(string controllerPath)
+        public Dictionary<string, Resourse> GetResourses(string controllerPath)
         {
             var result = new Dictionary<string, Resourse>();
             if (!_resourseResolutionCache.ContainsKey(controllerPath))

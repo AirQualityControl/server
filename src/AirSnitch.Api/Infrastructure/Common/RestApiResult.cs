@@ -6,44 +6,52 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net.Http;
 
 namespace AirSnitch.Api.Infrastructure.Common
 {
-    public class RestApiResult<T> : ActionResult
+    public class RestApiResult : ActionResult
     {
-        private readonly T _model;
+        private readonly object _model;
         private readonly string _controllerRoute;
         private readonly Dictionary<string, object> _includes;
-        public RestApiResult(T model, string controllerRoute, Dictionary<string, object> includes = null)
+        public RestApiResult(object model, string controllerRoute, Dictionary<string, object> includes = null)
         {
             _model = model;
             _controllerRoute = controllerRoute;
             _includes = includes;
         }
 
-        public override Task ExecuteResultAsync(ActionContext context)
+        private Response CreateResponseObject(string basePath)
         {
-
+            //Inject resourse path resolver
             var resourseResolver = new ResourcePathResolver();
-
-            var basePath = context.HttpContext.Request.Path.Value;
-
-            var resourses = resourseResolver.GetPathResourses(_controllerRoute);
+            var resourses = resourseResolver.GetResourses(_controllerRoute);
             resourses.Add("self", new Resourse { Path = "" });
             Parallel.ForEach(resourses, (item) =>
             {
                 item.Value.Path = item.Value.Path.Insert(0, basePath);
             });
-            
-            
-            Response<T> result = new Response<T>
-            {
+
+
+           return new Response
+           {
                 Links = resourses,
                 Values = _model,
                 Includes = _includes
-            };
+           };
+        }
+
+        private async Task<Response> CreateResponseObjectAsync(string basePath)
+        {
+            return await Task.Run(() => CreateResponseObject(basePath));
+        }
+
+        public override async Task<ObjectResult> ExecuteResultAsync(ActionContext context)
+        { 
+            var basePath = context.HttpContext.Request.Path.Value;
             
-            return Task.FromResult(result);
+            return new OkObjectResult(await CreateResponseObjectAsync(basePath));
         }
 
     }
