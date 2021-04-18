@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0D8C82DC-B354-47C0-8F44-925CDF06A994}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirSnitch.Api", "src\AirSnitch.API\AirSnitch.Api.csproj", "{9E3E66CB-D877-44D2-B16B-984F5A53A9EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{88C34088-097F-4405-89BD-A23ED3D8819C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E3E66CB-D877-44D2-B16B-984F5A53A9EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3E66CB-D877-44D2-B16B-984F5A53A9EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3E66CB-D877-44D2-B16B-984F5A53A9EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3E66CB-D877-44D2-B16B-984F5A53A9EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9E3E66CB-D877-44D2-B16B-984F5A53A9EC} = {0D8C82DC-B354-47C0-8F44-925CDF06A994}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE70D193-54E1-44D7-8BC5-4F2709E5549B}
+	EndGlobalSection
+EndGlobal
