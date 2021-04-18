@@ -19,7 +19,7 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
             _resourseResolutionCache = new Dictionary<string, Dictionary<string, Resourse>>();
             _bfs = new BFS();
 
-            //TODO: inject graph to resolver Build graph on statup of app 
+            //TODO: inject graph to resolver Build graph on the statup of app 
             _graph = new Graph(6);
             var vertecies = new List<Vertex>
             {
@@ -52,6 +52,7 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
                         Path = route[item.Key].Select(item => "/" + _graph.Vertices[item].ResoursePath).Aggregate((x, y) => $"{x}{y}"),
                     });
                 }
+                result.Add("self", new Resourse { Path = "" });
                 _resourseResolutionCache.Add(controllerPath, result);
                 return result;
             }
