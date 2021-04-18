@@ -15,11 +15,22 @@ namespace AirSnitch.Api.Controllers
     [Route(ControllersRoutes.AirmonitoringStation)]
     public class AirmonitoringStationController : ControllerBase
     {
-        private ResourcePathResolver _resourseResolver;
+        private readonly ResourcePathResolver _resourseResolver;
         public AirmonitoringStationController()
         {
             //Inject resourse path resolver
             _resourseResolver = new ResourcePathResolver();
+        }
+
+        private object GetIncludeObject(string include, int id)
+        {
+            return include switch
+            {
+                "airPolution" => new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 },
+                "city" => new CityDTO { FriendlyName = $"TestCity{id}", State = $"testState{id}", Code = "1234", CountryCode = "UA" },
+                "dataProvider" => new DataProviderDTO { Name = $"TestDataProvider{id}", WebSiteUri = new Uri("https://test.com") },
+                _ => throw new ArgumentException($"Incorrect include: {include}"),
+            };
         }
 
         private Dictionary<string, object> GetIncludes(string[] includes, int stationId)
@@ -27,20 +38,7 @@ namespace AirSnitch.Api.Controllers
             Dictionary<string, object> result = new();
             for (int i = 0; i < includes.Length; i++)
             {
-                switch (includes[i])
-                {
-                    case "airPolution":
-                        result.Add(includes[i], new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 });
-                        break;
-                    case "city":
-                        result.Add(includes[i], new CityDTO { FriendlyName = $"TestCity{i}", State = $"testState{i}", Code = "1234", CountryCode = "UA"});
-                        break;
-                    case "dataProvider":
-                        result.Add(includes[i], new DataProviderDTO { Name = $"TestDataProvider{i}", WebSiteUri = new Uri("https://test.com") });
-                        break;
-                    default:
-                        throw new ArgumentException($"Incorrect include: {includes[i]}");
-                }
+                result.Add(includes[i], GetIncludeObject(includes[i], stationId));
             }
             return result;
         }
@@ -63,26 +61,56 @@ namespace AirSnitch.Api.Controllers
             };
         }
 
-        private PaginativeResponse CreatePaginativeResponseObject(int limit, int offset, int total, 
+        private Response CreateResponseIncludeObject(string includeKey, string basePath, object model, Dictionary<string, object> includes = null)
+        {
+            var cachedResourses = _resourseResolver.GetResourses(ControllersRoutes.AirmonitoringStation);
+
+            string pathBeforeInclude = basePath.Remove(basePath.LastIndexOf('/')).TrimEnd();
+
+            var resourses = new Dictionary<string, Resourse>();
+            Parallel.ForEach(cachedResourses, (item) =>
+            {
+                if(item.Key == "self" )
+                {
+                    resourses.Add(ControllersRoutes.AirmonitoringStation, new Resourse { Path = item.Value.Path.Insert(0, pathBeforeInclude) });
+                }
+                else if(item.Key == includeKey)
+                {
+                    resourses.Add("self", new Resourse { Path = item.Value.Path.Insert(0, pathBeforeInclude) });
+                } else {
+                    resourses.Add(item.Key, new Resourse { Path = item.Value.Path.Insert(0, pathBeforeInclude) });
+                }
+                
+            });
+
+            return new Response
+            {
+                Links = resourses,
+                Values = model,
+                Includes = includes
+            };
+        }
+
+        private PaginativeResponse CreatePaginativeResponseObject(int limit, int offset, int total,
             Dictionary<string, object> models, Dictionary<string, object> includes = null)
         {
-            
+
             string basePath = ControllerContext.HttpContext.Request.Path.Value;
             string format = basePath + "?limit={0}&offset={1}";
-            
+
             int maxOffset = total - limit;
 
             Dictionary<string, Resourse> links = new()
             {
-                ["self"] = new Resourse { Path = String.Format(format,limit, offset)}
+                ["self"] = new Resourse { Path = String.Format(format, limit, offset) }
             };
-            if(offset + limit <= maxOffset)
+            if (offset + limit <= maxOffset)
             {
                 links.Add("next", new Resourse { Path = String.Format(format, limit, offset + limit) });
             }
             if (offset <= maxOffset)
             {
-                links.Add("last", new Resourse { Path = String.Format(format, limit, maxOffset)});
+                links.Add("last", new Resourse { Path = String.Format(format, limit, maxOffset) });
             }
             if (offset > 0)
             {
@@ -90,11 +118,11 @@ namespace AirSnitch.Api.Controllers
             }
 
             List<Response> items = new();
-            foreach(var item in models)
+            foreach (var item in models)
             {
                 items.Add(CreateResponseObject(basePath + "/" + item.Key, item.Value, includes));
             }
-            
+
             return new PaginativeResponse
             {
                 Responses = items,
@@ -103,6 +131,14 @@ namespace AirSnitch.Api.Controllers
                 Offset = offset,
                 Links = links
             };
+        }
+
+
+
+        private async Task<Response> CreateResponseIncludeObjectAsync(string includeKey, string basePath,
+            object model, Dictionary<string, object> includes = null)
+        {
+            return await Task.Run(() => CreateResponseIncludeObject(includeKey, basePath, model, includes));
         }
 
         private async Task<PaginativeResponse> CreatePaginativeResponseObjectAsync(int limit, int offset, int total,
@@ -164,33 +200,48 @@ namespace AirSnitch.Api.Controllers
                     }));
         }
 
-        [HttpGet]
-        [Route("{id}/airPollution")]
-        public async Task<ActionResult> GetAirPolution(int id)
-        {
-            return await Task.FromResult(Ok($"airpolution info from stationId = {id}"));
-        }
 
         [HttpGet]
-        [Route("{id}/dataprovider")]
-        public async Task<ActionResult> GetDataProvider(int id)
+        [Route("{id}/{path}")]
+        public async Task<ActionResult> GetPossibleInclude(int id, string path)
         {
-            return await Task.FromResult(Ok($"dataprovier info from stationId = {id}"));
+            if(_resourseResolver.IsQueryPathValid(ControllersRoutes.AirmonitoringStation, id, path))
+            {
+                return Ok(await CreateResponseIncludeObjectAsync(
+                    path,
+                    ControllerContext.HttpContext.Request.Path.Value,
+                    GetIncludeObject(path, id)));
+            }
+            return BadRequest();
         }
 
-        [HttpGet]
-        [Route("{id}/airPollutionHistory")]
-        public async Task<ActionResult> GetAirPolutionHistory(int id)
-        {
-            return await Task.FromResult(Ok($"Air polution history info from stationId = {id}"));
-        }
+        //[HttpGet]
+        //[Route("{id}/airPollution")]
+        //public async Task<ActionResult> GetAirPolution(int id)
+        //{
+        //    return await Task.FromResult(Ok($"airpolution info from stationId = {id}"));
+        //}
 
-        [HttpGet]
-        [Route("{id}/city")]
-        public async Task<ActionResult> GetCity(int id)
-        {
-            return await Task.FromResult(Ok($"City info from stationId = {id}"));
-        }
+        //[HttpGet]
+        //[Route("{id}/dataprovider")]
+        //public async Task<ActionResult> GetDataProvider(int id)
+        //{
+        //    return await Task.FromResult(Ok($"dataprovier info from stationId = {id}"));
+        //}
+
+        //[HttpGet]
+        //[Route("{id}/airPollutionHistory")]
+        //public async Task<ActionResult> GetAirPolutionHistory(int id)
+        //{
+        //    return await Task.FromResult(Ok($"Air polution history info from stationId = {id}"));
+        //}
+
+        //[HttpGet]
+        //[Route("{id}/city")]
+        //public async Task<ActionResult> GetCity(int id)
+        //{
+        //    return await Task.FromResult(Ok($"City info from stationId = {id}"));
+        //}
 
     }
 }

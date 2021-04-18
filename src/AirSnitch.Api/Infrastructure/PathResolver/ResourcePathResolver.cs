@@ -60,5 +60,16 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
             return _resourseResolutionCache[controllerPath];
         }
 
+        public bool IsQueryPathValid(string controllerPath, int id, string queryPath)
+        {
+            var currentResourse = new Resourse { Path = "/" + queryPath };
+            if (!_resourseResolutionCache.ContainsKey(controllerPath))
+            {
+                var resourses = GetResourses(controllerPath);
+                return resourses.Values.Contains(currentResourse);
+            }
+            return _resourseResolutionCache[controllerPath].Values.Contains(currentResourse);
+        }
+
     }
 }
