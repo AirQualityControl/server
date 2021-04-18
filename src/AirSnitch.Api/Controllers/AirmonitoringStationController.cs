@@ -94,7 +94,7 @@ namespace AirSnitch.Api.Controllers
         private PaginativeResponse CreatePaginativeResponseObject(int limit, int offset, int total,
             Dictionary<string, object> models, Dictionary<string, object> includes = null)
         {
-
+            limit = limit == 0 ? 2 : limit;
             string basePath = ControllerContext.HttpContext.Request.Path.Value;
             string format = basePath + "?limit={0}&offset={1}";
 
@@ -214,34 +214,6 @@ namespace AirSnitch.Api.Controllers
             }
             return BadRequest();
         }
-
-        //[HttpGet]
-        //[Route("{id}/airPollution")]
-        //public async Task<ActionResult> GetAirPolution(int id)
-        //{
-        //    return await Task.FromResult(Ok($"airpolution info from stationId = {id}"));
-        //}
-
-        //[HttpGet]
-        //[Route("{id}/dataprovider")]
-        //public async Task<ActionResult> GetDataProvider(int id)
-        //{
-        //    return await Task.FromResult(Ok($"dataprovier info from stationId = {id}"));
-        //}
-
-        //[HttpGet]
-        //[Route("{id}/airPollutionHistory")]
-        //public async Task<ActionResult> GetAirPolutionHistory(int id)
-        //{
-        //    return await Task.FromResult(Ok($"Air polution history info from stationId = {id}"));
-        //}
-
-        //[HttpGet]
-        //[Route("{id}/city")]
-        //public async Task<ActionResult> GetCity(int id)
-        //{
-        //    return await Task.FromResult(Ok($"City info from stationId = {id}"));
-        //}
 
     }
 }
