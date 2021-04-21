@@ -46,15 +46,20 @@ namespace AirSnitch.Api.Controllers
 
             if (!String.IsNullOrEmpty(include))
             {
-                return Ok(await CreateResponseObjectAsync(
-                    ControllerContext.HttpContext.Request.Path.Value,
-                    new UserDTO
-                    {
-                        Name = "First name2 LastName2",
-                        PhoneNumber = "3802222222225"
-                    },
-                    GetIncludes(include.Trim().Split(','), id))
-                );
+                var validIncludes = ResoursePathResolver
+                    .GetValidQueryIncludes(ControllerPath, include.Trim().Split(','));
+                if (validIncludes.Length > 0)
+                {
+                    return Ok(await CreateResponseObjectAsync(
+                        ControllerContext.HttpContext.Request.Path.Value,
+                        new UserDTO
+                        {
+                            Name = "First name2 LastName2",
+                            PhoneNumber = "3802222222225"
+                        },
+                        GetIncludes(validIncludes, id))
+                    );
+                }
             }
 
             return Ok(await CreateResponseObjectAsync(
@@ -71,10 +76,7 @@ namespace AirSnitch.Api.Controllers
         [Route("{id}/{*path}")]
         public async Task<ActionResult> GetPossibleInclude(int id, string path)
         {
-            var controllerPath = ControllerContext.ActionDescriptor.ControllerTypeInfo.CustomAttributes
-                .Single(item => item.AttributeType == typeof(RouteAttribute)).ConstructorArguments[0].Value as string;
-
-            if (ResoursePathResolver.IsQueryPathValid(controllerPath, id, path))
+            if (ResoursePathResolver.IsPathValid(ControllerPath, id, path))
             {
                 return Ok(await CreateResponseIncludeObjectAsync(id,
                     path,

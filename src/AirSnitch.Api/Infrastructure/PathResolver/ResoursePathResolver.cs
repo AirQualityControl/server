@@ -48,7 +48,7 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
             return _resourseResolutionCache[controllerPath];
         }
 
-        public bool IsQueryPathValid(string controllerPath, int id, string queryPath)
+        public bool IsPathValid(string controllerPath, int id, string queryPath)
         {
             var currentResourse = new Resourse { Path = "/" + queryPath };
             if (!_resourseResolutionCache.ContainsKey(controllerPath))
@@ -59,5 +59,14 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
             return _resourseResolutionCache[controllerPath].Values.Contains(currentResourse);
         }
 
+        public string[] GetValidQueryIncludes(string controllerPath, string[] includes)
+        {
+            if (!_resourseResolutionCache.ContainsKey(controllerPath))
+            {
+                var resourses = GetResourses(controllerPath);
+                return includes.Where(item =>resourses.ContainsKey(item)).ToArray();
+            }
+            return includes.Where(item => _resourseResolutionCache[controllerPath].ContainsKey(item)).ToArray();
+        }
     }
 }
