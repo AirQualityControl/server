@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AirSnitch.Api.Infrastructure.PathResolver
+namespace AirSnitch.Api.Infrastructure.PathResolver.Models
 {
     public class Resourse
     {

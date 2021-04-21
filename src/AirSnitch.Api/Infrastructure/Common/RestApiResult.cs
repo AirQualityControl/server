@@ -25,18 +25,18 @@ namespace AirSnitch.Api.Infrastructure.Common
         private Response CreateResponseObject(string basePath)
         {
             //Inject resourse path resolver
-            var resourseResolver = new ResourcePathResolver();
-            var resourses = resourseResolver.GetResourses(_controllerRoute);
-            resourses.Add("self", new Resourse { Path = "" });
-            Parallel.ForEach(resourses, (item) =>
-            {
-                item.Value.Path = item.Value.Path.Insert(0, basePath);
-            });
+            //var resourseResolver = new ResourcePathResolver();
+            //var resourses = resourseResolver.GetResourses(_controllerRoute);
+            //resourses.Add("self", new Resourse { Path = "" });
+            //Parallel.ForEach(resourses, (item) =>
+            //{
+            //    item.Value.Path = item.Value.Path.Insert(0, basePath);
+            //});
 
 
            return new Response
            {
-                Links = resourses,
+                //Links = resourses,
                 Values = _model,
                 Includes = _includes
            };

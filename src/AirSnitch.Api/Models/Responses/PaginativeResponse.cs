@@ -1,4 +1,5 @@
 ﻿using AirSnitch.Api.Infrastructure.PathResolver;
+using AirSnitch.Api.Infrastructure.PathResolver.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

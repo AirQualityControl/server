@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
-using AirSnitch.Api.Infrastructure.PathResolver;
+using AirSnitch.Api.Infrastructure.PathResolver.Models;
 
 namespace AirSnitch.Api.Models.Responses
 {

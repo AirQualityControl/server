@@ -1,5 +1,7 @@
 
 using AirSnitch.Api.Infrastructure.PathResolver;
+using AirSnitch.Api.Infrastructure.PathResolver.Models;
+using AirSnitch.Api.Infrastructure.PathResolver.SearchAlgorithms;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -23,12 +25,12 @@ namespace AirSnitch.Api.Test
             var graph = new Graph(6);
             var vertecies = new List<Vertex>
             {
-                new Vertex { ResourseName = "City", ResoursePath = "city" },
-                new Vertex { ResourseName = "DataProvider", ResoursePath = "dataprovider" },
-                new Vertex { ResourseName = "AirMonitoringStation", ResoursePath = "airmonitoringstation" },
-                new Vertex { ResourseName = "AirPollutionHistory", ResoursePath = "airpollutionhistory" },
-                new Vertex { ResourseName = "AirPollution", ResoursePath = "airpollution" },
-                new Vertex { ResourseName = "User", ResoursePath = "user" }
+                new Vertex { ResourseName = "city" },
+                new Vertex { ResourseName = "dataprovider" },
+                new Vertex { ResourseName = "airmonitoringstation" },
+                new Vertex { ResourseName = "airpollutionhistory" },
+                new Vertex { ResourseName = "airpollution" },
+                new Vertex { ResourseName = "user" }
             };
             graph.AddVertexRange(vertecies);
             graph.AddEdge(vertecies[5], vertecies[2]);
@@ -37,9 +39,17 @@ namespace AirSnitch.Api.Test
             graph.AddEdge(vertecies[2], vertecies[1]);
             graph.AddEdge(vertecies[2], vertecies[3]);
 
+            var expectedResult = new Dictionary<int, List<int>>
+            {
+                [0] = new List<int> { 2, 0 },
+                [1] = new List<int> { 2, 1 },
+                [2] = new List<int> { 2 },
+                [3] = new List<int> { 2, 3 }
+            };
+
             var result = _bfs.GetRoute(vertecies[4], graph);
 
-            Assert.AreEqual(result, result);
+            Assert.AreEqual(expectedResult, result);
         }
     }
 }
