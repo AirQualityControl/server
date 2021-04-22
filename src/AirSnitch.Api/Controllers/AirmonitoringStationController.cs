@@ -1,10 +1,11 @@
 ﻿using AirSnitch.Api.Infrastructure.Attributes;
-using AirSnitch.Api.Infrastructure.Common;
+using AirSnitch.Api.Infrastructure.Authorization;
 using AirSnitch.Api.Infrastructure.Interfaces;
 using AirSnitch.Api.Infrastructure.PathResolver;
 using AirSnitch.Api.Infrastructure.PathResolver.Models;
 using AirSnitch.Api.Models;
 using AirSnitch.Api.Models.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace AirSnitch.Api.Controllers
 {
+    [Authorize(Policy = Policies.RequiredUser)]
     [ApiController]
     [IncludeResourse(ControllersRoutes.City)]
     [IncludeResourse(ControllersRoutes.Dataprovider)]

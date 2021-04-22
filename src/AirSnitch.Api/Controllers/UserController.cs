@@ -1,6 +1,9 @@
 ﻿using AirSnitch.Api.Infrastructure.Attributes;
+using AirSnitch.Api.Infrastructure.Authorization;
 using AirSnitch.Api.Infrastructure.Interfaces;
 using AirSnitch.Api.Models;
+using AirSnitch.Api.Models.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,15 +12,30 @@ using System.Threading.Tasks;
 
 namespace AirSnitch.Api.Controllers
 {
+    [Authorize(Policy = Policies.RequiredAdmin)]
     [ApiController]
     [IncludeResourse(ControllersRoutes.AirmonitoringStation)]
     [Route(ControllersRoutes.User)]
     public class UserController : BaseApiController
     {
+        private IDummyUserService _dummyUserService;
+        public UserController(IResoursePathResolver resoursePathResolver,
+            IDummyUserService dummyUserService) : base(resoursePathResolver)
+        {
+            _dummyUserService = dummyUserService;
+        }
 
-        public UserController(IResoursePathResolver resoursePathResolver): base(resoursePathResolver)
-        { }
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("create-api-key")]
+        public async Task<ActionResult> SignUp([FromBody] UserDTO user)
+        {
+            var apiKey = await _dummyUserService.CreateAsync(user);
 
+            return Ok(apiKey);
+        }
+
+        
         [HttpGet]
         public async Task<ActionResult> GetPaginated(int limit, int offset)
         {
@@ -70,7 +88,6 @@ namespace AirSnitch.Api.Controllers
                         PhoneNumber = "3800000000025"
                     }));
         }
-
 
         [HttpGet]
         [Route("{id}/{*path}")]

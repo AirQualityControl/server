@@ -1,8 +1,13 @@
 using AirSnitch.Api.Infrastructure.Attributes;
+using AirSnitch.Api.Infrastructure.Auth;
+using AirSnitch.Api.Infrastructure.Auth.Extensions;
+using AirSnitch.Api.Infrastructure.Authorization;
 using AirSnitch.Api.Infrastructure.Interfaces;
 using AirSnitch.Api.Infrastructure.PathResolver;
 using AirSnitch.Api.Infrastructure.PathResolver.Models;
 using AirSnitch.Api.Infrastructure.PathResolver.SearchAlgorithms;
+using AirSnitch.Api.Models.Internal;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,24 +42,61 @@ namespace AirSnitch.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+                options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+            })
+            .AddApiKeySupport(options => { });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.RequiredUser, policy => policy.Requirements.Add(new UserRequirement()));
+                options.AddPolicy(Policies.RequiredAdmin, policy => policy.Requirements.Add(new AdminRequirement()));
+            });
+
             
             services.AddControllers().AddNewtonsoftJson();
+
             ConfigureIoC(services);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AirSnitch Api", Version = "v1" });
+                c.AddSecurityDefinition(ApiKeyConstants.HeaderName, new OpenApiSecurityScheme
+                {
+                    Description = "Api key needed to access the endpoints. ApiKey: My_API_Key",
+                    In = ParameterLocation.Header,
+                    Name = ApiKeyConstants.HeaderName,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Name = ApiKeyConstants.HeaderName,
+                            Type = SecuritySchemeType.ApiKey,
+                            In = ParameterLocation.Header,
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = ApiKeyConstants.HeaderName },
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
         }
 
         
-
         protected virtual void ConfigureIoC(IServiceCollection services)
         {
+            services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
+            services.AddSingleton<IDummyUserService, DummyUserService>();
+            services.AddSingleton<IGetApiKeyQuery, InMemoryGetApiKeyQuery>();
+
             services.AddSingleton(x => ResourcePathResolver);
             services.AddScoped<ISearchAlgorithm, BFS>();
         }
-
-
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,7 +110,7 @@ namespace AirSnitch.Api
             }
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

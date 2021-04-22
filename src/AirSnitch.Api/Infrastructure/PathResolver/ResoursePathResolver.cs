@@ -1,5 +1,4 @@
 ﻿using AirSnitch.Api.Infrastructure.Attributes;
-using AirSnitch.Api.Infrastructure.Common;
 using AirSnitch.Api.Infrastructure.Interfaces;
 using AirSnitch.Api.Infrastructure.PathResolver.Models;
 using Microsoft.AspNetCore.Mvc;

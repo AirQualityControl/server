@@ -1,5 +1,4 @@
-﻿using AirSnitch.Api.Infrastructure.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +13,7 @@ namespace AirSnitch.Api.Infrastructure.PathResolver.SearchAlgorithms
             int[] _reachedVertecies;
             int[] _numbersOfReachedVertecies;
             int N;
-            List<List<int>> path = new List<List<int>>();
+            List<List<int>> path = new();
 
             N = graph.AdjacencyMatrix.GetLength(0);
             for (int k = 0; k < N; k++)

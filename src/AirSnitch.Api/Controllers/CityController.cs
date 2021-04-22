@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AirSnitch.Api.Infrastructure.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace AirSnitch.Api.Controllers
 {
+    [Authorize(Policy = Policies.RequiredUser)]
     [ApiController]
     [Route(ControllersRoutes.City)]
     public class CityController : ControllerBase
