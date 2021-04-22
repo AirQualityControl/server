@@ -81,7 +81,7 @@ namespace AirSnitch.Api.Controllers
                 return Ok(await CreateResponseIncludeObjectAsync(id,
                     path,
                     ControllerContext.HttpContext.Request.Path.Value,
-                    GetIncludeObject(path, id)));
+                    GetIncludeObject(ResoursePathResolver.GetIncludeByPath(ControllerPath, path), id)));
             }
             return BadRequest();
         }
@@ -94,9 +94,9 @@ namespace AirSnitch.Api.Controllers
                 "airpolution" => new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 },
                 "city" => new CityDTO { FriendlyName = $"TestCity{id}", State = $"testState{id}", Code = "1234", CountryCode = "UA" },
                 "dataproviders" => new DataProviderDTO { Name = $"TestDataProvider{id}", WebSiteUri = new Uri("https://test.com") },
-                "airmonitoringstations/airpolution" => new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 },
-                "airmonitoringstations/city" => new CityDTO { FriendlyName = $"TestCity{id}", State = $"testState{id}", Code = "1234", CountryCode = "UA" },
-                "airmonitoringstations/dataproviders" => new DataProviderDTO { Name = $"TestDataProvider{id}", WebSiteUri = new Uri("https://test.com") },
+                //"airmonitoringstations/airpolution" => new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 },
+                //"airmonitoringstations/city" => new CityDTO { FriendlyName = $"TestCity{id}", State = $"testState{id}", Code = "1234", CountryCode = "UA" },
+                //"airmonitoringstations/dataproviders" => new DataProviderDTO { Name = $"TestDataProvider{id}", WebSiteUri = new Uri("https://test.com") },
                 _ => throw new ArgumentException($"Incorrect include: {include}"),
             };
         }

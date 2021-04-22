@@ -59,6 +59,17 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
             return _resourseResolutionCache[controllerPath].Values.Contains(currentResourse);
         }
 
+        public string GetIncludeByPath(string controllerPath, string queryPath)
+        {
+            var currentResourse = new Resourse { Path = "/" + queryPath };
+            if (!_resourseResolutionCache.ContainsKey(controllerPath))
+            {
+                var resourses = GetResourses(controllerPath);
+                return resourses.FirstOrDefault(item => item.Value == currentResourse).Key;
+            }
+            return _resourseResolutionCache[controllerPath].FirstOrDefault(item => item.Value.Equals(currentResourse)).Key;
+        }
+
         public string[] GetValidQueryIncludes(string controllerPath, string[] includes)
         {
             if (!_resourseResolutionCache.ContainsKey(controllerPath))
@@ -68,5 +79,7 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
             }
             return includes.Where(item => _resourseResolutionCache[controllerPath].ContainsKey(item)).ToArray();
         }
+
+
     }
 }

@@ -11,5 +11,6 @@ namespace AirSnitch.Api.Infrastructure.Interfaces
         Dictionary<string, Resourse> GetResourses(string controllerPath);
         bool IsPathValid(string controllerPath, int id, string queryPath);
         string[] GetValidQueryIncludes(string controllerPath, string[] includes);
+        string GetIncludeByPath(string controllerPath, string queryPath);
     }
 }

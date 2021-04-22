@@ -98,10 +98,10 @@ namespace AirSnitch.Api.Controllers
         {
             if (ResoursePathResolver.IsPathValid(ControllerPath, id, path))
             {
-                return Ok(await CreateResponseIncludeObjectAsync(id,
-                    path,
+                return Ok(
+                    await CreateResponseIncludeObjectAsync(id, path,
                     ControllerContext.HttpContext.Request.Path.Value,
-                    GetIncludeObject(path, id)));
+                    GetIncludeObject(ResoursePathResolver.GetIncludeByPath(ControllerPath,path), id)));
             }
             return BadRequest();
         }
