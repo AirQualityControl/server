@@ -7,6 +7,8 @@ using AirSnitch.Api.Infrastructure.PathResolver;
 using AirSnitch.Api.Infrastructure.PathResolver.Models;
 using AirSnitch.Api.Infrastructure.PathResolver.SearchAlgorithms;
 using AirSnitch.Api.Models.Internal;
+using AirSnitch.Core.Domain.Models;
+using AirSnitch.Infrastructure.Extentions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using SaveDnipro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,6 +92,9 @@ namespace AirSnitch.Api
         
         protected virtual void ConfigureIoC(IServiceCollection services)
         {
+            services.AddCoreInfrastructure();
+            services.AddScoped<IAirPollutionDataProvider, SaveDniproDataProvider>();
+
             services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
             services.AddSingleton<IDummyUserService, DummyUserService>();

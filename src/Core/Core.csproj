@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <ApplicationIcon />
+    <StartupObject />
+    <RootNamespace>AirSnitch.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Features\**" />
+    <EmbeddedResource Remove="Features\**" />
+    <None Remove="Features\**" />
+    <Compile Remove="Infrastructure\Persistence\PersistentEntity.cs" />
+    <Compile Remove="Models\IPerpsistent.cs" />
+    <Compile Remove="Infrastructure\Persistence\MongoDb\Mapping\AirMonitoringStationMapping.cs" />
+    <Compile Remove="Infrastructure\Persistence\MongoDb\Mapping\SessionModelMapping.cs" />
+    <Compile Remove="Infrastructure\Persistence\MongoDb\Mapping\UserModelMapping.cs" />
+    <Compile Remove="Infrastructure\Persistence\MongoDb\Mapping\**" />
+    <EmbeddedResource Remove="Infrastructure\Persistence\MongoDb\Mapping\**" />
+    <None Remove="Infrastructure\Persistence\MongoDb\Mapping\**" />
+    <Compile Remove="Infrastructure\JobStore\IPersistentJob.cs" />
+    <Compile Remove="Infrastructure\JobStore\IReurringJob.cs" />
+    <Compile Remove="Models\IPersistentEntity.cs" />
+    <Compile Remove="Models\Persistence\**" />
+    <EmbeddedResource Remove="Models\Persistence\**" />
+    <None Remove="Models\Persistence\**" />
+    <Compile Remove="Infrastructure\JobStore\RecurringJob.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DeclarativeContracts" Version="1.1.0" />
+    <PackageReference Include="RestSharp" Version="106.11.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\Persistence\" />
+  </ItemGroup>
+
+<ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>AirSnitch.Tests</_Parameter1>
+    </AssemblyAttribute>
+     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>
