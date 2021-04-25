@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using AirSnitch.Core.Domain.Models;
-
-
+using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
 
 namespace AirSnitch.Core.Infrastructure.Geo
 {
@@ -19,7 +18,7 @@ namespace AirSnitch.Core.Infrastructure.Geo
         /// <returns></returns>
         public static BoundingBox Create(GeoLocation point, double halfSideInKm)
         {
-            Contract.Requires(point != null);
+            Require.That(point, Is.NotNull);
 
             // Bounding box surrounding the point at given coordinates,
             // assuming local approximation of Earth surface as a sphere

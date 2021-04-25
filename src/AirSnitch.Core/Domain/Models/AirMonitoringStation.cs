@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using AirSnitch.Core.Domain.Exceptions;
-
+using DeclarativeContracts.Functions;
+using Ensure = DeclarativeContracts.Postcondition.Ensure;
+using Require = DeclarativeContracts.Precondition.Require;
 
 namespace AirSnitch.Core.Domain.Models
 {
@@ -33,8 +34,11 @@ namespace AirSnitch.Core.Domain.Models
             get => _id;
             set
             {
-                Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(value),
-                    "Invalid monitoring station id value was specified");
+                Require.That(
+                    element: value, 
+                    predicate: Is.NotNullOrEmptyString, 
+                    exceptionToThrow: new ArgumentException("Invalid monitoring station id value was specified")
+                );
                 _id = value;
             }
         }
@@ -49,8 +53,11 @@ namespace AirSnitch.Core.Domain.Models
             get => _name;
             set
             {
-                Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(value),
-                    "Invalid monitoring station Name value was specified");
+                Require.That(
+                    element: value, 
+                    predicate: Is.NotNullOrEmptyString, 
+                    exceptionToThrow: new ArgumentException("Invalid monitoring station Name value was specified")
+                );
                 _name = value;
             }
         }
@@ -83,8 +90,11 @@ namespace AirSnitch.Core.Domain.Models
             get => _city;
             set
             {
-                Contract.Requires<ArgumentException>(value != null,
-                    "Invalid value for city was specified: city cannot be NULL");
+                Require.That(
+                    element: value,
+                    predicate:Is.NotNull,
+                    exceptionToThrow:new ArgumentException("Invalid value for city was specified: city cannot be NULL")
+                );
                 _city = value;
             }
         }
@@ -121,8 +131,9 @@ namespace AirSnitch.Core.Domain.Models
         /// <returns></returns>
         public async Task<AirPollution> GetLatestAirPollutionAsync()
         {
-            Contract.Requires(_dataProvider!= null);
+            Require.That(_dataProvider, Is.NotNull);
             var airPollutionData = await _dataProvider.GetLatestDataAsync(station:this);
+            Ensure.That(_dataProvider, Is.NotNull);
             airPollutionData.MonitoringStation = this;
             
             if (IsAirPollutionDataActual(airPollutionData))

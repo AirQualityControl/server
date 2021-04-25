@@ -1,7 +1,5 @@
-﻿
-
-using System;
-using System.Diagnostics.Contracts;
+﻿using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
 
 namespace AirSnitch.Core.Domain.Models
 {
@@ -21,7 +19,7 @@ namespace AirSnitch.Core.Domain.Models
             get => _name;
             set
             {
-                Contract.Requires(!String.IsNullOrEmpty(value));
+                Require.That(value, Is.NotNullOrEmptyString);
                 _name = value;
             }
         }

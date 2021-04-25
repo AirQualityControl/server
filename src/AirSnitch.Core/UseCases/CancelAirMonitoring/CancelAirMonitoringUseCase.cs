@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using AirSnitch.Core.Infrastructure.JobStore;
 using AirSnitch.Core.Infrastructure.Persistence;
-
-
+using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
 
 namespace AirSnitch.Core.UseCases.CancelAirMonitoring
 {

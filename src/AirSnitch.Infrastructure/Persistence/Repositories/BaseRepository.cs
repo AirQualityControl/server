@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AirSnitch.Core.Infrastructure.Persistence;
 using AirSnitch.Infrastructure.Persistence.Extenstion;
-
-
+using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
 using MongoDB.Driver;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
@@ -33,7 +32,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         ///<inheritdoc/>
         public async Task<IReadOnlyCollection<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            Contract.Requires(predicate != null);
+            Require.That(predicate, Is.NotNull);
             
             var filter = Builders<TEntity>.Filter.Where(predicate);
             return await Collection.Find(filter).ToListAsync();
@@ -43,7 +42,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         public async Task<IReadOnlyCollection<TProjection>> GetByAsync<TProjection>(Expression<Func<TEntity, bool>> predicate, 
             Expression<Func<TEntity, TProjection>> projection)
         {
-            Contract.Requires(predicate != null);
+            Require.That(predicate, Is.NotNull);
             
             var filter = Builders<TEntity>.Filter.Where(predicate);
             return await Collection.Find(filter).Project(projection).ToListAsync();

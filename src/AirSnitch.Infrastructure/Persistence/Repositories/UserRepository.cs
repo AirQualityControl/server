@@ -1,12 +1,11 @@
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Core.Domain.Exceptions;
 using AirSnitch.Core.Domain.Models;
 using AirSnitch.Core.Infrastructure.Persistence;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
-
-
+using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
@@ -18,7 +17,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         ///<inheritdoc/>
         public async Task Insert(User user)
         {
-            Contract.Requires(user != null);
+            Require.That(user, Is.NotNull);
 
             var userStorageModel = UserStorageModel.CreateFromDomainModel(user);
             
@@ -28,8 +27,8 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         ///<inheritdoc/>
         public async Task Update(User user)
         {
-            Contract.Requires(user != null);
-            Contract.Requires(user.ClientUserId != default);
+            Require.That(user, Is.NotNull);
+            Require.That(user.ClientUserId, Is.NotDefault);
 
             var userStorageModel = UserStorageModel.CreateFromDomainModel(user);
             
@@ -43,7 +42,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         ///<inheritdoc/>
         public async Task<User> GetByIdAsync(long clientUserId)
         {
-            Contract.Requires(clientUserId != default);
+            Require.That(clientUserId, Is.NotDefault);
 
             var users =  await GetByAsync(
                 u => u.ClientUserId == clientUserId
@@ -61,7 +60,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         ///<inheritdoc/>
         public async Task<User> FindByIdAsync(long clientUserId)
         {
-            Contract.Requires(clientUserId != default);
+            Require.That(clientUserId, Is.NotDefault);
 
             var resultSequence = await GetByAsync(
                 u => u.ClientUserId == clientUserId

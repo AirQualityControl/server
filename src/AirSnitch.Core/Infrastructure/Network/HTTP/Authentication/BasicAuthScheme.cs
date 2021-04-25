@@ -1,7 +1,6 @@
 using System;
-using System.Diagnostics.Contracts;
-
-
+using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
 using RestSharp.Authenticators;
 
 namespace AirSnitch.Core.Infrastructure.Network.HTTP.Authentication
@@ -24,8 +23,11 @@ namespace AirSnitch.Core.Infrastructure.Network.HTTP.Authentication
             get => _userName;
             set
             {
-                Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(value),
-                    $"user name should be not null and not an empty string.Actual value is {value}");
+                Require.That(
+                    value,
+                    Is.NotNullOrEmptyString,
+                    new ArgumentException(
+                        $"user name should be not null and not an empty string.Actual value is {value}"));
                 _userName = value;
             }
         }
@@ -35,8 +37,11 @@ namespace AirSnitch.Core.Infrastructure.Network.HTTP.Authentication
             get => _userPassword;
             set
             {
-                Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(value),
-                    $"user name should be not null and not an empty string.Actual value is {value}");
+                Require.That(
+                    value,
+                    Is.NotNullOrEmptyString,
+                    new ArgumentException(
+                        $"user name should be not null and not an empty string.Actual value is {value}"));
                 _userPassword = value;
             }
         }
