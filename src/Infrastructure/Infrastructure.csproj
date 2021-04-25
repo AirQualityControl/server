@@ -28,7 +28,7 @@
 
     <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>Di.Bindings</_Parameter1>
+      <_Parameter1>AirSnitch.Api</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
   

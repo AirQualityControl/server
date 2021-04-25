@@ -92,8 +92,8 @@ namespace AirSnitch.Api
         
         protected virtual void ConfigureIoC(IServiceCollection services)
         {
+            services.AddTransient<IAirPollutionDataProvider, SaveDniproDataProvider>();//!!!!
             services.AddCoreInfrastructure();
-            services.AddScoped<IAirPollutionDataProvider, SaveDniproDataProvider>();
 
             services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();

@@ -27,7 +27,7 @@ namespace AirSnitch.Infrastructure.Extentions
     {
         public static IServiceCollection AddCoreInfrastructure(this IServiceCollection services)
         {
-            
+
 #if DEBUG
             services.AddScoped<IAppConfig, FileBasedAppConfig>();
 #else
@@ -48,7 +48,6 @@ namespace AirSnitch.Infrastructure.Extentions
             services.AddTransient(typeof(IEventNotificationEmitter<>), typeof(InProcessEventNotificationEmitter<>));
             services.AddTransient(typeof(IEvenNotificationStore<>), typeof(InMemoryEventNotificationStore<>));
 
-            //services.AddScoped<IAirPollutionDataProvider, SaveDniproDataProvider>();!!!!
             services.AddScoped<IUserBlockedAppUseCase, UserBlockedAppUseCase>();
             services.AddScoped<IStartAirMonitoringUseCase, StartAirMonitoringUseCase>();
             services.AddScoped<IGetAirPollutionByGeoLocationUseCase, GetAirPollutionByGeoLocationUseCase>();
