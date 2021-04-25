@@ -23,19 +23,19 @@ namespace AirSnitch.Api.Models
         /// <summary>
         /// Wind speed (m/s)
         /// </summary>
-        [JsonProperty("windSpeed")]
+        [JsonProperty("windSpeed", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int WindSpeed { get; set; }
 
         /// <summary>
         /// humidity percentage value
         /// </summary>
-        [JsonProperty("humidity")]
+        [JsonProperty("humidity", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Humidity { get; set; }
 
         /// <summary>
         /// Temperature value. By default in Celsius
         /// </summary>
-        [JsonProperty("temperature")]
+        [JsonProperty("temperature", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Temperature { get; set; }
 
         /// <summary>

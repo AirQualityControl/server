@@ -36,7 +36,7 @@ namespace AirSnitch.Api.Controllers
             return result;
         }
 
-        protected virtual Response CreateResponseObject(string basePath, object model, Dictionary<string, object> includes = null)
+        protected virtual Response<T> CreateResponseObject<T>(string basePath, T model, Dictionary<string, object> includes = null)
         {
             var cachedResourses = ResoursePathResolver.GetResourses(ControllerPath);
 
@@ -46,7 +46,7 @@ namespace AirSnitch.Api.Controllers
                 resourses.Add(item.Key, new Resourse { Path = item.Value.Path.Insert(0, basePath) });
             });
 
-            return new Response
+            return new Response<T>
             {
                 Links = resourses,
                 Values = model,
@@ -54,7 +54,7 @@ namespace AirSnitch.Api.Controllers
             };
         }
 
-        protected virtual Response CreateResponseIncludeObject(int id, string includeKey, string basePath, object model, Dictionary<string, object> includes = null)
+        protected virtual Response<T> CreateResponseIncludeObject<T>(int id, string includeKey, string basePath, T model, Dictionary<string, object> includes = null)
         {
             var cachedResourses = ResoursePathResolver.GetResourses(ControllerPath);
             //basePath.LastIndexOf(ControllerPath+$"/{id}/")
@@ -80,7 +80,7 @@ namespace AirSnitch.Api.Controllers
 
             });
 
-            return new Response
+            return new Response<T>
             {
                 Links = resourses,
                 Values = model,
@@ -88,8 +88,8 @@ namespace AirSnitch.Api.Controllers
             };
         }
 
-        protected virtual PaginativeResponse CreatePaginativeResponseObject(int limit, int offset, int total,
-            Dictionary<string, object> models, Dictionary<string, object> includes = null)
+        protected virtual PaginativeResponse<T> CreatePaginativeResponseObject<T>(int limit, int offset, int total,
+            Dictionary<string, T> models, Dictionary<string, object> includes = null)
         {
             limit = limit == 0 ? 2 : limit;
             string requestPath = ControllerContext.HttpContext.Request.Path.Value;
@@ -114,13 +114,13 @@ namespace AirSnitch.Api.Controllers
                 links.Add("first", new Resourse { Path = String.Format(format, limit, 0) });
             }
 
-            List<Response> items = new();
+            List<Response<T>> items = new();
             foreach (var item in models)
             {
                 items.Add(CreateResponseObject(requestPath + "/" + item.Key, item.Value, includes));
             }
 
-            return new PaginativeResponse
+            return new PaginativeResponse<T>
             {
                 Responses = items,
                 Count = models.Count,
@@ -130,19 +130,19 @@ namespace AirSnitch.Api.Controllers
             };
         }
 
-        protected virtual async Task<Response> CreateResponseIncludeObjectAsync(int id, string includeKey, string basePath,
-            object model, Dictionary<string, object> includes = null)
+        protected virtual async Task<Response<T>> CreateResponseIncludeObjectAsync<T>(int id, string includeKey, string basePath,
+            T model, Dictionary<string, object> includes = null)
         {
             return await Task.Run(() => CreateResponseIncludeObject(id, includeKey, basePath, model, includes));
         }
 
-        protected virtual async Task<PaginativeResponse> CreatePaginativeResponseObjectAsync(int limit, int offset, int total,
-            Dictionary<string, object> models, Dictionary<string, object> includes = null)
+        protected virtual async Task<PaginativeResponse<T>> CreatePaginativeResponseObjectAsync<T>(int limit, int offset, int total,
+            Dictionary<string, T> models, Dictionary<string, object> includes = null)
         {
             return await Task.Run(() => CreatePaginativeResponseObject(limit, offset, total, models, includes));
         }
 
-        protected virtual async Task<Response> CreateResponseObjectAsync(string basePath, object model, Dictionary<string, object> includes = null)
+        protected virtual async Task<Response<T>> CreateResponseObjectAsync<T>(string basePath, T model, Dictionary<string, object> includes = null)
         {
             return await Task.Run(() => CreateResponseObject(basePath, model, includes));
         }

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -11,9 +13,21 @@ namespace AirSnitch.Api.Models.Internal
     {
         public ApiKey(int id, string owner, string key, DateTime created, List<string> roles)
         {
-            Contract.Requires<ArgumentNullException>(owner != null, nameof(owner));
-            Contract.Requires<ArgumentNullException>(key != null, nameof(key));
-            Contract.Requires<ArgumentNullException>(roles != null, nameof(roles));
+            Require.That(
+                    element: owner,
+                    predicate: Is.NotNull,
+                    exceptionToThrow: new ArgumentNullException(nameof(owner))
+                );
+            Require.That(
+                    element: roles,
+                    predicate: Is.NotNull,
+                    exceptionToThrow: new ArgumentNullException(nameof(roles))
+                );
+            Require.That(
+                    element: key,
+                    predicate: Is.NotNull,
+                    exceptionToThrow: new ArgumentNullException(nameof(key))
+                );
 
             Id = id;
             Owner = owner;

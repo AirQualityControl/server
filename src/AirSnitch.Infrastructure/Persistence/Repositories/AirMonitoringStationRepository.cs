@@ -64,5 +64,32 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 
             return nearestStations;
         }
+
+        public async Task<Page<AirMonitoringStation>> GetPage(int pageOffset, int numberOfItems = 50)
+        {
+            Require.That(
+                pageOffset,
+                (offset) => offset >= 0,
+                "Page offset should be greater or equal than zero"
+            );
+
+            Require.That(
+                pageOffset,
+                (numOfItems) => numOfItems >= 0,
+                "Number of items should be greater or equal than zero"
+            );
+
+            var query = Collection.Find(x => true);
+            var totalTask = query.CountDocumentsAsync();
+            var itemsTask = query.Skip(pageOffset).Limit(numberOfItems).ToListAsync();
+
+            await Task.WhenAll(totalTask, itemsTask);
+
+            return new Page<AirMonitoringStation>
+            {
+                TotalNumberOfItems = (int)totalTask.Result,
+                Items = itemsTask.Result.Select(m => _mapper.MapToDomainModel(m)).ToList()
+            };
+        }
     }
 }

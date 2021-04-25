@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AirSnitch.Api.Models.Responses
 {
-    public class PaginativeResponse
+    public class PaginativeResponse<T>
     {
         [JsonProperty("_links")]
         public Dictionary<string, Resourse> Links { get; set; }
@@ -23,6 +23,6 @@ namespace AirSnitch.Api.Models.Responses
         public int Total { get; set; }
 
         [JsonProperty("items")]
-        public List<Response> Responses { get; set; }
+        public List<Response<T>> Responses { get; set; }
     }
 }

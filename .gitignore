@@ -1,3 +1,5 @@
+#ignore secret settings
+src/AirSnitch.Api/core_settings.json
 
 # Created by https://www.gitignore.io/api/angular,dotnetcore,aspnetcore,visualstudio,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=angular,dotnetcore,aspnetcore,visualstudio,visualstudiocode
