@@ -6,10 +6,6 @@
         <FileVersion></FileVersion>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Core\Core.csproj" />
-    </ItemGroup>
-
     <PropertyGroup>
       <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     </PropertyGroup> 
@@ -31,6 +27,10 @@
       <_Parameter1>AirSnitch.Api</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AirSnitch.Core\AirSnitch.Core.csproj" />
+    </ItemGroup>
   
 
 </Project>

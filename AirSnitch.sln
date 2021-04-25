@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirSnitch.Api", "src\AirSni
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{88C34088-097F-4405-89BD-A23ED3D8819C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataProviders", "DataProviders", "{590A2291-9092-40EA-9D0F-6784D66E4C67}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AirSnitch.DataProviders", "AirSnitch.DataProviders", "{590A2291-9092-40EA-9D0F-6784D66E4C67}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaveDnipro", "src\DataProviders\SaveDnipro\SaveDnipro.csproj", "{3CB2EBAC-5FEE-492D-9152-C3E6776E39C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaveDnipro", "src\AirSnitch.DataProviders\SaveDnipro\SaveDnipro.csproj", "{3CB2EBAC-5FEE-492D-9152-C3E6776E39C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.csproj", "{F15E193C-017E-490C-A1DA-73428A447499}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirSnitch.Core", "src\AirSnitch.Core\AirSnitch.Core.csproj", "{F15E193C-017E-490C-A1DA-73428A447499}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{EAE4C391-57E9-428B-AE66-EAB7DE0638F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirSnitch.Infrastructure", "src\AirSnitch.Infrastructure\AirSnitch.Infrastructure.csproj", "{EAE4C391-57E9-428B-AE66-EAB7DE0638F6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirSnitch.Api.Test", "test\AirSnitch.Api.Test\AirSnitch.Api.Test.csproj", "{8FB890F6-E49A-4CE8-AB6D-AD7374BA19C2}"
 EndProject

@@ -10,9 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\DataProviders\SaveDnipro\SaveDnipro.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\AirSnitch.Core\AirSnitch.Core.csproj" />
+    <ProjectReference Include="..\AirSnitch.DataProviders\SaveDnipro\SaveDnipro.csproj" />
+    <ProjectReference Include="..\AirSnitch.Infrastructure\AirSnitch.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
