@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using AirSnitch.Core.Infrastructure.Network.HTTP;
 using AirSnitch.Core.Infrastructure.Network.HTTP.Authentication;
-using DeclarativeContracts.Functions;
-using DeclarativeContracts.Precondition;
+
+
 using RestSharp;
 
 namespace AirSnitch.Infrastructure.Network.HTTP
@@ -27,8 +28,8 @@ namespace AirSnitch.Infrastructure.Network.HTTP
             Uri baseAddress, 
             IHttpResource httpResource) where Target : new() 
         {
-            Require.That(baseAddress, Is.NotNull);
-            Require.That(httpResource, Is.NotNull);
+            Contract.Requires(baseAddress != null);
+            Contract.Requires(httpResource != null);
 
             return await InternalGetRequest<Target>(baseAddress, httpResource);
         }
@@ -46,9 +47,9 @@ namespace AirSnitch.Infrastructure.Network.HTTP
             IHttpResource httpResource, 
             IReadOnlyCollection<KeyValuePair<string, string>> requestParameters) where Target : new()
         {
-            Require.That(baseAddress, Is.NotNull);
-            Require.That(httpResource, Is.NotNull);
-            Require.That(requestParameters, Has.AtLeastOneValue);
+            Contract.Requires(baseAddress != null);
+            Contract.Requires(httpResource != null);
+            Contract.Requires(requestParameters.Count > 0);
 
             return await InternalGetRequest<Target>(baseAddress, httpResource, requestParameters);
         }
@@ -71,9 +72,9 @@ namespace AirSnitch.Infrastructure.Network.HTTP
             )
             where TResult : new()
         {
-            Require.That(baseAddress, Is.NotNull);
-            Require.That(resource, Is.NotNull);
-            Require.That(authScheme, Is.NotNull);
+            Contract.Requires(baseAddress != null);
+            Contract.Requires(resource != null);
+            Contract.Requires(authScheme != null);
 
             return await InternalPostRequest<TModel, TResult>(baseAddress, resource, body, authScheme);
         }

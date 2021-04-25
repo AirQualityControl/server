@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using AirSnitch.Core.Domain.Models;
 using AirSnitch.Core.Infrastructure.Jobs;
 using AirSnitch.Core.Infrastructure.JobStore;
-using DeclarativeContracts.Precondition;
+
 
 namespace AirSnitch.Core.UseCases.CancelAirMonitoring
 {

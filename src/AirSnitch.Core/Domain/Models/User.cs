@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using AirSnitch.Core.Domain.Exceptions;
-using DeclarativeContracts.Functions;
-using DeclarativeContracts.Precondition;
+
+
 
 namespace AirSnitch.Core.Domain.Models
 {
@@ -161,7 +162,7 @@ namespace AirSnitch.Core.Domain.Models
         ///     stationSummary is not null
         private void AddNewStationForMonitoring(AirMonitoringStationSummary stationSummary)
         {
-            Require.That(stationSummary, Is.NotNull);
+            Contract.Requires(stationSummary != null);
             lock(_syncObj)
             {
                 if (_monitoringStationSummaries != null)
@@ -193,7 +194,7 @@ namespace AirSnitch.Core.Domain.Models
         ///     stationSummary is not null
         private void RemoveStationFromMonitoring(AirMonitoringStationSummary stationSummary)
         {
-            Require.That(stationSummary, Is.NotNull);
+            Contract.Requires(stationSummary!= null);
             lock (_syncObj)
             {
                 _monitoringStationSummaries?.Remove(stationSummary);

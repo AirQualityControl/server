@@ -1,7 +1,8 @@
 ﻿using AirSnitch.Core.Infrastructure.Cache;
-using DeclarativeContracts.Functions;
-using DeclarativeContracts.Precondition;
+
+
 using Microsoft.Extensions.Caching.Memory;
+using System.Diagnostics.Contracts;
 
 namespace AirSnitch.Infrastructure.Cache
 {
@@ -21,7 +22,7 @@ namespace AirSnitch.Infrastructure.Cache
         /// <exception cref="ContractViolationException">If cacheEntryPolicy is null - contractViolationException will be throw </exception>
         public static MemoryCacheEntryOptions ToMemoryCacheEntryOptions(this CacheEntryPolicy cacheEntryPolicy) 
         {
-            Require.That(cacheEntryPolicy, Is.NotNull);
+            Contract.Requires(cacheEntryPolicy != null);
             
             return new MemoryCacheEntryOptions()
             {

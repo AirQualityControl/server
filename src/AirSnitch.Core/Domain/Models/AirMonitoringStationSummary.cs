@@ -1,7 +1,8 @@
 using System;
+using System.Diagnostics.Contracts;
 using AirSnitch.Core.Domain.Exceptions;
-using DeclarativeContracts.Functions;
-using DeclarativeContracts.Precondition;
+
+
 
 namespace AirSnitch.Core.Domain.Models
 {
@@ -19,11 +20,8 @@ namespace AirSnitch.Core.Domain.Models
             get => _id;
             set
             {
-                Require.That(
-                    element: value, 
-                    predicate: Is.NotNullOrEmptyString, 
-                    exceptionToThrow: new ArgumentException("Invalid monitoring station id value was specified")
-                );
+                Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(value),
+                    "Invalid monitoring station id value was specified");
                 _id = value;
             }
         }

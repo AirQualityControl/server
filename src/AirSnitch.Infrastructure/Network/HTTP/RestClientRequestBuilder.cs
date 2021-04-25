@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using AirSnitch.Core.Infrastructure.Network.HTTP;
-using DeclarativeContracts.Functions;
-using DeclarativeContracts.Precondition;
+
+
 using RestSharp;
 
 namespace AirSnitch.Infrastructure.Network.HTTP
@@ -21,7 +22,7 @@ namespace AirSnitch.Infrastructure.Network.HTTP
         /// <returns>RestRequest result request</returns>
         public RestRequest BuildRequest(IHttpResource httpResource)
         {
-            Require.That(httpResource, Is.NotNull);
+            Contract.Requires(httpResource != null);
             
             return CreateRestRequest(httpResource);
         } 
@@ -36,8 +37,8 @@ namespace AirSnitch.Infrastructure.Network.HTTP
         /// <returns>RestRequest result request</returns>
         public RestRequest BuildRequest(IHttpResource httpResource, IReadOnlyCollection<KeyValuePair<string, string>> requestParameters)
         {
-            Require.That(httpResource, Is.NotNull);
-            Require.That(requestParameters, Has.AtLeastOneValue);
+            Contract.Requires(httpResource != null);
+            Contract.Requires(requestParameters.Count > 0);
             
             var request = CreateRestRequest(httpResource);
             AddParamsToRequest(request, requestParameters);

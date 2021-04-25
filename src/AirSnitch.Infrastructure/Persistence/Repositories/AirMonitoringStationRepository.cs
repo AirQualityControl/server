@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Core.Domain.Exceptions;
@@ -7,8 +8,8 @@ using AirSnitch.Core.Domain.Models;
 using AirSnitch.Core.Infrastructure.Persistence;
 using AirSnitch.Infrastructure.Persistence.Mongo.Mappers;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
-using DeclarativeContracts.Functions;
-using DeclarativeContracts.Precondition;
+
+
 using MongoDB.Driver;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
@@ -28,7 +29,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         ///<inheritdoc/>
         public async Task<AirMonitoringStation> GetByIdAsync(string stationId)
         {
-            Require.That(stationId, Is.NotNullOrEmptyString);
+            Contract.Requires(!String.IsNullOrEmpty(stationId));
             
             var stations = await GetByAsync(
                 predicate: st => st.Id == stationId);
@@ -47,7 +48,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         public async Task<IReadOnlyCollection<AirMonitoringStation>> GetTopNearestStationsAsync(GeoLocation geoLocation,
             int numberOfNearestStations)
         {
-            Require.That(numberOfNearestStations, Is.Positive);
+            Contract.Requires(numberOfNearestStations > 0);
 
             LinkedList<AirMonitoringStation> nearestStations = new LinkedList<AirMonitoringStation>();
             

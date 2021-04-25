@@ -1,7 +1,8 @@
 using System;
+using System.Diagnostics.Contracts;
 using System.Linq;
-using DeclarativeContracts.Functions;
-using DeclarativeContracts.Precondition;
+
+
 
 namespace AirSnitch.Infrastructure.Persistence.Extenstion
 {
@@ -18,8 +19,8 @@ namespace AirSnitch.Infrastructure.Persistence.Extenstion
         /// <returns>New string in lowerCamelCase formatting</returns>
         public static string ToLowerCamelCase(this String originalString)
         {
-            Require.That(originalString, Is.NotNull);
-            Require.That(originalString, Is.NotNullOrEmptyString); 
+            Contract.Requires(originalString != null);
+            Contract.Requires(!String.IsNullOrEmpty(originalString));
            
             char firstLetter = originalString.First();
             return originalString.Replace(firstLetter, Char.ToLower(firstLetter));
