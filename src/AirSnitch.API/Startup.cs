@@ -103,7 +103,13 @@ namespace AirSnitch.Api
 
             services.AddSingleton(x => ResourcePathResolver);
             services.AddScoped<ISearchAlgorithm, BFS>();
+
             services.AddScoped<IAirMonitoringStationService, AirMonitoringStationService>();
+            services.AddScoped<ICityService, CityService>();
+            services.AddScoped<IDataProviderService, DataProviderService>();
+
+            services.AddScoped<ICityRepository, CityRepository>();
+            services.AddScoped<IDataProviderRepository, DataProviderRepository>();
         }
 
 

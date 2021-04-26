@@ -1,4 +1,8 @@
 ﻿using AirSnitch.Api.Infrastructure.Authorization;
+using AirSnitch.Api.Infrastructure.Interfaces;
+using AirSnitch.Api.Infrastructure.Services;
+using AirSnitch.Api.Models;
+using AirSnitch.Api.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,19 +15,37 @@ namespace AirSnitch.Api.Controllers
     [Authorize(Policy = Policies.RequiredUser)]
     [ApiController]
     [Route(ControllersRoutes.Dataprovider)]
-    public class DataprovidersController : ControllerBase
+    public class DataprovidersController : BaseApiController
     {
+        IDataProviderService _dataProviderService;
+        public DataprovidersController(IDataProviderService dataProviderService,
+            IResoursePathResolver resoursePathResolver) : base(resoursePathResolver)
+        {
+            _dataProviderService = dataProviderService;
+        }
+
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult<Response<DataProviderDTO>>> Get(string id)
         {
-            return await Task.FromResult(Ok($"Dataprovider stub for id: {id}"));
+            var basePath = ControllerContext.HttpContext.Request.Path.Value;
+            var model = await _dataProviderService.GetByIdAsync(id);
+            return Ok(await CreateResponseObjectAsync(basePath, model));
         }
 
         [HttpGet]
         public async Task<ActionResult> GetPaginated(int limit, int offset)
         {
-            return await Task.FromResult(Ok($"Dataprovider collection stub limit: {limit}, offset: {offset}"));
+            limit = limit > 0 ? limit : 10;
+            (var paginatedResult, var total) = await _dataProviderService.GetPaginated(limit, offset);
+            return Ok(await CreatePaginativeResponseObjectAsync(limit, offset, total, paginatedResult));
         }
+
+        protected override Task<object> GetIncludeObject(string include, string id)
+        {
+            throw new ArgumentException($"Incorrect include: {include}");
+        }
+
+        
     }
 }

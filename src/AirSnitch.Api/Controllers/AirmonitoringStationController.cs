@@ -44,7 +44,7 @@ namespace AirSnitch.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetPaginated(int limit, int offset)
+        public async Task<ActionResult<PaginativeResponse<AirMonitoringStationDTO>>> GetPaginated(int limit, int offset)
         {
             limit = limit > 0 ? limit : 10;
             (var paginatedResult, var total) = await _airMonitoringStationService.GetPaginated(limit, offset);
@@ -53,7 +53,7 @@ namespace AirSnitch.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult> GetWithIncludes(string id, [FromQuery] string include)
+        public async Task<ActionResult<Response<AirMonitoringStationDTO>>> GetWithIncludes(string id, [FromQuery] string include)
         {
 
             var model = await _airMonitoringStationService.GetByIdAsync(id);

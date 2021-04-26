@@ -1,4 +1,8 @@
 ﻿using AirSnitch.Api.Infrastructure.Authorization;
+using AirSnitch.Api.Infrastructure.Interfaces;
+using AirSnitch.Api.Infrastructure.Services;
+using AirSnitch.Api.Models;
+using AirSnitch.Api.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,20 +15,35 @@ namespace AirSnitch.Api.Controllers
     [Authorize(Policy = Policies.RequiredUser)]
     [ApiController]
     [Route(ControllersRoutes.City)]
-    public class CityController : ControllerBase
+    public class CityController : BaseApiController
     {
+        private ICityService _cityService;
+        public CityController(ICityService cityService,
+            IResoursePathResolver resoursePathResolver) : base(resoursePathResolver)
+        {
+            _cityService = cityService;
+        }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult<Response<CityDTO>>> Get(string id)
         {
-            return await Task.FromResult(Ok($"city stub for id: {id}"));
+            var basePath = ControllerContext.HttpContext.Request.Path.Value;
+            var model = await _cityService.GetByIdAsync(id);
+            return Ok(await CreateResponseObjectAsync(basePath, model));
         }
 
         [HttpGet]
         public async Task<ActionResult> GetPaginated(int limit, int offset)
         {
-            return await Task.FromResult(Ok($"city collection stub limit: {limit}, offset: {offset}"));
+            limit = limit > 0 ? limit : 10;
+            (var paginatedResult, var total) = await _cityService.GetPaginated(limit, offset);
+            return Ok(await CreatePaginativeResponseObjectAsync(limit, offset, total, paginatedResult));
+        }
+
+        protected override Task<object> GetIncludeObject(string include, string id)
+        {
+            throw new ArgumentException($"Incorrect include: {include}");
         }
     }
 }
