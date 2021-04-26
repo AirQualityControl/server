@@ -98,7 +98,7 @@ namespace AirSnitch.Api.Infrastructure.Services
             var stationId = await _userRepository.GetRelatedStationId(userId);
             var station = await _airMonitoringStationRepository.GetByIdAsync(stationId);
             var result = new Dictionary<string, object>();
-            foreach (var item in includes)
+            Parallel.ForEach(includes, async (item) =>
             {
                 switch (item)
                 {
@@ -117,7 +117,7 @@ namespace AirSnitch.Api.Infrastructure.Services
                     default:
                         throw new ArgumentException($"Incorrect include: {item}");
                 }
-            }
+            });
             return result;
         }
 
