@@ -11,5 +11,6 @@ namespace AirSnitch.Api.Infrastructure.Services
         Task<DataProviderDTO> GetIncludedDataProvider(string stationId);
         Task<CityDTO> GetIncludedCity(string stationId);
         Task<(Dictionary<string, AirMonitoringStationDTO>, int)> GetPaginated(int limit, int offset);
+        Task<Dictionary<string, object>> GetIncludes(string[] includes, string userId);
     }
 }

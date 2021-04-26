@@ -19,8 +19,7 @@ namespace AirSnitch.Api.Controllers
     [Route(ControllersRoutes.AirPolution)]
     public class AirPolutionController : BaseApiController
     {
-
-        IGetAirPollutionByGeoLocationUseCase _getAirPollutionByGeoLocationUseCase;
+        private readonly IGetAirPollutionByGeoLocationUseCase _getAirPollutionByGeoLocationUseCase;
 
         public AirPolutionController(IResoursePathResolver resoursePathResolver,
             IGetAirPollutionByGeoLocationUseCase getAirPollutionByGeoLocationUseCase) : base(resoursePathResolver)

@@ -17,7 +17,7 @@ namespace AirSnitch.Api.Controllers
     [Route(ControllersRoutes.City)]
     public class CityController : BaseApiController
     {
-        private ICityService _cityService;
+        private readonly ICityService _cityService;
         public CityController(ICityService cityService,
             IResoursePathResolver resoursePathResolver) : base(resoursePathResolver)
         {

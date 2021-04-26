@@ -8,17 +8,17 @@ namespace AirSnitch.Api.Infrastructure.Auth
 {
     public class InMemoryGetApiKeyQuery : IGetApiKeyQuery
     {
-        IDummyUserService _dummyUserService;
+        readonly IClientService _dummyClientService;
 
-        public InMemoryGetApiKeyQuery(IDummyUserService dummyUserService)
+        public InMemoryGetApiKeyQuery(IClientService dummyUserService)
         {
-            _dummyUserService = dummyUserService;
+            _dummyClientService = dummyUserService;
             
         }
 
         public async Task<ApiKey> Execute(string providedApiKey)
         {
-            return await _dummyUserService.GetStoredApiKey(providedApiKey);
+            return await _dummyClientService.GetStoredApiKey(providedApiKey);
         }
     }
 }

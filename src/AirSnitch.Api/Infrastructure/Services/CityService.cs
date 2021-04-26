@@ -9,7 +9,7 @@ namespace AirSnitch.Api.Infrastructure.Services
 {
     public class CityService : ICityService
     {
-        ICityRepository _cityRepository;
+        readonly ICityRepository _cityRepository;
         public CityService(ICityRepository cityRepository)
         {
             _cityRepository = cityRepository;

@@ -13,5 +13,6 @@ namespace AirSnitch.Api
         public const string City = "city";
         public const string AirPollutionHistory = "airpollutionhistory";
         public const string User = "user";
+        public const string Client = "client";
     }
 }

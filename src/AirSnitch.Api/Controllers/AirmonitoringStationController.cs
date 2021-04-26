@@ -24,7 +24,7 @@ namespace AirSnitch.Api.Controllers
     [Route(ControllersRoutes.AirmonitoringStation)]
     public class AirMonitoringStationController : BaseApiController
     {
-        private IAirMonitoringStationService _airMonitoringStationService;
+        private readonly IAirMonitoringStationService _airMonitoringStationService;
         public AirMonitoringStationController(IResoursePathResolver resoursePathResolver,
             IAirMonitoringStationService airMonitoringStationService) : base(resoursePathResolver)
         {
@@ -36,11 +36,16 @@ namespace AirSnitch.Api.Controllers
         {
             return include switch
             {
-                "airpolution" => await  _airMonitoringStationService.GetIncludedAirpolution(id),
-                "city" => await _airMonitoringStationService.GetIncludedCity(id),
-                "dataproviders" => await _airMonitoringStationService.GetIncludedDataProvider(id),
+                ControllersRoutes.AirPolution => await  _airMonitoringStationService.GetIncludedAirpolution(id),
+                ControllersRoutes.City => await _airMonitoringStationService.GetIncludedCity(id),
+                ControllersRoutes.Dataprovider => await _airMonitoringStationService.GetIncludedDataProvider(id),
                 _ => throw new ArgumentException($"Incorrect include: {include}"),
             };
+        }
+
+        protected override async Task<Dictionary<string, object>> GetIncludes(string[] includes, string Id)
+        {
+            return await _airMonitoringStationService.GetIncludes(includes, Id);
         }
 
         [HttpGet]

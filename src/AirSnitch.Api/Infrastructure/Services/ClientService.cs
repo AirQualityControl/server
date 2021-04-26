@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace AirSnitch.Api
 {
-    public class DummyUserService : IDummyUserService
+    public class ClientService : IClientService
     {
         private Dictionary<string, ApiKey> _apiKeys; 
-        public DummyUserService()
+        public ClientService()
         {
             InitializeUserCollection();
         }
@@ -51,6 +51,12 @@ namespace AirSnitch.Api
         {
             _apiKeys.TryGetValue(providedApiKey, out var key);
             return await Task.FromResult(key);
+        }
+
+        public Task RevokeKey(string key)
+        {
+            _apiKeys.Remove(key);
+            return Task.CompletedTask;
         }
     }
 }

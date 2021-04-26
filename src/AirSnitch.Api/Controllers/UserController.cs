@@ -1,6 +1,7 @@
 ﻿using AirSnitch.Api.Infrastructure.Attributes;
 using AirSnitch.Api.Infrastructure.Authorization;
 using AirSnitch.Api.Infrastructure.Interfaces;
+using AirSnitch.Api.Infrastructure.Services;
 using AirSnitch.Api.Models;
 using AirSnitch.Api.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -18,43 +19,20 @@ namespace AirSnitch.Api.Controllers
     [Route(ControllersRoutes.User)]
     public class UserController : BaseApiController
     {
-        private IDummyUserService _dummyUserService;
+        private readonly IUserService _userService;
         public UserController(IResoursePathResolver resoursePathResolver,
-            IDummyUserService dummyUserService) : base(resoursePathResolver)
+            IUserService userService) : base(resoursePathResolver)
         {
-            _dummyUserService = dummyUserService;
+            _userService = userService;
         }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("create-api-key")]
-        public async Task<ActionResult> SignUp([FromBody] UserDTO user)
-        {
-            var apiKey = await _dummyUserService.CreateAsync(user);
-
-            return Ok(apiKey);
-        }
-
         
         [HttpGet]
         public async Task<ActionResult> GetPaginated(int limit, int offset)
         {
 
-            return Ok(await CreatePaginativeResponseObjectAsync(limit, offset, 20,
-                new Dictionary<string, object>
-                {
-                    ["1"] = new UserDTO
-                    {
-                        Name = "First name LastName",
-                        PhoneNumber = "3806554556555"
-                    },
-                    ["2"] = new UserDTO
-                    {
-                        Name = "First name2 LastName2",
-                        PhoneNumber = "3802222222225"
-                    },
-                })
-            );
+            limit = limit > 0 ? limit : 10;
+            (var paginatedResult, var total) = await _userService.GetPaginated(limit, offset);
+            return Ok(await CreatePaginativeResponseObjectAsync(limit, offset, total, paginatedResult));
         }
 
         [HttpGet]
@@ -62,31 +40,19 @@ namespace AirSnitch.Api.Controllers
         public async Task<ActionResult> GetWithIncludes(string id, [FromQuery] string include)
         {
 
+            var model = await _userService.GetByIdAsync(id);
+            var basePath = ControllerContext.HttpContext.Request.Path.Value;
             if (!String.IsNullOrEmpty(include))
             {
                 var validIncludes = ResoursePathResolver
                     .GetValidQueryIncludes(ControllerPath, include.Trim().Split(','));
                 if (validIncludes.Length > 0)
                 {
-                    return Ok(await CreateResponseObjectAsync(
-                        ControllerContext.HttpContext.Request.Path.Value,
-                        new UserDTO
-                        {
-                            Name = "First name2 LastName2",
-                            PhoneNumber = "3802222222225"
-                        },
-                        await GetIncludes(validIncludes, id))
-                    );
+                    var includes = await GetIncludes(validIncludes, id);
+                    return Ok(await CreateResponseObjectAsync(basePath, model, includes));
                 }
             }
-
-            return Ok(await CreateResponseObjectAsync(
-                    ControllerContext.HttpContext.Request.Path.Value,
-                    new UserDTO
-                    {
-                        Name = "First name1 LastName1",
-                        PhoneNumber = "3800000000025"
-                    }));
+            return Ok(await CreateResponseObjectAsync(basePath, model));
         }
 
         [HttpGet]
@@ -95,26 +61,27 @@ namespace AirSnitch.Api.Controllers
         {
             if (ResoursePathResolver.IsPathValid(ControllerPath, id, path))
             {
-                return Ok(await CreateResponseIncludeObjectAsync(id,
-                    path,
-                    ControllerContext.HttpContext.Request.Path.Value,
-                    GetIncludeObject(ResoursePathResolver.GetIncludeByPath(ControllerPath, path), id)));
+                var basePath = ControllerContext.HttpContext.Request.Path.Value;
+                var includeObject = await GetIncludeObject(ResoursePathResolver.GetIncludeByPath(ControllerPath, path), id);
+                return Ok(await CreateResponseIncludeObjectAsync(id, path, basePath, includeObject));
             }
             return BadRequest();
+        }
+
+        protected override async Task<Dictionary<string, object>> GetIncludes(string[] includes, string Id)
+        {
+            return await _userService.GetIncludes(includes, Id);
         }
 
         protected override async Task<object> GetIncludeObject(string include, string id)
         {
             return include switch
             {
-                "airmonitoringstations" => new AirMonitoringStationDTO { IsActive = false, LocalName = $"secondSttion{id}", Name = $"General name{id}" },
-                "airpolution" => new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 },
-                "city" => new CityDTO { FriendlyName = $"TestCity{id}", State = $"testState{id}", Code = "1234", CountryCode = "UA" },
-                "dataproviders" => new DataProviderDTO { Name = $"TestDataProvider{id}", WebSiteUri = new Uri("https://test.com") },
-                //"airmonitoringstations/airpolution" => new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 },
-                //"airmonitoringstations/city" => new CityDTO { FriendlyName = $"TestCity{id}", State = $"testState{id}", Code = "1234", CountryCode = "UA" },
-                //"airmonitoringstations/dataproviders" => new DataProviderDTO { Name = $"TestDataProvider{id}", WebSiteUri = new Uri("https://test.com") },
-                _ => throw new ArgumentException($"Incorrect include: {include}"),
+                ControllersRoutes.AirmonitoringStation => await _userService.GetIncludedAirMonitoringStation(id),
+                ControllersRoutes.AirPolution => await _userService.GetIncludedAirpolution(id),
+                ControllersRoutes.City => await _userService.GetIncludedCity(id),
+                ControllersRoutes.Dataprovider => await _userService.GetIncludedDataProvider(id),
+                _ => throw new ArgumentException($"Incorrect include: {include}")
             };
         }
     }

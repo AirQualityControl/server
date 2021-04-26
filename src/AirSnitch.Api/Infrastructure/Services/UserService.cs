@@ -1,4 +1,5 @@
 ﻿using AirSnitch.Api.Models;
+using AirSnitch.Api.Models.Internal;
 using AirSnitch.Core.Domain.Models;
 using AirSnitch.Core.Infrastructure.Persistence;
 using System;
@@ -8,50 +9,30 @@ using System.Threading.Tasks;
 
 namespace AirSnitch.Api.Infrastructure.Services
 {
-    public class AirMonitoringStationService : IAirMonitoringStationService
+    public class UserService : IUserService
     {
+        private readonly IApiUserRepository _userRepository;
         private readonly IAirMonitoringStationRepository _airMonitoringStationRepository;
-        public AirMonitoringStationService(IAirMonitoringStationRepository airMonitoringStationRepository)
+        public UserService(IApiUserRepository cityRepository, IAirMonitoringStationRepository airMonitoringStationRepository)
         {
             _airMonitoringStationRepository = airMonitoringStationRepository;
+            _userRepository = cityRepository;
+        }
+        public async Task<UserDTO> GetByIdAsync(string stationId)
+        {
+            var station = await _userRepository.GetByIdAsync(stationId);
+            return station;
         }
 
-        public async Task<AirMonitoringStationDTO> GetByIdAsync(string stationId)
+        public async Task<(Dictionary<string, UserDTO>, int)> GetPaginated(int limit, int offset)
         {
-            var station = await _airMonitoringStationRepository.GetByIdAsync(stationId);
-            return new AirMonitoringStationDTO
-            {
-                IsActive = station.IsActive,
-                LocalName = station.LocalName,
-                Location = new GeoLocationDTO
-                {
-                    Latitude = station.Location.Latitude,
-                    Longitude = station.Location.Longitude
-                },
-                TimeZone = station.TimeZone,
-                Name = station.Name
-            };
+            var page = await _userRepository.GetPage(pageOffset: offset, numberOfItems: limit);
+            return (page.Items, page.TotalNumberOfItems);
         }
 
-        public async Task<(Dictionary<string, AirMonitoringStationDTO>, int)> GetPaginated(int limit, int offset)
+        public async Task<CityDTO> GetIncludedCity(string userId)
         {
-            var page = await _airMonitoringStationRepository.GetPage(pageOffset: offset, numberOfItems: limit);
-            return (page.Items.ToDictionary(item => item.Id, item => new AirMonitoringStationDTO
-            {
-                IsActive = item.IsActive,
-                LocalName = item.LocalName,
-                Location = new GeoLocationDTO
-                {
-                    Latitude = item.Location.Latitude,
-                    Longitude = item.Location.Longitude
-                },
-                TimeZone = item.TimeZone,
-                Name = item.Name
-            }), page.TotalNumberOfItems);
-        }
-
-        public async Task<CityDTO> GetIncludedCity(string stationId)
-        {
+            var stationId = await _userRepository.GetRelatedStationId(userId);
             var station = await _airMonitoringStationRepository.GetByIdAsync(stationId);
 
             return new CityDTO
@@ -63,8 +44,9 @@ namespace AirSnitch.Api.Infrastructure.Services
             };
         }
 
-        public async Task<AirPollutionDTO> GetIncludedAirpolution(string stationId)
+        public async Task<AirPollutionDTO> GetIncludedAirpolution(string userId)
         {
+            var stationId = await _userRepository.GetRelatedStationId(userId);
             var station = await _airMonitoringStationRepository.GetByIdAsync(stationId);
             var airpollution = await station.GetLatestAirPollutionAsync();
             return new AirPollutionDTO
@@ -80,8 +62,9 @@ namespace AirSnitch.Api.Infrastructure.Services
             };
         }
 
-        public async Task<DataProviderDTO> GetIncludedDataProvider(string stationId)
+        public async Task<DataProviderDTO> GetIncludedDataProvider(string userId)
         {
+            var stationId = await _userRepository.GetRelatedStationId(userId);
             var station = await _airMonitoringStationRepository.GetByIdAsync(stationId);
             return new DataProviderDTO
             {
@@ -91,15 +74,37 @@ namespace AirSnitch.Api.Infrastructure.Services
             };
         }
 
-
-        public async Task<Dictionary<string, object>> GetIncludes(string[] includes, string stationId)
+        public async Task<AirMonitoringStationDTO> GetIncludedAirMonitoringStation(string userId)
         {
+            var stationId = await _userRepository.GetRelatedStationId(userId);
+            var station = await _airMonitoringStationRepository.GetByIdAsync(stationId);
+
+            return new AirMonitoringStationDTO
+            {
+                IsActive = station.IsActive,
+                LocalName = station.LocalName,
+                Location = new GeoLocationDTO
+                {
+                    Latitude = station.Location.Latitude,
+                    Longitude = station.Location.Longitude
+                },
+                TimeZone = station.TimeZone,
+                Name = station.Name
+            };
+        }
+
+        public async Task<Dictionary<string, object>> GetIncludes(string[] includes, string userId)
+        {
+            var stationId = await _userRepository.GetRelatedStationId(userId);
             var station = await _airMonitoringStationRepository.GetByIdAsync(stationId);
             var result = new Dictionary<string, object>();
             foreach (var item in includes)
             {
                 switch (item)
                 {
+                    case ControllersRoutes.AirmonitoringStation:
+                        result.Add(ControllersRoutes.AirmonitoringStation, GetIncludedAirMonitoringStation(station));
+                        break;
                     case ControllersRoutes.AirPolution:
                         result.Add(ControllersRoutes.AirPolution, await GetIncludedAirpolution(station));
                         break;
@@ -150,6 +155,22 @@ namespace AirSnitch.Api.Infrastructure.Services
                 DataUpdateInterval = station.DataProvider.DataUpdateInterval,
                 Name = station.DataProvider.Name,
                 WebSiteUri = station.DataProvider.WebSiteUri
+            };
+        }
+
+        private AirMonitoringStationDTO GetIncludedAirMonitoringStation(AirMonitoringStation station)
+        {
+            return new AirMonitoringStationDTO
+            {
+                IsActive = station.IsActive,
+                LocalName = station.LocalName,
+                Location = new GeoLocationDTO
+                {
+                    Latitude = station.Location.Latitude,
+                    Longitude = station.Location.Longitude
+                },
+                TimeZone = station.TimeZone,
+                Name = station.Name
             };
         }
 

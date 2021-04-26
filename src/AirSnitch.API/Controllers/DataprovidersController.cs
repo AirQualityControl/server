@@ -17,7 +17,7 @@ namespace AirSnitch.Api.Controllers
     [Route(ControllersRoutes.Dataprovider)]
     public class DataprovidersController : BaseApiController
     {
-        IDataProviderService _dataProviderService;
+        readonly IDataProviderService _dataProviderService;
         public DataprovidersController(IDataProviderService dataProviderService,
             IResoursePathResolver resoursePathResolver) : base(resoursePathResolver)
         {

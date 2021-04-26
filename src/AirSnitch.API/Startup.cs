@@ -98,7 +98,7 @@ namespace AirSnitch.Api
 
             services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, AdminAuthorizationHandler>();
-            services.AddSingleton<IDummyUserService, DummyUserService>();
+            services.AddSingleton<IClientService, ClientService>();
             services.AddSingleton<IGetApiKeyQuery, InMemoryGetApiKeyQuery>();
 
             services.AddSingleton(x => ResourcePathResolver);
@@ -107,9 +107,11 @@ namespace AirSnitch.Api
             services.AddScoped<IAirMonitoringStationService, AirMonitoringStationService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IDataProviderService, DataProviderService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<IDataProviderRepository, DataProviderRepository>();
+            services.AddScoped<IApiUserRepository, UserRepository>();
         }
 
 
