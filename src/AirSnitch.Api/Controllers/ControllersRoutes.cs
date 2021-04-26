@@ -7,9 +7,9 @@ namespace AirSnitch.Api
 {
     public static class ControllersRoutes
     {
-        public const string AirmonitoringStation = "airmonitoringstations";
-        public const string AirPolution = "airpolution";
-        public const string Dataprovider = "dataproviders";
+        public const string AirmonitoringStation = "airmonitoringstation";
+        public const string AirPolution = "airpollution";
+        public const string Dataprovider = "dataprovider";
         public const string City = "city";
         public const string AirPollutionHistory = "airpollutionhistory";
         public const string User = "user";

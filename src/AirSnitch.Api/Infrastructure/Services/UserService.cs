@@ -98,7 +98,7 @@ namespace AirSnitch.Api.Infrastructure.Services
             var stationId = await _userRepository.GetRelatedStationId(userId);
             var station = await _airMonitoringStationRepository.GetByIdAsync(stationId);
             var result = new Dictionary<string, object>();
-            Parallel.ForEach(includes, async (item) =>
+            Parallel.ForEach(includes, (item) =>
             {
                 switch (item)
                 {
@@ -106,7 +106,7 @@ namespace AirSnitch.Api.Infrastructure.Services
                         result.Add(ControllersRoutes.AirmonitoringStation, GetIncludedAirMonitoringStation(station));
                         break;
                     case ControllersRoutes.AirPolution:
-                        result.Add(ControllersRoutes.AirPolution, await GetIncludedAirpolution(station));
+                        result.Add(ControllersRoutes.AirPolution, GetIncludedAirpolution(station).Result);
                         break;
                     case ControllersRoutes.City:
                         result.Add(ControllersRoutes.City, GetIncludedCity(station));
