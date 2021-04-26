@@ -47,7 +47,7 @@ namespace AirSnitch.Api.Infrastructure.PathResolver
             return _resourseResolutionCache[controllerPath];
         }
 
-        public bool IsPathValid(string controllerPath, int id, string queryPath)
+        public bool IsPathValid(string controllerPath, string id, string queryPath)
         {
             var currentResourse = new Resourse { Path = "/" + queryPath };
             if (!_resourseResolutionCache.ContainsKey(controllerPath))

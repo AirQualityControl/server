@@ -21,17 +21,17 @@ namespace AirSnitch.Api.Controllers
 
         protected IResoursePathResolver ResoursePathResolver { get; private set; }
 
-        protected abstract object GetIncludeObject(string include, int id);
+        protected abstract Task<object> GetIncludeObject(string include, string id);
 
         protected virtual string ControllerPath => _controllerPath ??= ControllerContext.ActionDescriptor.ControllerTypeInfo.CustomAttributes
                 .Single(item => item.AttributeType == typeof(RouteAttribute)).ConstructorArguments[0].Value as string;
 
-        protected virtual Dictionary<string, object> GetIncludes(string[] includes, int Id)
+        protected virtual async Task<Dictionary<string, object>> GetIncludes(string[] includes, string Id)
         {
             Dictionary<string, object> result = new();
             for (int i = 0; i < includes.Length; i++)
             {
-                result.Add(includes[i], GetIncludeObject(includes[i], Id));
+                result.Add(includes[i], await GetIncludeObject(includes[i], Id));
             }
             return result;
         }
@@ -41,10 +41,10 @@ namespace AirSnitch.Api.Controllers
             var cachedResourses = ResoursePathResolver.GetResourses(ControllerPath);
 
             var resourses = new Dictionary<string, Resourse>();
-            Parallel.ForEach(cachedResourses, (item) =>
+            foreach(var item in cachedResourses) 
             {
                 resourses.Add(item.Key, new Resourse { Path = item.Value.Path.Insert(0, basePath) });
-            });
+            }
 
             return new Response<T>
             {
@@ -54,7 +54,7 @@ namespace AirSnitch.Api.Controllers
             };
         }
 
-        protected virtual Response<T> CreateResponseIncludeObject<T>(int id, string includeKey, string basePath, T model, Dictionary<string, object> includes = null)
+        protected virtual Response<T> CreateResponseIncludeObject<T>(string id, string includeKey, string basePath, T model, Dictionary<string, object> includes = null)
         {
             var cachedResourses = ResoursePathResolver.GetResourses(ControllerPath);
             //basePath.LastIndexOf(ControllerPath+$"/{id}/")
@@ -130,7 +130,7 @@ namespace AirSnitch.Api.Controllers
             };
         }
 
-        protected virtual async Task<Response<T>> CreateResponseIncludeObjectAsync<T>(int id, string includeKey, string basePath,
+        protected virtual async Task<Response<T>> CreateResponseIncludeObjectAsync<T>(string id, string includeKey, string basePath,
             T model, Dictionary<string, object> includes = null)
         {
             return await Task.Run(() => CreateResponseIncludeObject(id, includeKey, basePath, model, includes));

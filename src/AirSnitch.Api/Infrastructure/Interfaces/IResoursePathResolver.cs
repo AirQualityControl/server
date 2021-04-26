@@ -9,7 +9,7 @@ namespace AirSnitch.Api.Infrastructure.Interfaces
     public interface IResoursePathResolver
     {
         Dictionary<string, Resourse> GetResourses(string controllerPath);
-        bool IsPathValid(string controllerPath, int id, string queryPath);
+        bool IsPathValid(string controllerPath, string id, string queryPath);
         string[] GetValidQueryIncludes(string controllerPath, string[] includes);
         string GetIncludeByPath(string controllerPath, string queryPath);
     }

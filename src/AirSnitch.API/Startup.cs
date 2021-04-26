@@ -6,6 +6,7 @@ using AirSnitch.Api.Infrastructure.Interfaces;
 using AirSnitch.Api.Infrastructure.PathResolver;
 using AirSnitch.Api.Infrastructure.PathResolver.Models;
 using AirSnitch.Api.Infrastructure.PathResolver.SearchAlgorithms;
+using AirSnitch.Api.Infrastructure.Services;
 using AirSnitch.Api.Models.Internal;
 using AirSnitch.Core.Domain.Models;
 using AirSnitch.Infrastructure.Extentions;
@@ -102,6 +103,7 @@ namespace AirSnitch.Api
 
             services.AddSingleton(x => ResourcePathResolver);
             services.AddScoped<ISearchAlgorithm, BFS>();
+            services.AddScoped<IAirMonitoringStationService, AirMonitoringStationService>();
         }
 
 

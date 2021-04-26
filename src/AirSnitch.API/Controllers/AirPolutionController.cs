@@ -68,7 +68,7 @@ namespace AirSnitch.Api.Controllers
                         })); 
         }
 
-        protected override object GetIncludeObject(string include, int id)
+        protected override Task<object> GetIncludeObject(string include, string id)
         {
             throw new ArgumentException($"Incorrect include: {include}");
         }

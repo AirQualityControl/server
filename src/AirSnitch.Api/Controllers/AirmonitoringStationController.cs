@@ -3,6 +3,7 @@ using AirSnitch.Api.Infrastructure.Authorization;
 using AirSnitch.Api.Infrastructure.Interfaces;
 using AirSnitch.Api.Infrastructure.PathResolver;
 using AirSnitch.Api.Infrastructure.PathResolver.Models;
+using AirSnitch.Api.Infrastructure.Services;
 using AirSnitch.Api.Models;
 using AirSnitch.Api.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -23,17 +24,21 @@ namespace AirSnitch.Api.Controllers
     [Route(ControllersRoutes.AirmonitoringStation)]
     public class AirMonitoringStationController : BaseApiController
     {
-        public AirMonitoringStationController(IResoursePathResolver resoursePathResolver) : base(resoursePathResolver)
-        { }
+        private IAirMonitoringStationService _airMonitoringStationService;
+        public AirMonitoringStationController(IResoursePathResolver resoursePathResolver,
+            IAirMonitoringStationService airMonitoringStationService) : base(resoursePathResolver)
+        {
+            _airMonitoringStationService = airMonitoringStationService;
+        }
         
 
-        protected override object GetIncludeObject(string include, int id)
+        protected override async Task<object> GetIncludeObject(string include, string id)
         {
             return include switch
             {
-                "airpolution" => new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 },
-                "city" => new CityDTO { FriendlyName = $"TestCity{id}", State = $"testState{id}", Code = "1234", CountryCode = "UA" },
-                "dataproviders" => new DataProviderDTO { Name = $"TestDataProvider{id}", WebSiteUri = new Uri("https://test.com") },
+                "airpolution" => await  _airMonitoringStationService.GetIncludedAirpolution(id),
+                "city" => await _airMonitoringStationService.GetIncludedCity(id),
+                "dataproviders" => await _airMonitoringStationService.GetIncludedDataProvider(id),
                 _ => throw new ArgumentException($"Incorrect include: {include}"),
             };
         }
@@ -41,69 +46,41 @@ namespace AirSnitch.Api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetPaginated(int limit, int offset)
         {
-
-            return Ok(await CreatePaginativeResponseObjectAsync(limit, offset, 20,
-                new Dictionary<string, object> { 
-                    ["1"] = new AirMonitoringStationDTO { 
-                        IsActive = true,
-                        LocalName = "firstSttion",
-                        Name = "General name"
-                    },
-                    ["2"] = new AirMonitoringStationDTO
-                    {
-                        IsActive = false,
-                        LocalName = "secondSttion",
-                        Name = "General name2"
-                    }
-                })
-            );
+            limit = limit > 0 ? limit : 10;
+            (var paginatedResult, var total) = await _airMonitoringStationService.GetPaginated(limit, offset);
+            return Ok(await CreatePaginativeResponseObjectAsync(limit, offset, total, paginatedResult));
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult> GetWithIncludes(int id, [FromQuery] string include)
+        public async Task<ActionResult> GetWithIncludes(string id, [FromQuery] string include)
         {
-            
+
+            var model = await _airMonitoringStationService.GetByIdAsync(id);
+            var basePath = ControllerContext.HttpContext.Request.Path.Value;
             if (!String.IsNullOrEmpty(include))
             {
                 var validIncludes = ResoursePathResolver
                     .GetValidQueryIncludes(ControllerPath, include.Trim().Split(','));
                 if (validIncludes.Length > 0)
                 {
-                    return Ok(await CreateResponseObjectAsync(
-                        ControllerContext.HttpContext.Request.Path.Value,
-                        new AirMonitoringStationDTO
-                        {
-                            IsActive = true,
-                            LocalName = "firstSttion",
-                            Name = "General name"
-                        },
-                        GetIncludes(validIncludes, id))
-                    );
+                    var includes = await GetIncludes(validIncludes, id);
+                    return Ok(await CreateResponseObjectAsync(basePath, model, includes));
                 }
             }
-
-            return Ok(await CreateResponseObjectAsync(
-                    ControllerContext.HttpContext.Request.Path.Value,
-                    new AirMonitoringStationDTO
-                    {
-                        IsActive = true,
-                        LocalName = "firstSttion",
-                        Name = "General name"
-                    }));
+            return Ok(await CreateResponseObjectAsync(basePath, model));
         }
 
 
         [HttpGet]
         [Route("{id}/{*path}")]
-        public async Task<ActionResult> GetPossibleInclude(int id, string path)
+        public async Task<ActionResult> GetPossibleInclude(string id, string path)
         {
             if (ResoursePathResolver.IsPathValid(ControllerPath, id, path))
             {
-                return Ok(
-                    await CreateResponseIncludeObjectAsync(id, path,
-                    ControllerContext.HttpContext.Request.Path.Value,
-                    GetIncludeObject(ResoursePathResolver.GetIncludeByPath(ControllerPath,path), id)));
+                var basePath = ControllerContext.HttpContext.Request.Path.Value;
+                var includeObject = await GetIncludeObject(ResoursePathResolver.GetIncludeByPath(ControllerPath, path), id);
+                return Ok(await CreateResponseIncludeObjectAsync(id, path, basePath, includeObject));
             }
             return BadRequest();
         }

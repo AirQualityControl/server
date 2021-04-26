@@ -59,7 +59,7 @@ namespace AirSnitch.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult> GetWithIncludes(int id, [FromQuery] string include)
+        public async Task<ActionResult> GetWithIncludes(string id, [FromQuery] string include)
         {
 
             if (!String.IsNullOrEmpty(include))
@@ -75,7 +75,7 @@ namespace AirSnitch.Api.Controllers
                             Name = "First name2 LastName2",
                             PhoneNumber = "3802222222225"
                         },
-                        GetIncludes(validIncludes, id))
+                        await GetIncludes(validIncludes, id))
                     );
                 }
             }
@@ -91,7 +91,7 @@ namespace AirSnitch.Api.Controllers
 
         [HttpGet]
         [Route("{id}/{*path}")]
-        public async Task<ActionResult> GetPossibleInclude(int id, string path)
+        public async Task<ActionResult> GetPossibleInclude(string id, string path)
         {
             if (ResoursePathResolver.IsPathValid(ControllerPath, id, path))
             {
@@ -103,11 +103,11 @@ namespace AirSnitch.Api.Controllers
             return BadRequest();
         }
 
-        protected override object GetIncludeObject(string include, int id)
+        protected override async Task<object> GetIncludeObject(string include, string id)
         {
             return include switch
             {
-                "airmonitoringstations" => new AirMonitoringStationDTO { IsActive = id % 2 == 0, LocalName = $"secondSttion{id}", Name = $"General name{id}" },
+                "airmonitoringstations" => new AirMonitoringStationDTO { IsActive = false, LocalName = $"secondSttion{id}", Name = $"General name{id}" },
                 "airpolution" => new AirPollutionDTO { Temperature = 20, AqiusValue = 80, Humidity = 20, Message = "All good", WindSpeed = 20 },
                 "city" => new CityDTO { FriendlyName = $"TestCity{id}", State = $"testState{id}", Code = "1234", CountryCode = "UA" },
                 "dataproviders" => new DataProviderDTO { Name = $"TestDataProvider{id}", WebSiteUri = new Uri("https://test.com") },
