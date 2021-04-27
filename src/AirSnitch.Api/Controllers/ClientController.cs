@@ -1,5 +1,6 @@
 ﻿
 using AirSnitch.Api.Infrastructure.Authorization;
+using AirSnitch.Api.Infrastructure.Services;
 using AirSnitch.Api.Models;
 using AirSnitch.Api.Models.Internal;
 using Microsoft.AspNetCore.Authorization;

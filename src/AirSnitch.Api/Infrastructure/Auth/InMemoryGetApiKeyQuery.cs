@@ -1,4 +1,5 @@
-﻿using AirSnitch.Api.Models.Internal;
+﻿using AirSnitch.Api.Infrastructure.Services;
+using AirSnitch.Api.Models.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
