@@ -25,4 +25,8 @@
     <Content Remove="Models\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AirSnitch.Infrastructure.Abstract\AirSnitch.Infrastructure.Abstract.csproj" />
+  </ItemGroup>
+
 </Project>
