@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AirSnitch.Api.Graph;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 
 namespace AirSnitch.Api.Resources.Graph
 {
-    internal class GraphPath<TValue> : IEnumerable<TValue> where TValue : IApiResourceMetaInfo
+    public class GraphPath<TValue> : IEnumerable<TValue> where TValue : IApiResourceMetaInfo
     {
         private readonly IReadOnlyCollection<RelatedVertex<TValue>> _path;
         

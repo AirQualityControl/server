@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using AirSnitch.Api.Resources.Relationship;
+using AirSnitch.Api.Resources;
 
-namespace AirSnitch.Api.Resources.Graph
+namespace AirSnitch.Api.Graph
 {
-    internal abstract class Vertex<TValue>  where TValue : IApiResourceMetaInfo
+    public abstract class Vertex<TValue>  where TValue : IApiResourceMetaInfo
     {
         private readonly TValue _value;
         private List<RelatedVertex<TValue>> _neighbours;
@@ -39,20 +39,6 @@ namespace AirSnitch.Api.Resources.Graph
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-    }
-
-    internal class RelatedVertex<TValue> : Vertex<TValue> where TValue : IApiResourceMetaInfo
-    {
-        private List<IApiResourceRelationship> _relations;
-        public RelatedVertex(TValue value) : base(value)
-        {
-            _relations = new List<IApiResourceRelationship>();
-        }
-        
-        public void AddRelation(IApiResourceRelationship relation)
-        {
-            _relations.Add(relation);
         }
     }
 }

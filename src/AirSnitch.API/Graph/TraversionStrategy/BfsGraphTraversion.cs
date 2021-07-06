@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using ApiResourcesGrapth;
-using ApiResourcesGrapth.Graph;
+using AirSnitch.Api.Resources;
+using AirSnitch.Api.Resources.Graph;
 
-namespace AirSnitch.Api.Resources.Graph.TraversionStrategy
+namespace AirSnitch.Api.Graph.TraversionStrategy
 {
     internal class BfsGraphTraversion<TValue> : IGraphTraversionStrategy<TValue> where TValue : IApiResourceMetaInfo
     {

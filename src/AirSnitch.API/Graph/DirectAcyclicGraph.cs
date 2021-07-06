@@ -1,10 +1,12 @@
 using System.Collections.Generic;
-using AirSnitch.Api.Resources.Graph.TraversionStrategy;
+using AirSnitch.Api.Graph.TraversionStrategy;
+using AirSnitch.Api.Resources;
+using AirSnitch.Api.Resources.Graph;
 using AirSnitch.Api.Resources.Relationship;
 
-namespace AirSnitch.Api.Resources.Graph
+namespace AirSnitch.Api.Graph
 {
-    internal class DirectAcyclicGraph<TValue> where TValue : IApiResourceMetaInfo
+    internal class DirectAcyclicGraph<TValue> : IDirectAcyclicGraph<TValue>  where TValue : IApiResourceMetaInfo 
     {
         private readonly List<RelatedVertex<TValue>> _adjacencylist;
         private readonly IGraphTraversionStrategy<TValue> _graphTraversingStrategy;

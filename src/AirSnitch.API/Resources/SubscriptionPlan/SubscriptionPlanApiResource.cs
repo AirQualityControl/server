@@ -1,4 +1,4 @@
-namespace AirSnitch.Api.Resources
+namespace AirSnitch.Api.Resources.SubscriptionPlan
 {
     public class SubscriptionPlan
     {

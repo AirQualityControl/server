@@ -2,7 +2,7 @@ using System;
 
 namespace AirSnitch.Api.Resources
 {
-    internal class ApiResourceName : IEquatable<ApiResourceName>
+    public class ApiResourceName : IEquatable<ApiResourceName>
     {
         private readonly string _name;
 

@@ -1,8 +1,6 @@
-using System.Threading.Tasks;
 using AirSnitch.Api.Graph;
 using AirSnitch.Api.Resources;
 using AirSnitch.Api.Resources.Graph;
-using AirSnitch.Api.Resources.Relationship;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirSnitch.Api.Controllers
@@ -12,22 +10,29 @@ namespace AirSnitch.Api.Controllers
     public class ApiUserController : ControllerBase
     {
         private readonly IDirectAcyclicGraph<IApiResourceMetaInfo> _apiResourcesGraph;
-        public ApiUserController(IDirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph)
+        private readonly IGraphVisitor _graphVisitor;
+
+        //TODO: in base class
+        private static RelatedVertex<IApiResourceMetaInfo> _currentResource = new RelatedVertex<IApiResourceMetaInfo>(new ApiUserResource());
+        
+        public ApiUserController(IDirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph,
+            IGraphVisitor graphVisitor)
         {
             _apiResourcesGraph = apiResourcesGraph;
+            _graphVisitor = graphVisitor;
         }
         
         [HttpGet]
         public IActionResult GetAll()
         {
-            var query = new GraphVisitor()
+            var query = _graphVisitor
                 .Visit(_apiResourcesGraph)
-                .From(apiUserResourceVertex)
-                .Includes(includedResources)
-                .BuildQuery();
+                .From(_currentResource)
+                .Includes(null)
+            .BuildQuery();
+
+            //Page<Data> queryResult = await _apiUserRepository.ExecuteQueryAsync(query);
             
-            
-            //Page<Data> apiUsers = _apiUserRepository.ExecuteQuery(query);
             return new SuccessRestApiResult();
         }
         

@@ -1,6 +1,6 @@
 namespace AirSnitch.Api.Resources
 {
-    internal class ApiResourceColumn
+    public class ApiResourceColumn
     {
         private readonly string _name;
         private readonly string _path;
