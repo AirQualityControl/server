@@ -1,11 +1,11 @@
 using AirSnitch.Api.Extensions;
+using AirSnitch.Di;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using AirSnitch.Di;
 
 namespace AirSnitch.Api
 {
