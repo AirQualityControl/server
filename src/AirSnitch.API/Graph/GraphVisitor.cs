@@ -1,39 +1,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using AirSnitch.Api.Resources;
-using AirSnitch.Api.Resources.Graph;
 using AirSnitch.Api.Resources.Relationship;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 
 namespace AirSnitch.Api.Graph
 {
-    public class GraphVisitor<TValue> : IGraphVisitor
+    public class GraphVisitor
     {
         private IDirectAcyclicGraph<IApiResourceMetaInfo> _visitedGraph;
         private RelatedVertex<IApiResourceMetaInfo> _rootVertex;
         private readonly Queue<RelatedVertex<IApiResourceMetaInfo>> _queue;
         private readonly List<IApiResourceMetaInfo> _includedResources;
-        private readonly IQueryBuilder _queryBuilder;
+        private readonly RelatedResourceQueryBuilder _queryBuilder;
         
-        public GraphVisitor(IQueryBuilder queryBuilder)
+        public GraphVisitor()
         {
-            _queryBuilder = queryBuilder;
+            _queryBuilder = new RelatedResourceQueryBuilder();
             _queue = new Queue<RelatedVertex<IApiResourceMetaInfo>>();
             _includedResources = new List<IApiResourceMetaInfo>();
         }
         
-        public IGraphVisitor Visit(IDirectAcyclicGraph<IApiResourceMetaInfo> graph)
+        public GraphVisitor Visit(IDirectAcyclicGraph<IApiResourceMetaInfo> graph)
         {
             _visitedGraph = graph;
             return this;
         }
-        public IGraphVisitor From(RelatedVertex<IApiResourceMetaInfo> rootVertex)
+        public GraphVisitor From(RelatedVertex<IApiResourceMetaInfo> rootVertex)
         {
             _rootVertex = rootVertex;
             return this;
         }
 
-        public IGraphVisitor Includes(IReadOnlyCollection<IApiResourceMetaInfo> includedResources)
+        public GraphVisitor Includes(IReadOnlyCollection<IApiResourceMetaInfo> includedResources)
         {
             foreach (var resource in includedResources)
             {
@@ -42,14 +41,14 @@ namespace AirSnitch.Api.Graph
             return this;
         }
 
-        public Query BuildQuery()
+        public FetchQuery BuildQuery()
         {
             if (!_includedResources.Any())
             {
                 return _queryBuilder.GenerateQuery(_rootVertex.Value);
             }
             VisitInternal(_rootVertex);
-            return _queryBuilder.Query;
+            return _queryBuilder.FetchQuery;
         }
         
         private void VisitInternal(RelatedVertex<IApiResourceMetaInfo> startingVertex)

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using AirSnitch.Api.Graph.TraversionStrategy;
 using AirSnitch.Api.Resources;
-using AirSnitch.Api.Resources.Graph;
 using AirSnitch.Api.Resources.Relationship;
 
 namespace AirSnitch.Api.Graph

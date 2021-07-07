@@ -4,20 +4,20 @@ namespace AirSnitch.Api.Resources
 {
     public class ApiResourceName : IEquatable<ApiResourceName>
     {
-        private readonly string _name;
+        private readonly string _value;
 
-        public ApiResourceName(string name)
+        public ApiResourceName(string value)
         {
-            _name = name;
+            _value = value;
         }
 
-        public string Name => _name;
+        public string Value => _value;
 
         public bool Equals(ApiResourceName other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name;
+            return Value == other.Value;
         }
 
         public override bool Equals(object obj)
@@ -30,7 +30,7 @@ namespace AirSnitch.Api.Resources
 
         public override int GetHashCode()
         {
-            return (Name != null ? Name.GetHashCode() : 0);
+            return (Value != null ? Value.GetHashCode() : 0);
         }
     }
 }

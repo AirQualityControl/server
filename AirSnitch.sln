@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSnitch.Infrastructure", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSnitch.Infrastructure.Abstract", "src\AirSnitch.Infrastructure.Abstract\AirSnitch.Infrastructure.Abstract.csproj", "{7BFD45DE-85BD-49EC-A338-803890DE336E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSnitch.Di", "AirSnitch.Di\AirSnitch.Di.csproj", "{DE0CC79C-53C6-4C22-BC02-EA59D1834C21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{7BFD45DE-85BD-49EC-A338-803890DE336E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BFD45DE-85BD-49EC-A338-803890DE336E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BFD45DE-85BD-49EC-A338-803890DE336E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE0CC79C-53C6-4C22-BC02-EA59D1834C21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE0CC79C-53C6-4C22-BC02-EA59D1834C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE0CC79C-53C6-4C22-BC02-EA59D1834C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE0CC79C-53C6-4C22-BC02-EA59D1834C21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{4BE78EBD-87C7-4B51-B83F-03125779D3E6} = {0D8C82DC-B354-47C0-8F44-925CDF06A994}
 		{E3BCE3A2-956F-455A-ACA6-3C9858542D43} = {0D8C82DC-B354-47C0-8F44-925CDF06A994}
 		{7BFD45DE-85BD-49EC-A338-803890DE336E} = {0D8C82DC-B354-47C0-8F44-925CDF06A994}
+		{DE0CC79C-53C6-4C22-BC02-EA59D1834C21} = {0D8C82DC-B354-47C0-8F44-925CDF06A994}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE70D193-54E1-44D7-8BC5-4F2709E5549B}

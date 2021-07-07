@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using AirSnitch.Api.Graph;
+using AirSnitch.Api.Resources;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 
-namespace AirSnitch.Api.Resources.Graph
+namespace AirSnitch.Api.Graph
 {
     public class GraphPath<TValue> : IEnumerable<TValue> where TValue : IApiResourceMetaInfo
     {
@@ -15,7 +15,7 @@ namespace AirSnitch.Api.Resources.Graph
             _path = path;
         }
 
-        public Query EmmitQuery()
+        public FetchQuery EmmitQuery()
         {
             return null;
         }

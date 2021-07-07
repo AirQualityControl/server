@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using AirSnitch.Api.Resources;
-using AirSnitch.Api.Resources.Graph;
 
 namespace AirSnitch.Api.Graph.TraversionStrategy
 {

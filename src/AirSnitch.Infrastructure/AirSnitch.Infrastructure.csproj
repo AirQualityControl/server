@@ -5,7 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AirSnitch.API\AirSnitch.Api.csproj" />
+      <PackageReference Include="MongoDB.Driver" Version="2.12.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AirSnitch.Infrastructure.Abstract\AirSnitch.Infrastructure.Abstract.csproj" />
     </ItemGroup>
 
 </Project>
