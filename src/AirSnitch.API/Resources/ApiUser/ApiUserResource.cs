@@ -14,14 +14,11 @@ namespace AirSnitch.Api.Resources.ApiUser
             new ApiResourceColumn("profilePicUrl", "profilePicUrl")
         };
         public ApiResourceName Name => ApiUserResourceName;
-
         public IReadOnlyCollection<ApiResourceColumn> Columns => ResourceColumns;
-
         public bool Equals(IApiResourceMetaInfo other)
         {
             return other != null && Name.Equals(other.Name);
         }
-
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -29,7 +26,6 @@ namespace AirSnitch.Api.Resources.ApiUser
             if (obj.GetType() != this.GetType()) return false;
             return Equals((ApiUserResource) obj);
         }
-
         public override int GetHashCode()
         {
             return (Name != null ? Name.GetHashCode() : 0);

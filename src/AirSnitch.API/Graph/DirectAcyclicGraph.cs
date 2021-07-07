@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using AirSnitch.Api.Graph.TraversionStrategy;
 using AirSnitch.Api.Resources;
 using AirSnitch.Api.Resources.Relationship;
 
 namespace AirSnitch.Api.Graph
 {
-    internal class DirectAcyclicGraph<TValue> : IDirectAcyclicGraph<TValue>  where TValue : IApiResourceMetaInfo 
+    public class DirectAcyclicGraph<TValue> : IDirectAcyclicGraph<TValue>  where TValue : IApiResourceMetaInfo 
     {
         private readonly List<RelatedVertex<TValue>> _adjacencylist;
         private readonly IGraphTraversionStrategy<TValue> _graphTraversingStrategy;
@@ -39,6 +40,12 @@ namespace AirSnitch.Api.Graph
         public bool ContainsVertex(RelatedVertex<IApiResourceMetaInfo> startingVertex)
         {
             return true;
+        }
+
+        public RelatedVertex<TValue> GetVertex(RelatedVertex<TValue> vertex)
+        {
+            return _adjacencylist
+                .Single(v => v.Value.Equals(vertex.Value));
         }
     }
 }

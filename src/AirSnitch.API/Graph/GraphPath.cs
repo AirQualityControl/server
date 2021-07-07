@@ -15,7 +15,7 @@ namespace AirSnitch.Api.Graph
             _path = path;
         }
 
-        public FetchQuery EmmitQuery()
+        public QueryScheme EmmitQuery()
         {
             return null;
         }

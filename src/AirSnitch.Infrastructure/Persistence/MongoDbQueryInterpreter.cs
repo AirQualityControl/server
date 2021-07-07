@@ -1,13 +1,17 @@
 using AirSnitch.Infrastructure.Abstract.Persistence;
-using MongoDB.Bson;
 
 namespace AirSnitch.Infrastructure.Persistence
 {
-    public class MongoDbQueryInterpreter : IQueryInterpreter<BsonDocument>
+    public class MongoDbQueryInterpreter : IQueryInterpreter<MongoDbQuery>
     {
-        public BsonDocument InterpretQuery(FetchQuery query)
+        public MongoDbQuery InterpretQuery(QueryScheme queryScheme)
         {
-            return null;
+            var mongoQuery = new MongoDbQuery(collectionName: queryScheme.EntityName);
+            foreach (var column in queryScheme.Columns)
+            {
+                mongoQuery.AddColumn(column);
+            }
+            return mongoQuery;
         }
     }
 }

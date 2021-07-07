@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using AirSnitch.Api.Graph;
 using AirSnitch.Api.Resources;
 using AirSnitch.Api.Resources.ApiUser;
+using AirSnitch.Api.Resources.Client;
+using AirSnitch.Api.Resources.SubscriptionPlan;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirSnitch.Api.Controllers
@@ -9,12 +12,12 @@ namespace AirSnitch.Api.Controllers
     [Route("apiUser")]
     public class ApiUserController : ControllerBase
     {
-        private readonly IDirectAcyclicGraph<IApiResourceMetaInfo> _apiResourcesGraph;
-
+        private readonly DirectAcyclicGraph<IApiResourceMetaInfo> _apiResourcesGraph;
         //TODO: in base class
-        private static RelatedVertex<IApiResourceMetaInfo> _currentResource = new RelatedVertex<IApiResourceMetaInfo>(new ApiUserResource());
+        private static RelatedVertex<IApiResourceMetaInfo> _currentResource = 
+            new RelatedVertex<IApiResourceMetaInfo>(new ApiUserResource());
         
-        public ApiUserController(IDirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph)
+        public ApiUserController(DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph)
         {
             _apiResourcesGraph = apiResourcesGraph;
         }
@@ -22,11 +25,19 @@ namespace AirSnitch.Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var query = new GraphVisitor()
+            var requestedResources = new List<IApiResourceMetaInfo>()
+                {
+                    new ClientApiResource(), 
+                    new SubscriptionPlanApiResource()
+                };
+            
+            var queryScheme = new GraphVisitor()
                 .Visit(_apiResourcesGraph)
-                .From(rootVertex: _currentResource)
-                .Includes(null)
-            .BuildQuery();
+                .From(startingVertex: _currentResource)
+                .Includes(requestedResources)
+            .BuildQueryScheme();
+            
+            //Query query = _querySchemeInterpreter.BuildQuery(queryScheme);
             
             //Page<Data> queryResult = await _apiUserRepository.ExecuteQueryAsync(query);
             

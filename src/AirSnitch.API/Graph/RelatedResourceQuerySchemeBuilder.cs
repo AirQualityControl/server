@@ -7,22 +7,22 @@ namespace AirSnitch.Api.Graph
 {
     public class RelatedResourceQueryBuilder
     {
-        private readonly FetchQuery _fetchQuery;
+        private readonly QueryScheme _queryScheme;
         public RelatedResourceQueryBuilder()
         {
-            _fetchQuery = new FetchQuery();
+            _queryScheme = new QueryScheme();
         }
         public void AddRelation(IApiResourceMetaInfo rootResource, IApiResourceMetaInfo relatedResource,
             IApiResourceRelationship relationType)
         {
-            if(relationType.GetType() == typeof(IncludeRelationship))
+            if(relationType.GetType() != typeof(IncludeRelationship))
             {
                 throw new Exception("unable to implement this type!");
             }
 
-            if(_fetchQuery.EntityName == String.Empty)
+            if(_queryScheme.EntityName == null)
             {
-                _fetchQuery.EntityName = rootResource.Name.Value;
+                _queryScheme.EntityName = rootResource.Name.Value;
 
                 AddColumns(rootResource);
                 AddRelatedColumns(relatedResource);
@@ -37,7 +37,7 @@ namespace AirSnitch.Api.Graph
         {
             foreach (var column in rootResource.Columns)
             {
-                _fetchQuery.AddColumn(new QueryColumn(
+                _queryScheme.AddColumn(new QueryColumn(
                     name: column.Name, 
                     path: column.Path)
                 );
@@ -47,19 +47,19 @@ namespace AirSnitch.Api.Graph
         {
             foreach (var column in relatedResource.Columns)
             {
-                _fetchQuery.AddColumn(
+                _queryScheme.AddColumn(
                     new QueryColumn(
-                        name:$"{relatedResource.Name}.{column}", 
-                        path:$"{relatedResource.Name}.{column}")
+                        name:$"{relatedResource.Name.Value}.{column.Name}", 
+                        path:$"{relatedResource.Name.Value}.{column.Name}")
                 );
             }
         }
-        public FetchQuery GenerateQuery(IApiResourceMetaInfo scalarResource)
+        public QueryScheme GenerateQuery(IApiResourceMetaInfo scalarResource)
         {
-            _fetchQuery.EntityName = scalarResource.Name.Value;
+            _queryScheme.EntityName = scalarResource.Name.Value;
             AddColumns(scalarResource);
-            return _fetchQuery;
+            return _queryScheme;
         }
-        public FetchQuery FetchQuery => _fetchQuery;
+        public QueryScheme QueryScheme => _queryScheme;
     }
 }

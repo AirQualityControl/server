@@ -11,5 +11,7 @@ namespace AirSnitch.Api.Graph
 
         void AddDirectedEdge(RelatedVertex<TValue> vertex1, RelatedVertex<TValue> vertex2,
             IApiResourceRelationship type);
+
+        RelatedVertex<TValue> GetVertex(RelatedVertex<TValue> vertex);
     }
 }

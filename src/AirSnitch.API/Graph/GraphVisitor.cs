@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AirSnitch.Api.Resources;
@@ -26,9 +27,13 @@ namespace AirSnitch.Api.Graph
             _visitedGraph = graph;
             return this;
         }
-        public GraphVisitor From(RelatedVertex<IApiResourceMetaInfo> rootVertex)
+        public GraphVisitor From(RelatedVertex<IApiResourceMetaInfo> startingVertex)
         {
-            _rootVertex = rootVertex;
+            if(!_visitedGraph.ContainsVertex(startingVertex))
+            {
+                throw new Exception("ex");
+            }
+            _rootVertex = _visitedGraph.GetVertex(startingVertex);
             return this;
         }
 
@@ -41,14 +46,15 @@ namespace AirSnitch.Api.Graph
             return this;
         }
 
-        public FetchQuery BuildQuery()
+        public QueryScheme BuildQueryScheme()
         {
             if (!_includedResources.Any())
             {
                 return _queryBuilder.GenerateQuery(_rootVertex.Value);
             }
+            
             VisitInternal(_rootVertex);
-            return _queryBuilder.FetchQuery;
+            return _queryBuilder.QueryScheme;
         }
         
         private void VisitInternal(RelatedVertex<IApiResourceMetaInfo> startingVertex)
