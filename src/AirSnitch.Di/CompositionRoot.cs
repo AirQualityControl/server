@@ -1,4 +1,12 @@
-$HEADER$namespace $NAMESPACE$
+using Microsoft.Extensions.DependencyInjection;
+
+namespace AirSnitch.Di
 {
-  public class $CLASS$ {$END$}
+    public static class CompositionRoot
+    {
+        public static void ResolveApplicationDependencies(this IServiceCollection services)
+        {
+
+        }
+    }
 }

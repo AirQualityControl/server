@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AirSnitch.Di\AirSnitch.Di.csproj" />
     <ProjectReference Include="..\AirSnitch.Infrastructure.Abstract\AirSnitch.Infrastructure.Abstract.csproj" />
   </ItemGroup>
 
