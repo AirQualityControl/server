@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
 {
     /// <summary>
-    ///     Interface declare a set of operations specific fot User entity
+    ///     Interface declare a set of operations that could be applicable for any storage model
     /// </summary>
     public interface IGenericRepository<TEntity>
     {
