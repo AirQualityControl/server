@@ -1,9 +1,9 @@
 using AirSnitch.Api.Resources;
 
-namespace AirSnitch.Api.Graph
+namespace AirSnitch.Api.Graph.TraversionStrategy
 {
     internal interface IGraphTraversionStrategy<TValue> where TValue : IApiResourceMetaInfo
     {
-        GraphPath<TValue> TraverseFrom(RelatedVertex<TValue> vertex);
+        void TraverseFrom(RelatedVertex<TValue> vertex);
     }
 }

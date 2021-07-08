@@ -6,7 +6,7 @@ using AirSnitch.Api.Resources.Relationship;
 
 namespace AirSnitch.Api.Graph
 {
-    public class DirectAcyclicGraph<TValue> : IDirectAcyclicGraph<TValue>  where TValue : IApiResourceMetaInfo 
+    public class DirectAcyclicGraph<TValue> where TValue : IApiResourceMetaInfo 
     {
         private readonly List<RelatedVertex<TValue>> _adjacencylist;
         private readonly IGraphTraversionStrategy<TValue> _graphTraversingStrategy;
@@ -23,12 +23,6 @@ namespace AirSnitch.Api.Graph
             
             AddToAdjacencyList(vertex1);
         }
-
-        public GraphPath<TValue> GetAllReachableVertexesFrom(RelatedVertex<TValue> rootVertex)
-        {
-            return _graphTraversingStrategy.TraverseFrom(rootVertex);
-        }
-        
         private void AddToAdjacencyList(RelatedVertex<TValue> vertex1)
         {
             if (!_adjacencylist.Contains(vertex1))

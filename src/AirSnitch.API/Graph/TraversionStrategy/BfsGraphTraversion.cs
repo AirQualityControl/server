@@ -8,12 +8,10 @@ namespace AirSnitch.Api.Graph.TraversionStrategy
         private Queue<RelatedVertex<TValue>> _queue = new Queue<RelatedVertex<TValue>>();
         private List<RelatedVertex<TValue>> _visitedNode = new List<RelatedVertex<TValue>>();
         
-        public GraphPath<TValue> TraverseFrom(RelatedVertex<TValue> vertex)
+        public void TraverseFrom(RelatedVertex<TValue> vertex)
         {
             _queue.Enqueue(vertex);
             TraverseInternal(vertex);
-
-            return GraphPath<TValue>.CreateFrom(_visitedNode);
         }
 
         private void TraverseInternal(RelatedVertex<TValue> vertex)

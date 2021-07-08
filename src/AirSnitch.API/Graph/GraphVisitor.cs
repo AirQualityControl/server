@@ -9,7 +9,7 @@ namespace AirSnitch.Api.Graph
 {
     public class GraphVisitor
     {
-        private IDirectAcyclicGraph<IApiResourceMetaInfo> _visitedGraph;
+        private DirectAcyclicGraph<IApiResourceMetaInfo> _visitedGraph;
         private RelatedVertex<IApiResourceMetaInfo> _rootVertex;
         private readonly Queue<RelatedVertex<IApiResourceMetaInfo>> _queue;
         private readonly List<IApiResourceMetaInfo> _includedResources;
@@ -22,7 +22,7 @@ namespace AirSnitch.Api.Graph
             _includedResources = new List<IApiResourceMetaInfo>();
         }
         
-        public GraphVisitor Visit(IDirectAcyclicGraph<IApiResourceMetaInfo> graph)
+        public GraphVisitor Visit(DirectAcyclicGraph<IApiResourceMetaInfo> graph)
         {
             _visitedGraph = graph;
             return this;
