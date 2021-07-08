@@ -1,3 +1,7 @@
+using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
+using AirSnitch.Infrastructure.Persistence;
+using AirSnitch.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AirSnitch.Di
@@ -6,7 +10,7 @@ namespace AirSnitch.Di
     {
         public static void ResolveApplicationDependencies(this IServiceCollection services)
         {
-
+            services.AddTransient<IApiUserRepository, ApiUserRepository>();
         }
     }
 }

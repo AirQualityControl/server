@@ -8,10 +8,12 @@ namespace AirSnitch.Api.Graph
     public class RelatedResourceQueryBuilder
     {
         private readonly QueryScheme _queryScheme;
+
         public RelatedResourceQueryBuilder()
         {
             _queryScheme = new QueryScheme();
         }
+
         public void AddRelation(IApiResourceMetaInfo rootResource, IApiResourceMetaInfo relatedResource,
             IApiResourceRelationship relationType)
         {
@@ -43,6 +45,7 @@ namespace AirSnitch.Api.Graph
                 );
             }
         }
+
         private void AddRelatedColumns(IApiResourceMetaInfo relatedResource)
         {
             foreach (var column in relatedResource.Columns)
@@ -54,12 +57,14 @@ namespace AirSnitch.Api.Graph
                 );
             }
         }
+
         public QueryScheme GenerateQuery(IApiResourceMetaInfo scalarResource)
         {
             _queryScheme.EntityName = scalarResource.Name.Value;
             AddColumns(scalarResource);
             return _queryScheme;
         }
+        
         public QueryScheme QueryScheme => _queryScheme;
     }
 }

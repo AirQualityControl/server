@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirSnitch.Api.Graph;
 using AirSnitch.Api.Resources;
 using AirSnitch.Api.Resources.ApiUser;
 using AirSnitch.Api.Resources.Client;
 using AirSnitch.Api.Resources.SubscriptionPlan;
+using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirSnitch.Api.Controllers
@@ -13,23 +16,28 @@ namespace AirSnitch.Api.Controllers
     public class ApiUserController : ControllerBase
     {
         private readonly DirectAcyclicGraph<IApiResourceMetaInfo> _apiResourcesGraph;
+
+        private readonly IApiUserRepository _apiUserRepository;
+
         //TODO: in base class
         private static RelatedVertex<IApiResourceMetaInfo> _currentResource = 
             new RelatedVertex<IApiResourceMetaInfo>(new ApiUserResource());
         
-        public ApiUserController(DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph)
+        public ApiUserController(DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph, 
+            IApiUserRepository apiUserRepository)
         {
             _apiResourcesGraph = apiResourcesGraph;
+            _apiUserRepository = apiUserRepository;
         }
         
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var requestedResources = new List<IApiResourceMetaInfo>()
-                {
-                    new ClientApiResource(), 
-                    new SubscriptionPlanApiResource()
-                };
+            {
+                new ClientApiResource(), 
+                new SubscriptionPlanApiResource()
+            };
             
             var queryScheme = new GraphVisitor()
                 .Visit(_apiResourcesGraph)
@@ -37,11 +45,11 @@ namespace AirSnitch.Api.Controllers
                 .Includes(requestedResources)
             .BuildQueryScheme();
             
-            //Query query = _querySchemeInterpreter.BuildQuery(queryScheme);
+            queryScheme.AddPageOptions(new PageOptions());
             
-            //Page<Data> queryResult = await _apiUserRepository.ExecuteQueryAsync(query);
+            QueryResult result =  await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
-            return new SuccessRestApiResult();
+            return new SuccessRestApiResult(result);
         }
         
         [HttpGet]
@@ -50,7 +58,7 @@ namespace AirSnitch.Api.Controllers
         {
             //ApiUser user = _apiUserRepository.GetById(clientUserId);
 
-            return new SuccessRestApiResult();
+            return new SuccessRestApiResult(null);
         }
     }
 }
