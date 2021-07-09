@@ -45,7 +45,7 @@ namespace AirSnitch.Api.Controllers
                 .Includes(requestedResources)
             .BuildQueryScheme();
             
-            queryScheme.AddPageOptions(new PageOptions());
+            queryScheme.AddPageOptions(new PageOptions(pageNumber:1));
             
             QueryResult result =  await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             

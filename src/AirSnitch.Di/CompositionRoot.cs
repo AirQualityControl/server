@@ -1,4 +1,3 @@
-using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence;
 using AirSnitch.Infrastructure.Persistence.Repositories;
@@ -11,6 +10,8 @@ namespace AirSnitch.Di
         public static void ResolveApplicationDependencies(this IServiceCollection services)
         {
             services.AddTransient<IApiUserRepository, ApiUserRepository>();
+            services.AddSingleton(MongoDbClient.Create());
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         }
     }
 }

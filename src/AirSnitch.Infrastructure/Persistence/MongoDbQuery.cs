@@ -9,9 +9,9 @@ namespace AirSnitch.Infrastructure.Persistence
     {
         private readonly BsonDocument _projection;
 
-        private BsonDocument Projection => _projection;
+        public BsonDocument Projection => _projection;
 
-        private BsonDocument Filter => new BsonDocument();
+        public BsonDocument Filter => new BsonDocument();
 
         private int _itemsToSkip;
         private int _itemsLimit;
@@ -59,6 +59,5 @@ namespace AirSnitch.Infrastructure.Persistence
             query.AddPageOptions(queryScheme.PageOptions);
             return query;
         }
-
     }
 }

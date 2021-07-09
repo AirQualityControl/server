@@ -10,6 +10,9 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
     /// </summary>
     public interface IGenericRepository<TEntity>
     {
+
+        void SetCollectionName(string collectionName);
+        
         /// <summary>
         ///     Try to find an entity in DB
         /// </summary>
@@ -49,5 +52,12 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// <returns></returns>
         Task<IReadOnlyCollection<TProjection>> GetByAsync<TProjection>(Expression<Func<TEntity, bool>> predicate,
             Expression<Func<TEntity, TProjection>> projection);
+        
+        /// <summary>
+        ///     Method that execute query from provided scheme and returns a result
+        /// </summary>
+        /// <param name="queryScheme">QueryScheme incoming scheme that will be converted to query and executed in db</param>
+        /// <returns>An instance of QueryResult class</returns>
+        Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme);
     }
 }
