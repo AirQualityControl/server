@@ -10,10 +10,9 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
     {
         private readonly IGenericRepository<ApiUserStorageModel> _genericRepository;
 
-        public ApiUserRepository(IGenericRepository<ApiUserStorageModel> genericRepository)
+        public ApiUserRepository(MongoDbClient client)
         {
-            _genericRepository = genericRepository;
-            _genericRepository.SetCollectionName("apiUser");
+            _genericRepository = new MongoDbGenericRepository<ApiUserStorageModel>(client, "apiUser");
         }
         
         public async Task<ApiUser> FindById(string id)
@@ -22,9 +21,11 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             return null;
         }
 
-        public Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme)
+        public async Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme)
         {
-            var result = _genericRepository.ExecuteQueryFromSchemeAsync(queryScheme);
+            var query = MongoDbQuery.CreateFromScheme(queryScheme);
+
+            var result = await _genericRepository.ExecuteQueryAsync(query);
             return result;
         }
     }

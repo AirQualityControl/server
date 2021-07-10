@@ -1,22 +1,19 @@
+using System.Collections.Generic;
+
 namespace AirSnitch.Infrastructure.Abstract.Persistence
 {
     public class QueryResult
     {
-        private readonly object _result;
+        private readonly IReadOnlyCollection<IQueryResultEntry> _result;
 
-        public QueryResult(object result, PageOptions pageOptions)
+        public QueryResult(IReadOnlyCollection<IQueryResultEntry> result, PageOptions pageOptions)
         {
             _result = result;
             PageOptions = pageOptions;
         }
 
-        public bool IsSuccess { get; set; }
-
+        public bool IsSuccess => true;
+        public IReadOnlyCollection<IQueryResultEntry> Value => _result;
         public PageOptions PageOptions { get; }
-        
-        public T GetResultAs<T>()
-        {
-            return (T) _result;
-        }
     }
 }

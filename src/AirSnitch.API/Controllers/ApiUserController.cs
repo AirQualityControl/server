@@ -47,9 +47,14 @@ namespace AirSnitch.Api.Controllers
             
             queryScheme.AddPageOptions(new PageOptions(pageNumber:1));
             
-            QueryResult result =  await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
+            QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
-            return new SuccessRestApiResult(result);
+            if (result.IsSuccess)
+            {
+                return new SuccessRestApiResult(
+                    new RestResponseBody(result.Value));
+            }
+            return new NotFoundResult();
         }
         
         [HttpGet]

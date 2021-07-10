@@ -12,24 +12,16 @@ using MongoDB.Driver;
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
     /// <inheritdoc/>
-    public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
+    internal sealed class MongoDbGenericRepository<TEntity> : IGenericRepository<TEntity>
     {
-        private readonly MongoDbClient _client;
         private readonly IMongoCollection<TEntity> _collection;
-        private string _collectionName;
-        
-        public GenericRepository(MongoDbClient client)
+
+        public MongoDbGenericRepository(MongoDbClient client, string collectionName = default)
         {
-            _client = client;
             _collection = client.Db.GetCollection<TEntity>(
-                _collectionName ?? typeof(TEntity).Name.ToLowerCamelCase());
+                collectionName ?? typeof(TEntity).Name.ToLowerCamelCase());
         }
-
-        public void SetCollectionName(string collectionName)
-        {
-            _collectionName = collectionName;
-        }
-
+        
         /// <inheritdoc/>
         public Task<TEntity> FindByIdAsync(string id)
         {
@@ -61,21 +53,19 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme)
+        public async Task<QueryResult> ExecuteQueryAsync(IQuery query)
         {
-            var query = MongoDbQuery.CreateFromScheme(queryScheme);
-
-            var bsonDocuments = await _collection
-                .Find(query.Filter)
-                .Project(query.Projection)
-                .ToListAsync();
+            var mongoQuery = (MongoDbQuery) query;
             
-            var jsonData = bsonDocuments.Select(r => r.ToJson()).ToList();
+            var bsonDocuments = await _collection
+                .Find(mongoQuery.Filter)
+                .Project(mongoQuery.Projection)
+                .ToListAsync();
 
-            return new QueryResult(jsonData, queryScheme.PageOptions)
-            {
-                IsSuccess = true,
-            };
+            return new QueryResult(
+                MongoDbQueryResultEntry.BuildFrom(bsonDocuments), 
+                mongoQuery.PageOptions
+            );
         }
     }
 }

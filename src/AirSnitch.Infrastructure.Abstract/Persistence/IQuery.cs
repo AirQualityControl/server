@@ -2,19 +2,25 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
 {
     public interface IQuery
     {
-        void AddColumn(QueryColumn queryColumn);
+        PageOptions PageOptions { get; set; }
 
-        void AddPageOptions(PageOptions pageOptions);
+        void AddColumn(QueryColumn queryColumn);
     }
 
     public readonly struct PageOptions
     {
+        private readonly int _pageNumber;
+
+        private readonly int _itemsPerPage;
+        
         public PageOptions(int pageNumber, int itemsPerPage = 50)
         {
-            PageNumber = pageNumber;
-            ItemsPerPage = itemsPerPage;
+            _pageNumber = pageNumber;
+            _itemsPerPage = itemsPerPage;
         }
-        public int PageNumber { get; }
-        public int ItemsPerPage { get;}
+
+        public int ItemsToSkip => _pageNumber * _itemsPerPage;
+
+        public int ItemsLimit => _itemsPerPage;
     }
 }

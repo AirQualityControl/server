@@ -13,9 +13,6 @@ namespace AirSnitch.Infrastructure.Persistence
 
         public BsonDocument Filter => new BsonDocument();
 
-        private int _itemsToSkip;
-        private int _itemsLimit;
-        
         private MongoDbQuery(string collectionName)
         {
             CollectionName = collectionName;
@@ -24,9 +21,7 @@ namespace AirSnitch.Infrastructure.Persistence
         
         public string CollectionName { get; }
 
-        public int ItemsToSkip => _itemsToSkip;
-
-        public int ItemsLimit => _itemsLimit;
+        public PageOptions PageOptions { get; set; }
 
         public void AddColumn(QueryColumn queryColumn)
         {
@@ -41,12 +36,6 @@ namespace AirSnitch.Infrastructure.Persistence
             }
         }
 
-        public void AddPageOptions(PageOptions pageOptions)
-        {
-            _itemsToSkip = pageOptions.PageNumber * pageOptions.ItemsPerPage;
-            _itemsLimit = pageOptions.ItemsPerPage;
-        }
-
         public void AddFilter(string filter)
         {
             //TODO:    
@@ -56,7 +45,7 @@ namespace AirSnitch.Infrastructure.Persistence
         {
             var query = new MongoDbQuery(queryScheme.EntityName);
             query.AddColumns(queryScheme.Columns);
-            query.AddPageOptions(queryScheme.PageOptions);
+            query.PageOptions = queryScheme.PageOptions;
             return query;
         }
     }

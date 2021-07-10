@@ -11,7 +11,6 @@ namespace AirSnitch.Di
         {
             services.AddTransient<IApiUserRepository, ApiUserRepository>();
             services.AddSingleton(MongoDbClient.Create());
-            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         }
     }
 }

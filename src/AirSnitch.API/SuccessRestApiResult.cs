@@ -1,23 +1,22 @@
 using System.Threading.Tasks;
-using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Api.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace AirSnitch.Api
 {
     public class SuccessRestApiResult : IActionResult
     {
-        private readonly QueryResult _queryResult;
+        private readonly RestResponseBody _responseBody;
 
-        public SuccessRestApiResult(QueryResult queryResult)
+        public SuccessRestApiResult(RestResponseBody responseBody)
         {
-            _queryResult = queryResult;
+            _responseBody = responseBody;
         }
         
         public async Task ExecuteResultAsync(ActionContext context)
         {
-            var objectResult = new ObjectResult("This is a plain not formatter text")
+            var objectResult = new ObjectResult(_responseBody.GetBody())
             {
                 StatusCode = StatusCodes.Status200OK,
             };
