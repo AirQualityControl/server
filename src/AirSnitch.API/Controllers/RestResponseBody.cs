@@ -7,24 +7,26 @@ namespace AirSnitch.Api.Controllers
     public class RestResponseBody
     {
         //TODO: introduce IResponseBodyMediaFormatter
-        
         private readonly IReadOnlyCollection<IQueryResultEntry> _queryResultEntries;
+        
         public RestResponseBody(IReadOnlyCollection<IQueryResultEntry> queryResultEntries)
         {
             _queryResultEntries = queryResultEntries;
         }
-        
-        public string GetBody()
-        {
-            JObject rootObject = new JObject();
-            AppendLinks(rootObject);
-            AppendPageSize(rootObject);
-            AppendCurrentPageNumber(rootObject);
-            AppendLastPageNumber(rootObject);
-            AppendValues(rootObject);
-            return rootObject.ToString();
-        }
 
+        public string Value {
+            get
+            {
+                JObject rootObject = new JObject();
+                AppendLinks(rootObject);
+                AppendPageSize(rootObject);
+                AppendCurrentPageNumber(rootObject);
+                AppendLastPageNumber(rootObject);
+                AppendValues(rootObject);
+                return rootObject.ToString();
+            }
+        }
+        
         private void AppendLinks(JObject rootObject)
         {
             rootObject["_links"] = new HalLinksContainer().Value;

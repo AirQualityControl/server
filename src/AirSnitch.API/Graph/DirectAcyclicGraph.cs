@@ -23,6 +23,7 @@ namespace AirSnitch.Api.Graph
             
             AddToAdjacencyList(vertex1);
         }
+        
         private void AddToAdjacencyList(RelatedVertex<TValue> vertex1)
         {
             if (!_adjacencylist.Contains(vertex1))
@@ -40,6 +41,11 @@ namespace AirSnitch.Api.Graph
         {
             return _adjacencylist
                 .Single(v => v.Value.Equals(vertex.Value));
+        }
+
+        public IReadOnlyCollection<TValue> GetAllReachableVertexFrom(RelatedVertex<TValue> rootVertex)
+        {
+            return null;
         }
     }
 }
