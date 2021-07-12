@@ -19,6 +19,10 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
             _itemsPerPage = itemsPerPage;
         }
 
+        public int PageNumber => _pageNumber;
+
+        public int Items => _itemsPerPage;
+        
         public int ItemsToSkip => _pageNumber * _itemsPerPage;
 
         public int ItemsLimit => _itemsPerPage;

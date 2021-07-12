@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers;
@@ -11,8 +12,7 @@ namespace AirSnitch.Api
     {
         private readonly RestResponseBody _responseBody;
 
-        public SuccessRestApiResult(RestResponseBody responseBody, 
-            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources)
+        public SuccessRestApiResult(RestResponseBody responseBody)
         {
             _responseBody = responseBody;
         }

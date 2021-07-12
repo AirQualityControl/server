@@ -25,7 +25,7 @@ namespace AirSnitch.Api.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int page, int pageSize, string includes)
         {
             var includedResources = new List<IApiResourceMetaInfo>()
             {
@@ -39,7 +39,15 @@ namespace AirSnitch.Api.Controllers
             
             if (result.IsSuccess)
             {
-                return new SuccessRestApiResult(new RestResponseBody(result.Value), RelatedResources);
+                return new SuccessRestApiResult
+                (
+                    new RestResponseBody(
+                        result.Value, 
+                        RelatedResources,
+                        Request,
+                        new PageOptions(page, pageSize)
+                    )
+                );
             }
             return new NotFoundResult();
         }
@@ -50,7 +58,7 @@ namespace AirSnitch.Api.Controllers
         {
             //ApiUser user = _apiUserRepository.GetById(clientUserId);
 
-            return new SuccessRestApiResult(null, null);
+            return new SuccessRestApiResult(new RestResponseBody(null, null,null,new PageOptions()));
         }
     }
 }

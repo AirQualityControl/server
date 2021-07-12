@@ -1,17 +1,32 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using AirSnitch.Api.Resources;
 using AirSnitch.Infrastructure.Abstract.Persistence;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
 
 namespace AirSnitch.Api.Controllers
 {
     public class RestResponseBody
     {
-        //TODO: introduce IResponseBodyMediaFormatter
+        //TODO: introduce IResponseBodyFormatter
         private readonly IReadOnlyCollection<IQueryResultEntry> _queryResultEntries;
-        
-        public RestResponseBody(IReadOnlyCollection<IQueryResultEntry> queryResultEntries)
+        private readonly IReadOnlyCollection<IApiResourceMetaInfo> _relatedResources;
+        private readonly HttpRequest _request;
+        private readonly PageOptions _pageOptions;
+
+        public RestResponseBody(
+            IReadOnlyCollection<IQueryResultEntry> queryResultEntries,
+            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources,
+            HttpRequest request,
+            PageOptions pageOptions)
         {
+            _request = request;
+            _pageOptions = pageOptions;
             _queryResultEntries = queryResultEntries;
+            _relatedResources = relatedResources;
         }
 
         public string Value {
@@ -29,17 +44,17 @@ namespace AirSnitch.Api.Controllers
         
         private void AppendLinks(JObject rootObject)
         {
-            rootObject["_links"] = new HalLinksContainer().Value;
+            rootObject["_links"] = new HalLinksContainer(_request, _pageOptions).Value;
         }
 
         private void AppendPageSize(JObject rootObject)
         {
-            rootObject["pageSize"] = 50;
+            rootObject["pageSize"] = _pageOptions.Items;
         }
 
         private void AppendCurrentPageNumber(JObject rootObject)
         {
-            rootObject["currentPageNumber"] = 1;
+            rootObject["currentPageNumber"] = _pageOptions.PageNumber;
         }
 
         private void AppendLastPageNumber(JObject rootObject)
@@ -119,90 +134,174 @@ namespace AirSnitch.Api.Controllers
     }
     public class HalLinksContainer
     {
-        public JObject Value {
+        private readonly HttpRequest _httpRequest;
+        private readonly PageOptions _pageOptions;
+
+        public HalLinksContainer(HttpRequest httpRequest, PageOptions pageOptions)
+        {
+            _httpRequest = httpRequest;
+            _pageOptions = pageOptions;
+        }
+
+        public JObject Value =>
+            new JObject(
+                new SelfLink(_httpRequest).JsonValue,
+                new NextLink(_httpRequest, pageOptions: _pageOptions).JsonValue,
+                new PrevLink(_httpRequest, _pageOptions).JsonValue,
+                new LastLink(_httpRequest).JsonValue
+            );
+    }
+    public abstract class HalLink
+    {
+        public abstract string Name { get; }
+        
+        public abstract string HrefValue { get; }
+        
+        public JProperty JsonValue =>
+            new JProperty(Name,
+                new JObject(
+                    new JProperty(
+                        "href", HrefValue)
+                )
+            );
+    }
+    
+    public class SelfLink : HalLink
+    {
+        private readonly HttpRequest _httpRequest;
+
+        public SelfLink(HttpRequest httpRequest)
+        {
+            _httpRequest = httpRequest;
+        }
+        
+        public override string Name
+        {
+            get => "self";
+        }
+        public override string HrefValue
+        {
             get
             {
-                return new JObject(
-                    new JProperty("self",
-                        new JObject(
-                            new JProperty(
-                                "href", "www.api.airsnitch.com/v1/apiuser")
-                        )
-                    ),
-                    new JProperty("next",
-                        new JObject(
-                            new JProperty(
-                                "href", "www.api.airsnitch.com/v1/apiuser")
-                        )
-                    ),
-                    new JProperty("prev",
-                        new JObject(
-                            new JProperty(
-                                "href", "www.api.airsnitch.com/v1/apiuser")
-                        )
-                    ),
-                    new JProperty("last",
-                        new JObject(
-                            new JProperty(
-                                "href", "www.api.airsnitch.com/v1/apiuser")
-                        )
-                    )
-                );
+                return new Uri(new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
+                    _httpRequest.Path.Value + _httpRequest.QueryString.Value).ToString();
+            }
+        }
+    }
+
+    public class NextLink : HalLink
+    {
+        private readonly HttpRequest _httpRequest;
+        private readonly PageOptions _pageOptions;
+
+        public NextLink(HttpRequest httpRequest, PageOptions pageOptions)
+        {
+            _httpRequest = httpRequest;
+            _pageOptions = pageOptions;
+        }
+        
+        public override string Name => "next";
+
+        public override string HrefValue {
+            get
+            {
+                if (_httpRequest.Query.ContainsKey("page"))
+                {
+                    var queryStringDictionary = _httpRequest.Query.ToDictionary(keySelector: k => k.Key, k => k.Value);
+                    var nextPageNumber = _pageOptions.PageNumber + 1;
+
+                    queryStringDictionary["page"] = new StringValues(nextPageNumber.ToString());
+                    
+                    return 
+                        new Uri(
+                            baseUri:new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
+                            relativeUri:_httpRequest.Path.Value + QueryString.Create(queryStringDictionary)
+                        ).ToString();
+                }
+                return 
+                    new Uri(
+                        baseUri:new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
+                        relativeUri:_httpRequest.Path.Value + _httpRequest.QueryString.Value
+                    ).ToString();
+            }
+        }
+    }
+
+    public class PrevLink : HalLink
+    {
+        private readonly HttpRequest _httpRequest;
+        private readonly PageOptions _pageOptions;
+
+        public PrevLink(HttpRequest httpRequest, PageOptions pageOptions)
+        {
+            _httpRequest = httpRequest;
+            _pageOptions = pageOptions;
+        }
+        
+        public override string Name
+        {
+            get => "prev";
+        }
+        public override string HrefValue {
+            get
+            {
+                if (_httpRequest.Query.ContainsKey("page") && _httpRequest.Query["page"].Single() != "1")
+                {
+                    var queryStringDictionary = _httpRequest.Query.ToDictionary(keySelector: k => k.Key, k => k.Value);
+                    var nextPageNumber = _pageOptions.PageNumber - 1;
+
+                    queryStringDictionary["page"] = new StringValues(nextPageNumber.ToString());
+                    
+                    return 
+                        new Uri(
+                            baseUri:new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
+                            relativeUri:_httpRequest.Path.Value + QueryString.Create(queryStringDictionary)
+                        ).ToString();
+                }
+                return 
+                    new Uri(
+                        baseUri:new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
+                        relativeUri:_httpRequest.Path.Value + _httpRequest.QueryString.Value
+                    ).ToString();
+            }
+        }
+    }
+
+    public class LastLink : HalLink
+    {
+        private readonly HttpRequest _httpRequest;
+
+        public LastLink(HttpRequest httpRequest)
+        {
+            _httpRequest = httpRequest;
+        }
+        
+        public override string Name => "last";
+
+        public override string HrefValue {
+            get
+            {
+                return new Uri(new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
+                    _httpRequest.Path.Value + _httpRequest.QueryString.Value).ToString();
             }
         }
     }
     
-    public interface IHalLink
+    public class RelatedResourceLink : HalLink
     {
-        public string Name { get; }
-
-        public string HrefValue { get; }
-
-        public JProperty JsonValue { get; }
-    }
-
-    public class SelfLink : IHalLink
-    {
-        public string Name => "www.api.airsnitch.com/v1/apiuser";
-
-        public string HrefValue { get; }
-
-        public JProperty JsonValue =>
-            new JProperty("self",
-                new JObject(
-                    new JProperty(
-                        "href", "www.api.airsnitch.com/v1/apiuser")
-                )
-            );
-    }
-
-    public class NextLink : IHalLink
-    {
-        public string Name { get; }
+        private readonly HttpRequest _httpRequest;
+        public RelatedResourceLink(HttpRequest httpRequest)
+        {
+            _httpRequest = httpRequest;
+        }
         
-        public string HrefValue { get; }
-        
-        public JProperty JsonValue =>
-            new JProperty("next",
-                new JObject(
-                    new JProperty(
-                        "href", "www.api.airsnitch.com/v1/apiuser")
-                )
-            );
-    }
-
-    public class LastLink : IHalLink
-    {
-        public string Name { get; }
-        
-        public string HrefValue { get; }
-        
-        public JProperty JsonValue =>
-            new JProperty("last",
-                new JObject(
-                    new JProperty(
-                        "href", "www.api.airsnitch.com/v1/apiuser")
-                )
-            );
+        public override string Name { get; }
+        public override string HrefValue {
+            get
+            {
+                return new Uri(new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
+                    _httpRequest.Path.Value + _httpRequest.QueryString.Value).ToString();
+            }
+        }
     }
 }
