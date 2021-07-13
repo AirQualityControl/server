@@ -205,7 +205,7 @@ namespace AirSnitch.Api.Controllers
         public override string HrefValue {
             get
             {
-                if (_httpRequest.Query.ContainsKey("page"))
+                if (_httpRequest.Query.ContainsKey(QueryParamName.Page))
                 {
                     var queryStringDictionary = _httpRequest.Query.ToDictionary(keySelector: k => k.Key, k => k.Value);
                     var nextPageNumber = _pageOptions.PageNumber + 1;
@@ -245,7 +245,7 @@ namespace AirSnitch.Api.Controllers
         public override string HrefValue {
             get
             {
-                if (_httpRequest.Query.ContainsKey("page") && _httpRequest.Query["page"].Single() != "1")
+                if (_httpRequest.Query.ContainsKey(QueryParamName.Page) && _httpRequest.Query[QueryParamName.Page].Single() != "1")
                 {
                     var queryStringDictionary = _httpRequest.Query.ToDictionary(keySelector: k => k.Key, k => k.Value);
                     var nextPageNumber = _pageOptions.PageNumber - 1;
@@ -303,5 +303,14 @@ namespace AirSnitch.Api.Controllers
                     _httpRequest.Path.Value + _httpRequest.QueryString.Value).ToString();
             }
         }
+    }
+
+    internal static class QueryParamName
+    {
+        public static string Page => "page";
+
+        public static string Include => "include";
+
+        public static string ItemsPerPage => "itemsPerPage";
     }
 }
