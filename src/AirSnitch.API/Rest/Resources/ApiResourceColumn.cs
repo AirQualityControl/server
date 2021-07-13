@@ -1,4 +1,4 @@
-namespace AirSnitch.Api.Resources
+namespace AirSnitch.Api.Rest.Resources
 {
     public class ApiResourceColumn
     {

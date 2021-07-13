@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using AirSnitch.Api.Graph;
-using AirSnitch.Api.Resources;
+using AirSnitch.Api.Rest.Graph;
+using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using Microsoft.AspNetCore.Mvc;
 

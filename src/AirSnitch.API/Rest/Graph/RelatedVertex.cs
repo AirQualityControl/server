@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using AirSnitch.Api.Resources;
-using AirSnitch.Api.Resources.Relationship;
+using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.Relationship;
 
-namespace AirSnitch.Api.Graph
+namespace AirSnitch.Api.Rest.Graph
 {
     public class RelatedVertex<TValue> : Vertex<TValue> where TValue : IApiResourceMetaInfo
     {

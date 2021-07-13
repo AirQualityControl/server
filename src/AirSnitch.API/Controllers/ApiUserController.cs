@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirSnitch.Api.Graph;
-using AirSnitch.Api.Resources;
-using AirSnitch.Api.Resources.ApiUser;
-using AirSnitch.Api.Resources.Client;
-using AirSnitch.Api.Resources.SubscriptionPlan;
+using AirSnitch.Api.Rest.Graph;
+using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.ApiUser;
+using AirSnitch.Api.Rest.Resources.Client;
+using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;

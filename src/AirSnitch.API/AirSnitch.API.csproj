@@ -30,4 +30,8 @@
     <ProjectReference Include="..\AirSnitch.Infrastructure.Abstract\AirSnitch.Infrastructure.Abstract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Rest" />
+  </ItemGroup>
+
 </Project>

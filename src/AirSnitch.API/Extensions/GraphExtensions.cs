@@ -1,9 +1,9 @@
-using AirSnitch.Api.Graph;
-using AirSnitch.Api.Resources;
-using AirSnitch.Api.Resources.ApiUser;
-using AirSnitch.Api.Resources.Client;
-using AirSnitch.Api.Resources.Relationship;
-using AirSnitch.Api.Resources.SubscriptionPlan;
+using AirSnitch.Api.Rest.Graph;
+using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.ApiUser;
+using AirSnitch.Api.Rest.Resources.Client;
+using AirSnitch.Api.Rest.Resources.Relationship;
+using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AirSnitch.Api.Extensions

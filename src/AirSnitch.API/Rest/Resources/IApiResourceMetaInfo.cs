@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AirSnitch.Api.Resources
+namespace AirSnitch.Api.Rest.Resources
 {
     public interface IApiResourceMetaInfo : IEquatable<IApiResourceMetaInfo>
     {

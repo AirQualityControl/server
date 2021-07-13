@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AirSnitch.Api.Resources.ApiUser
+namespace AirSnitch.Api.Rest.Resources.ApiUser
 {
     internal class ApiUserResource : IApiResourceMetaInfo
     {

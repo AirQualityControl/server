@@ -1,6 +1,6 @@
-using AirSnitch.Api.Resources;
+using AirSnitch.Api.Rest.Resources;
 
-namespace AirSnitch.Api.Graph.TraversionStrategy
+namespace AirSnitch.Api.Rest.Graph.TraversionStrategy
 {
     internal interface IGraphTraversionStrategy<TValue> where TValue : IApiResourceMetaInfo
     {

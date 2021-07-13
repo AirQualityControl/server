@@ -1,9 +1,9 @@
 using System;
-using AirSnitch.Api.Resources;
-using AirSnitch.Api.Resources.Relationship;
+using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.Relationship;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 
-namespace AirSnitch.Api.Graph
+namespace AirSnitch.Api.Rest.Graph
 {
     public class RelatedResourceQueryBuilder
     {

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using AirSnitch.Api.Graph.TraversionStrategy;
-using AirSnitch.Api.Resources;
-using AirSnitch.Api.Resources.Relationship;
+using AirSnitch.Api.Rest.Graph.TraversionStrategy;
+using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.Relationship;
 
-namespace AirSnitch.Api.Graph
+namespace AirSnitch.Api.Rest.Graph
 {
     public class DirectAcyclicGraph<TValue> where TValue : IApiResourceMetaInfo 
     {

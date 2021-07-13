@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using AirSnitch.Api.Resources;
+using AirSnitch.Api.Rest.Resources;
 
-namespace AirSnitch.Api.Graph
+namespace AirSnitch.Api.Rest.Graph
 {
     public abstract class Vertex<TValue>  where TValue : IApiResourceMetaInfo
     {
