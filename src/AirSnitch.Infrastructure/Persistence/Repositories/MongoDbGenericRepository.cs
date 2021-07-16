@@ -60,12 +60,21 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
                 .Skip(mongoQuery.PageOptions.ItemsToSkip)
                 .Limit(mongoQuery.PageOptions.ItemsLimit)
                 .Project(mongoQuery.Projection)
-                .ToListAsync();
+            .ToListAsync();
 
             return new QueryResult(
                 MongoDbQueryResultEntry.BuildFrom(bsonDocuments), 
                 mongoQuery.PageOptions
             );
+        }
+
+        public Task<long> Count {
+            get
+            {
+                var query = _collection.Find(x => true);
+                var totalNumberOfDocuments = query.CountDocumentsAsync();
+                return totalNumberOfDocuments;
+            }
         }
     }
 }

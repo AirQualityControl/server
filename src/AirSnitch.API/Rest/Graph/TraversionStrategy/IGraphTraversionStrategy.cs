@@ -3,7 +3,7 @@ using AirSnitch.Api.Rest.Resources;
 
 namespace AirSnitch.Api.Rest.Graph.TraversionStrategy
 {
-    internal interface IGraphTraversionStrategy<TValue> where TValue : IApiResourceMetaInfo
+    public interface IGraphTraversionStrategy<TValue> where TValue : IApiResourceMetaInfo
     {
         IGraphTraversionStrategy<TValue> TraverseFrom(RelatedVertex<TValue> vertex);
 

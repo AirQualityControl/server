@@ -6,7 +6,9 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
     {
         private readonly IReadOnlyCollection<IQueryResultEntry> _result;
 
-        public QueryResult(IReadOnlyCollection<IQueryResultEntry> result, PageOptions pageOptions)
+        public QueryResult(
+            IReadOnlyCollection<IQueryResultEntry> result, 
+            PageOptions pageOptions)
         {
             _result = result;
             PageOptions = pageOptions;

@@ -12,16 +12,16 @@ namespace AirSnitch.Api.Rest.Graph
     /// This class has singleton lifecycle and spin-up on application start.
     /// </summary>
     /// <typeparam name="TValue">Value that DAG holds</typeparam>
-    public class DirectAcyclicGraph<TValue> where TValue : IApiResourceMetaInfo 
+    public sealed class DirectAcyclicGraph<TValue> where TValue : IApiResourceMetaInfo 
     {
         private readonly List<RelatedVertex<TValue>> _adjacencylist;
-        private readonly IGraphTraversionStrategy<TValue> _graphTraversingStrategy;
         public DirectAcyclicGraph(int numberOfNode)
         {
             _adjacencylist = new List<RelatedVertex<TValue>>(numberOfNode);
-            _graphTraversingStrategy = new BfsGraphTraversion<TValue>();
         }
-        
+
+        private IGraphTraversionStrategy<TValue> TraversionStrategy => new BfsGraphTraversion<TValue>();
+
         /// <summary>
         /// Add a direct edge in Graph.
         /// </summary>
@@ -54,10 +54,26 @@ namespace AirSnitch.Api.Rest.Graph
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
         public RelatedVertex<TValue> GetVertex(RelatedVertex<TValue> vertex)
         {
             return _adjacencylist
                 .Single(v => v.Value.Equals(vertex.Value));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public bool TryGetVertex(out RelatedVertex<TValue> vertex)
+        {
+            vertex = null;
+            return true;
         }
 
         /// <summary>
@@ -70,7 +86,7 @@ namespace AirSnitch.Api.Rest.Graph
         {
             var rootVertex = GetVertex(requestedVertex);
 
-            var reachableVertices = _graphTraversingStrategy.TraverseFrom(rootVertex).Result;
+            var reachableVertices = TraversionStrategy.TraverseFrom(rootVertex).Result;
 
             return reachableVertices.Select(vertex => vertex.Value).ToList();
         }

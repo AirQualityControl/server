@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using AirSnitch.Api.Rest.Links;
 using AirSnitch.Api.Rest.Resources;
-using AirSnitch.Api.Rest.Resources.Client;
-using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
@@ -58,7 +56,7 @@ namespace AirSnitch.Api.Controllers
 
         private void AppendLastPageNumber(JObject rootObject)
         {
-            rootObject["lastPageNumber"] = 52;
+            rootObject["lastPageNumber"] = _queryResult.PageOptions.LastPageNumber;
         }
 
         private void AppendValues(JObject rootObject)
@@ -132,50 +130,5 @@ namespace AirSnitch.Api.Controllers
 
             return new JProperty("includes", includesContainer);
         }
-    }
-    public class HalLinksContainer
-    {
-        private readonly QueryResult _queryResult;
-        private readonly HttpRequest _httpRequest;
-        private readonly IReadOnlyCollection<IApiResourceMetaInfo> _relatedResourceMetaInfo;
-
-        public HalLinksContainer(QueryResult queryResult, HttpRequest httpRequest, IReadOnlyCollection<IApiResourceMetaInfo> relatedResourceMetaInfo)
-        {
-            _queryResult = queryResult;
-            _httpRequest = httpRequest;
-            _relatedResourceMetaInfo = relatedResourceMetaInfo;
-        }
-
-        public JObject Value
-        {
-            get
-            {
-                var resultValue = new JObject(
-                    new SelfLink(_httpRequest).JsonValue
-                );
-
-                if (!_queryResult.IsScalar())
-                {
-                    resultValue.Add(
-                        new NextLink(_httpRequest, pageOptions: _queryResult.PageOptions).JsonValue);
-                    resultValue.Add(new PrevLink(_httpRequest, _queryResult.PageOptions).JsonValue);
-                    resultValue.Add(new LastLink(_httpRequest).JsonValue);
-                }
-                
-                foreach (var relatedResource in _relatedResourceMetaInfo)
-                {
-                   resultValue.Add(
-                       new RelatedResourceLink(
-                           _httpRequest, 
-                           _queryResult,
-                           relatedResource.Name.Value
-                        ).JsonValue
-                   );
-                }
-                
-                return resultValue;
-            }
-        }
-
     }
 }

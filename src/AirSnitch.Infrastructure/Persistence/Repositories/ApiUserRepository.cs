@@ -3,6 +3,7 @@ using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
+using DnsClient.Protocol;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
@@ -25,8 +26,16 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         {
             var query = MongoDbQuery.CreateFromScheme(queryScheme);
 
-            var result = await _genericRepository.ExecuteQueryAsync(query);
-            return result;
+            var queryResultTask = _genericRepository.ExecuteQueryAsync(query);
+            var totalNumberOfDocumentsTask = _genericRepository.Count;
+            
+            await Task.WhenAll(queryResultTask, totalNumberOfDocumentsTask);
+
+            return new QueryResult(queryResultTask.Result.Value, 
+                new PageOptions(
+                    pageNumber: queryScheme.PageOptions.PageNumber, 
+                    totalNumberOfItems: totalNumberOfDocumentsTask.Result, 
+                    itemsPerPage:queryScheme.PageOptions.ItemsLimit));
         }
     }
 }
