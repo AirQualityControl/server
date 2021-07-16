@@ -15,5 +15,10 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
         public bool IsSuccess => true;
         public IReadOnlyCollection<IQueryResultEntry> Value => _result;
         public PageOptions PageOptions { get; }
+
+        public bool IsScalar()
+        {
+            return false;
+        }
     }
 }

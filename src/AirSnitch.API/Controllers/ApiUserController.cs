@@ -33,7 +33,7 @@ namespace AirSnitch.Api.Controllers
                 new SubscriptionPlanApiResource()
             };
 
-            var queryScheme = GenerateQueryScheme(includedResources, new PageOptions(pageNumber:1));
+            var queryScheme = GenerateQueryScheme(includedResources, new PageOptions(pageNumber:page, itemsPerPage:pageSize));
 
             QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
@@ -42,10 +42,9 @@ namespace AirSnitch.Api.Controllers
                 return new SuccessRestApiResult
                 (
                     new RestResponseBody(
-                        result.Value, 
-                        RelatedResources,
                         Request,
-                        new PageOptions(page, pageSize)
+                        result,
+                        RelatedResources
                     )
                 );
             }
@@ -58,7 +57,7 @@ namespace AirSnitch.Api.Controllers
         {
             //ApiUser user = _apiUserRepository.GetById(clientUserId);
 
-            return new SuccessRestApiResult(new RestResponseBody(null, null,null,new PageOptions()));
+            return new SuccessRestApiResult(null);
         }
     }
 }

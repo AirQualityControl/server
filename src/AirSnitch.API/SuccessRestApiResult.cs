@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers;
 using Microsoft.AspNetCore.Http;

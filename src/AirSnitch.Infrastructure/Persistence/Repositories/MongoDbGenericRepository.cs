@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.Extensions;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
@@ -59,6 +57,8 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             
             var bsonDocuments = await _collection
                 .Find(mongoQuery.Filter)
+                .Skip(mongoQuery.PageOptions.ItemsToSkip)
+                .Limit(mongoQuery.PageOptions.ItemsLimit)
                 .Project(mongoQuery.Projection)
                 .ToListAsync();
 

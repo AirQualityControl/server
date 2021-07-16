@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using AirSnitch.Api.Rest.Links;
 using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.Client;
+using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
@@ -9,21 +11,17 @@ namespace AirSnitch.Api.Controllers
 {
     public class RestResponseBody
     {
+        private readonly HttpRequest _httpRequest;
+        private readonly QueryResult _queryResult;
         //TODO: introduce IResponseBodyFormatter
-        private readonly IReadOnlyCollection<IQueryResultEntry> _queryResultEntries;
         private readonly IReadOnlyCollection<IApiResourceMetaInfo> _relatedResources;
-        private readonly HttpRequest _request;
-        private readonly PageOptions _pageOptions;
 
-        public RestResponseBody(
-            IReadOnlyCollection<IQueryResultEntry> queryResultEntries,
-            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources,
-            HttpRequest request,
-            PageOptions pageOptions)
+        public RestResponseBody(HttpRequest httpRequest, 
+            QueryResult queryResult, 
+            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources)
         {
-            _request = request;
-            _pageOptions = pageOptions;
-            _queryResultEntries = queryResultEntries;
+            _httpRequest = httpRequest;
+            _queryResult = queryResult;
             _relatedResources = relatedResources;
         }
 
@@ -32,9 +30,12 @@ namespace AirSnitch.Api.Controllers
             {
                 JObject rootObject = new JObject();
                 AppendLinks(rootObject);
-                AppendPageSize(rootObject);
-                AppendCurrentPageNumber(rootObject);
-                AppendLastPageNumber(rootObject);
+                if (!_queryResult.IsScalar())
+                {
+                    AppendPageSize(rootObject);
+                    AppendCurrentPageNumber(rootObject);
+                    AppendLastPageNumber(rootObject);
+                }
                 AppendValues(rootObject);
                 return rootObject.ToString();
             }
@@ -42,17 +43,17 @@ namespace AirSnitch.Api.Controllers
         
         private void AppendLinks(JObject rootObject)
         {
-            rootObject["_links"] = new HalLinksContainer(_request, _pageOptions).Value;
+            rootObject["_links"] = new HalLinksContainer(_queryResult, _httpRequest, _relatedResources).Value;
         }
 
         private void AppendPageSize(JObject rootObject)
         {
-            rootObject["pageSize"] = _pageOptions.Items;
+            rootObject["pageSize"] = _queryResult.PageOptions.Items;
         }
 
         private void AppendCurrentPageNumber(JObject rootObject)
         {
-            rootObject["currentPageNumber"] = _pageOptions.PageNumber;
+            rootObject["currentPageNumber"] = _queryResult.PageOptions.PageNumber;
         }
 
         private void AppendLastPageNumber(JObject rootObject)
@@ -67,11 +68,11 @@ namespace AirSnitch.Api.Controllers
 
         private JArray GetItems()
         {
-            var jarray = new JArray();
+            var jArray = new JArray();
 
-            foreach (var item in _queryResultEntries)
+            foreach (var item in _queryResult.Value)
             {
-                jarray.Add(
+                jArray.Add(
                     new JObject(
                         GetSelfValues(item.ScalarValues),
                         GetIncludeValues(item.IncludedValues)
@@ -79,8 +80,9 @@ namespace AirSnitch.Api.Controllers
                 );
             }
 
-            return jarray;
+            return jArray;
         }
+        
         private JProperty GetSelfValues(Dictionary<string, object> selfValues)
         {
             var selfValuesJObject = new JObject();
@@ -91,6 +93,7 @@ namespace AirSnitch.Api.Controllers
 
             return new JProperty("values", selfValuesJObject);
         }
+        
         private JProperty GetIncludeValues(Dictionary<string, object> dataIncludedResources)
         {
             var includesContainer = new JObject();
@@ -132,35 +135,47 @@ namespace AirSnitch.Api.Controllers
     }
     public class HalLinksContainer
     {
+        private readonly QueryResult _queryResult;
         private readonly HttpRequest _httpRequest;
-        private readonly PageOptions _pageOptions;
+        private readonly IReadOnlyCollection<IApiResourceMetaInfo> _relatedResourceMetaInfo;
 
-        public HalLinksContainer(HttpRequest httpRequest, PageOptions pageOptions)
+        public HalLinksContainer(QueryResult queryResult, HttpRequest httpRequest, IReadOnlyCollection<IApiResourceMetaInfo> relatedResourceMetaInfo)
         {
+            _queryResult = queryResult;
             _httpRequest = httpRequest;
-            _pageOptions = pageOptions;
+            _relatedResourceMetaInfo = relatedResourceMetaInfo;
         }
 
-        public JObject Value =>
-            new JObject(
-                new SelfLink(_httpRequest).JsonValue,
-                new NextLink(_httpRequest, pageOptions: _pageOptions).JsonValue,
-                new PrevLink(_httpRequest, _pageOptions).JsonValue,
-                new LastLink(_httpRequest).JsonValue
-            );
-    }
-    public abstract class HalLink
-    {
-        public abstract string Name { get; }
-        
-        public abstract string HrefValue { get; }
-        
-        public JProperty JsonValue =>
-            new JProperty(Name,
-                new JObject(
-                    new JProperty(
-                        "href", HrefValue)
-                )
-            );
+        public JObject Value
+        {
+            get
+            {
+                var resultValue = new JObject(
+                    new SelfLink(_httpRequest).JsonValue
+                );
+
+                if (!_queryResult.IsScalar())
+                {
+                    resultValue.Add(
+                        new NextLink(_httpRequest, pageOptions: _queryResult.PageOptions).JsonValue);
+                    resultValue.Add(new PrevLink(_httpRequest, _queryResult.PageOptions).JsonValue);
+                    resultValue.Add(new LastLink(_httpRequest).JsonValue);
+                }
+                
+                foreach (var relatedResource in _relatedResourceMetaInfo)
+                {
+                   resultValue.Add(
+                       new RelatedResourceLink(
+                           _httpRequest, 
+                           _queryResult,
+                           relatedResource.Name.Value
+                        ).JsonValue
+                   );
+                }
+                
+                return resultValue;
+            }
+        }
+
     }
 }

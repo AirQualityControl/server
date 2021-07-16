@@ -4,7 +4,7 @@ namespace AirSnitch.Api.Rest.Resources.Client
 {
     public class ClientApiResource : IApiResourceMetaInfo
     {
-        private static readonly ApiResourceName ApiUserResourceName = new ApiResourceName("clients");
+        private static readonly ApiResourceName ApiUserResourceName = new ApiResourceName("client");
 
         private static readonly List<ApiResourceColumn> ResourceColumns = new List<ApiResourceColumn>()
         {
