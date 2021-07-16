@@ -36,9 +36,14 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
         public int ItemsToSkip {
             get
             {
+                if (_pageNumber == 1)
+                {
+                    return 0;
+                }
+
                 if (_pageNumber > 1)
                 {
-                    return _pageNumber * _itemsPerPage;
+                    return (_pageNumber * _itemsPerPage) - _itemsPerPage;
                 }
 
                 return 0;
@@ -53,7 +58,16 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
             {
                 if (_totalNumberOfItems != null)
                 {
-                    return _totalNumberOfItems.Value % _itemsPerPage;
+                    var value = _totalNumberOfItems.Value / _itemsPerPage;
+
+                    var divisionReminder = _totalNumberOfItems.Value % _itemsPerPage;
+
+                    if (divisionReminder > 0)
+                    {
+                        value += 1;
+                    }
+
+                    return value;
                 }
                 return 0;
             }
