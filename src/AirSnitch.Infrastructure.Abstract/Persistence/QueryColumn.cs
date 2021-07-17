@@ -11,4 +11,12 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
 
         public string Path { get; }
     }
+    
+    public class PrimaryColumn : QueryColumn
+    {
+        public PrimaryColumn(string name, string path) : base(name, path)
+        {
+            
+        }
+    }
 }

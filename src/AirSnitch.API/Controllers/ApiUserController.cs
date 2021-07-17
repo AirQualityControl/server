@@ -5,6 +5,7 @@ using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Api.Rest.Resources.ApiUser;
 using AirSnitch.Api.Rest.Resources.Client;
 using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
+using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -52,12 +53,39 @@ namespace AirSnitch.Api.Controllers
         }
         
         [HttpGet]
-        [Route("{clientUserId}")]
-        public SuccessRestApiResult GetById(string clientUserId)
+        [Route("{apiUserId}")]
+        public async Task<IActionResult> GetById(string apiUserId)
         {
-            //ApiUser user = _apiUserRepository.GetById(clientUserId);
+            var includedResources = new List<IApiResourceMetaInfo>()
+            {
+                new ClientApiResource(), 
+                new SubscriptionPlanApiResource()
+            };
 
-            return new SuccessRestApiResult(null);
+            var queryScheme = GenerateQueryScheme(includedResources);
+            
+            queryScheme.AddColumnFilter(
+                new EqualColumnFilter(
+                     column:new PrimaryColumn("id", "_id"),
+                     value:apiUserId
+                    )
+                );
+            
+            QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
+            
+            if (result.IsSuccess)
+            {
+                return new SuccessRestApiResult
+                (
+                    new RestResponseBody(
+                        Request,
+                        result,
+                        RelatedResources
+                    )
+                );
+            }
+
+            return new NotFoundResult();
         }
     }
 }

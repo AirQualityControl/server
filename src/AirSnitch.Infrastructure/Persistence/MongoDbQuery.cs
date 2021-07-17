@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using MongoDB.Bson;
 
@@ -8,10 +10,13 @@ namespace AirSnitch.Infrastructure.Persistence
     public class MongoDbQuery : IQuery
     {
         private readonly BsonDocument _projection;
+        private BsonDocument _filters;
 
+        //TODO: separate class
         public BsonDocument Projection => _projection;
 
-        public BsonDocument Filter => new BsonDocument();
+        //TODO: separate class
+        public BsonDocument Filter => _filters;
 
         private MongoDbQuery(string collectionName)
         {
@@ -23,12 +28,14 @@ namespace AirSnitch.Infrastructure.Persistence
 
         public PageOptions PageOptions { get; set; }
 
+        protected virtual IColumnFilterConverter<BsonDocument> QueryFilterConverter => new MongoDbColumnFilterConverter();
+
         public void AddColumn(QueryColumn queryColumn)
         {
             _projection.Add(new BsonDocument($"{queryColumn.Path}", 1));
         }
 
-        public void AddColumns(IReadOnlyCollection<QueryColumn> queryColumns)
+        private void AddColumns(IReadOnlyCollection<QueryColumn> queryColumns)
         {
             foreach (var queryColumn in queryColumns)
             {
@@ -36,16 +43,22 @@ namespace AirSnitch.Infrastructure.Persistence
             }
         }
 
-        public void AddFilter(string filter)
+        private void AddFilters(IReadOnlyCollection<IColumnFilter> filters)
         {
-            //TODO:    
+            throw new NotImplementedException();
         }
-        
+
+        private void AddFilter(IColumnFilter columnFilter)
+        {
+            _filters = QueryFilterConverter.Convert(columnFilter);;
+        }
+
         public static MongoDbQuery CreateFromScheme(QueryScheme queryScheme)
         {
             var query = new MongoDbQuery(queryScheme.EntityName);
             query.AddColumns(queryScheme.Columns);
             query.PageOptions = queryScheme.PageOptions;
+            query.AddFilter(queryScheme.Filters.First());
             return query;
         }
     }

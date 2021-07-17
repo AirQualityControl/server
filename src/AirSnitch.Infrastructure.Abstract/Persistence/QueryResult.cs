@@ -20,7 +20,11 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
 
         public bool IsScalar()
         {
-            return false;
+            if (_result.Count > 1)
+            { 
+                return false;
+            }
+            return true;
         }
     }
 }
