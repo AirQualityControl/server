@@ -24,7 +24,9 @@ namespace AirSnitch.Api
             services.AddControllers();
             services.AddMvc();
             services.ResolveApplicationDependencies();
+            services.AddApiResourceRegistry();
             services.BuildApiResourceGraph();
+            
             AddSwagger(services);
         }
 

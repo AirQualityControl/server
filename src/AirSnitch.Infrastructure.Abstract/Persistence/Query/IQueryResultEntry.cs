@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AirSnitch.Infrastructure.Abstract.Persistence
+namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
 {
     public interface IQueryResultEntry
     {

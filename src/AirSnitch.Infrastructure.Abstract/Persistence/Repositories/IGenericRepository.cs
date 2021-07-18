@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
 {

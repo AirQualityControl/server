@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using AirSnitch.Api.Controllers;
 using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 

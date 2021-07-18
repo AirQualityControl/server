@@ -2,9 +2,12 @@ using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Api.Rest.Resources.ApiUser;
 using AirSnitch.Api.Rest.Resources.Client;
+using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Api.Rest.Resources.Relationship;
 using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
+using AirSnitch.Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
 
 namespace AirSnitch.Api.Extensions
 {
@@ -13,6 +16,16 @@ namespace AirSnitch.Api.Extensions
         public static void BuildApiResourceGraph(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton(BuildGraph());
+        }
+
+        public static void AddApiResourceRegistry(this IServiceCollection serviceCollection)
+        {
+            var apiResourceRegistry = new ApiResourceRegistry();
+            apiResourceRegistry.RegisterApiResource(new ApiUserResource());
+            apiResourceRegistry.RegisterApiResource(new ClientApiResource());
+            apiResourceRegistry.RegisterApiResource(new SubscriptionPlanApiResource());
+
+            serviceCollection.AddSingleton<IApiResourceRegistry>(apiResourceRegistry);
         }
 
         private static DirectAcyclicGraph<IApiResourceMetaInfo> BuildGraph()

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using AirSnitch.Api.Rest.Links;
 using AirSnitch.Api.Rest.Resources;
-using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 

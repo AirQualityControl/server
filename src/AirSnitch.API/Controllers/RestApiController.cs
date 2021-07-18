@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -13,14 +15,16 @@ namespace AirSnitch.Api.Controllers
     public abstract class RestApiController : ControllerBase
     {
         private readonly DirectAcyclicGraph<IApiResourceMetaInfo> _apiResourcesGraph;
-        
+        private readonly IApiResourceRegistry _apiResourceRegistry;
+
         /// <summary>
         /// Property that defines a target resource for every restfull controller.
         /// </summary>
         protected abstract IApiResourceMetaInfo CurrentResource { get; }
-        protected RestApiController(DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph)
+        protected RestApiController(DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph, IApiResourceRegistry apiResourceRegistry)
         {
             _apiResourcesGraph = apiResourcesGraph;
+            _apiResourceRegistry = apiResourceRegistry;
         }
         
         /// <summary>
@@ -40,10 +44,14 @@ namespace AirSnitch.Api.Controllers
         /// <summary>
         /// Generate a query scheme that will be translated to query fot fetching the requested data.
         /// </summary>
-        /// <param name="includedResources"></param>
+        /// <param name="includedResourcesString"></param>
         /// <returns></returns>
-        protected QueryScheme GenerateQueryScheme(List<IApiResourceMetaInfo> includedResources)
+        protected QueryScheme GenerateQueryScheme(string includedResourcesString)
         {
+            var predicate = BuildPredicate(includedResourcesString);
+            
+            var includedResources = _apiResourceRegistry.GetBy(predicate);
+            
             var queryScheme = new GraphVisitor()
                 .Visit(_apiResourcesGraph)
                 .From(startingVertex: new RelatedVertex<IApiResourceMetaInfo>(CurrentResource))
@@ -52,15 +60,19 @@ namespace AirSnitch.Api.Controllers
 
             return queryScheme;
         }
-        
+
         /// <summary>
         /// Generate a query scheme that will be translated to query fot fetching the requested data.
         /// </summary>
-        /// <param name="includedResources">Read-only collection of related resources that requested alongside with target resource </param>
+        /// <param name="includesString">Read-only collection of related resources that requested alongside with target resource </param>
         /// <param name="pageOptions">Client pageable options</param>
         /// <returns></returns>
-        protected QueryScheme GenerateQueryScheme(List<IApiResourceMetaInfo> includedResources, PageOptions pageOptions)
+        protected QueryScheme GenerateQueryScheme(string includesString, PageOptions pageOptions)
         {
+            var predicate = BuildPredicate(includesString);
+            
+            var includedResources = _apiResourceRegistry.GetBy(predicate);
+            
             var queryScheme = new GraphVisitor()
                 .Visit(_apiResourcesGraph)
                 .From(startingVertex: new RelatedVertex<IApiResourceMetaInfo>(CurrentResource))
@@ -70,6 +82,15 @@ namespace AirSnitch.Api.Controllers
             queryScheme.AddPageOptions(pageOptions);
             
             return queryScheme;
+        }
+
+        private static Func<IApiResourceMetaInfo, bool> BuildPredicate(string includesString) 
+        {
+            if (string.IsNullOrEmpty(includesString))
+            {
+                return (_) => false;
+            }
+            return (resource) => includesString.Contains(resource.Name.Value);
         }
     }
 }

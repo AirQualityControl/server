@@ -1,12 +1,9 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Api.Rest.Resources.ApiUser;
-using AirSnitch.Api.Rest.Resources.Client;
-using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
+using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Infrastructure.Abstract;
-using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -20,22 +17,18 @@ namespace AirSnitch.Api.Controllers
         private readonly IApiUserRepository _apiUserRepository;
         protected override IApiResourceMetaInfo CurrentResource => new ApiUserResource();
         
-        public ApiUserController(DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph, 
-            IApiUserRepository apiUserRepository) : base(apiResourcesGraph)
+        public ApiUserController(
+            DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph,
+            IApiResourceRegistry apiResourceRegistry,
+            IApiUserRepository apiUserRepository) : base(apiResourcesGraph, apiResourceRegistry)
         {
             _apiUserRepository = apiUserRepository;
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetAll(int page, int pageSize, string includes)
+        public async Task<IActionResult> GetAll([FromQuery]RequestParameters requestParameters)
         {
-            var includedResources = new List<IApiResourceMetaInfo>()
-            {
-                new ClientApiResource(), 
-                new SubscriptionPlanApiResource()
-            };
-
-            var queryScheme = GenerateQueryScheme(includedResources, new PageOptions(pageNumber:page, itemsPerPage:pageSize));
+            var queryScheme = GenerateQueryScheme(requestParameters.Includes, requestParameters.PageOptions);
 
             QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
@@ -55,14 +48,8 @@ namespace AirSnitch.Api.Controllers
         
         [HttpGet]
         [Route("{apiUserId}")]
-        public async Task<IActionResult> GetById(string apiUserId)
+        public async Task<IActionResult> GetById(string apiUserId, string includedResources)
         {
-            var includedResources = new List<IApiResourceMetaInfo>()
-            {
-                new ClientApiResource(), 
-                new SubscriptionPlanApiResource()
-            };
-
             var queryScheme = GenerateQueryScheme(includedResources);
             
             queryScheme.AddColumnFilter(
@@ -87,6 +74,20 @@ namespace AirSnitch.Api.Controllers
             }
 
             return new NotFoundResult();
+        }
+        
+        [HttpGet]
+        [Route("{apiUserId}/clients")]
+        public async Task<IActionResult> GetClients(string apiUserId)
+        {
+            return NotFound();
+        }
+        
+        [HttpGet]
+        [Route("{apiUserId}/subscriptionPlan")]
+        public async Task<IActionResult> GetSubscriptionPlan(string apiUserId)
+        {
+            return NotFound();
         }
     }
 }
