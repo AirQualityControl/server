@@ -1,10 +1,12 @@
-using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Exceptions;
+using AirSnitch.Infrastructure.Abstract.Persistence.Filters;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
-namespace AirSnitch.Infrastructure
+namespace AirSnitch.Infrastructure.Persistence.Filters
 {
     public class MongoDbColumnFilterConverter : IColumnFilterConverter<BsonDocument>
     {
@@ -23,17 +25,21 @@ namespace AirSnitch.Infrastructure
 
         private static object GetColumnValue(IColumnFilter columnFilter)
         {
-            object value;
-            if (columnFilter.Column is PrimaryColumn)
-            {
-                value = new ObjectId(columnFilter.Value.ToString());
-            }
-            else
-            {
-                value = columnFilter.Value.ToString();
-            }
-
+            var value = columnFilter.Column is PrimaryColumn
+                ? (object) ConvertToObjectId(columnFilter.Value.ToString())
+                : columnFilter.Value.ToString();
             return value;
+        }
+
+        private static ObjectId ConvertToObjectId(string columnFilterValue)
+        {
+            var isObjectIdFormatValid = ObjectId.TryParse(columnFilterValue, out ObjectId id);
+            if (isObjectIdFormatValid)
+            {
+                return id;
+            }
+            throw new InvalidIdFormatException("Specified resource identifier has an invalid format." +
+                                               "Please make sure that you pass a correct id.");
         }
     }
 }

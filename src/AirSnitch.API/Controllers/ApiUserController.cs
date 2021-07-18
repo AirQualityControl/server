@@ -7,6 +7,7 @@ using AirSnitch.Api.Rest.Resources.Client;
 using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,7 +67,7 @@ namespace AirSnitch.Api.Controllers
             
             queryScheme.AddColumnFilter(
                 new EqualColumnFilter(
-                     column:new PrimaryColumn("id", "_id"),
+                     column:new PrimaryColumn(),
                      value:apiUserId
                     )
                 );

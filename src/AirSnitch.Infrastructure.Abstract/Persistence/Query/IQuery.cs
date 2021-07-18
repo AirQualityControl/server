@@ -1,3 +1,5 @@
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
+
 namespace AirSnitch.Infrastructure.Abstract.Persistence
 {
     public interface IQuery

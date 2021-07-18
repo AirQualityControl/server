@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirSnitch.Api.Controllers

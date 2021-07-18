@@ -4,6 +4,7 @@ using System.Linq;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Api.Rest.Resources.Relationship;
 using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Api.Rest.Graph
 {

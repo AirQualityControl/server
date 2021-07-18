@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
 {

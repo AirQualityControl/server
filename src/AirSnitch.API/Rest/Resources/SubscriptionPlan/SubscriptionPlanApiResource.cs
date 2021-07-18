@@ -8,8 +8,7 @@ namespace AirSnitch.Api.Rest.Resources.SubscriptionPlan
 
         private static readonly List<ApiResourceColumn> ResourceColumns = new List<ApiResourceColumn>()
         {
-            new ApiResourceColumn("id", "name"),
-            new ApiResourceColumn("name", "description"),
+            new ApiResourceColumn("name", "name"),
             new ApiResourceColumn("description", "description"),
             new ApiResourceColumn("parameters", "parameters")
         };

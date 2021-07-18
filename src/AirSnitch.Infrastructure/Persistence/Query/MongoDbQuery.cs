@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence;
+using AirSnitch.Infrastructure.Abstract.Persistence.Filters;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
+using AirSnitch.Infrastructure.Persistence.Filters;
 using MongoDB.Bson;
 
 namespace AirSnitch.Infrastructure.Persistence
