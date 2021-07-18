@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Linq;
 
-namespace AirSnitch.Api.Controllers
+namespace AirSnitch.Api.Rest.Links
 {
     public abstract class HalLink
     {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.Extensions;
+using AirSnitch.Infrastructure.Persistence.Query;
 using MongoDB.Driver;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories

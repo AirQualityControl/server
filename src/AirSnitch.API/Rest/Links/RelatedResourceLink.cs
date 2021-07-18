@@ -25,16 +25,14 @@ namespace AirSnitch.Api.Rest.Links
         public override string HrefValue {
             get
             {
+                var baseUri = BaseApiLink.From(_httpRequest).Value;
                 if (!_queryResult.IsScalar())
                 {
                     var queryStringDictionary = _httpRequest.Query.ToDictionary(keySelector: k => k.Key, k => k.Value);
                     queryStringDictionary["includes"] = Name;
-                    
-                    return new Uri(new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
-                        _httpRequest.Path.Value + QueryString.Create(queryStringDictionary)).ToString();
+                    return $"{baseUri}{QueryString.Create(queryStringDictionary)}";
                 }
-                return new Uri(new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}"), 
-                    _httpRequest.Path.Value + _httpRequest.QueryString.Value).ToString();
+                return $"{baseUri}/{_name}";
             }
         }
     }

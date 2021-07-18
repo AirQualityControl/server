@@ -3,6 +3,7 @@ using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
+using AirSnitch.Infrastructure.Persistence.Query;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
 using DnsClient.Protocol;
 

@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Filters;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Persistence.Filters;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 
-namespace AirSnitch.Infrastructure.Persistence
+namespace AirSnitch.Infrastructure.Persistence.Query
 {
     public class MongoDbQuery : IQuery
     {
@@ -19,7 +20,19 @@ namespace AirSnitch.Infrastructure.Persistence
         public BsonDocument Projection => _projection;
 
         //TODO: separate class
-        public BsonDocument Filter => _filters;
+        public BsonDocument Filter {
+            get
+            {
+                if (_filters == null)
+                {
+                    return Builders<BsonDocument>.Filter.Empty.Render(
+                        BsonSerializer.SerializerRegistry.GetSerializer<BsonDocument>(), 
+                        BsonSerializer.SerializerRegistry
+                    );
+                }
+                return _filters;
+            }
+        }
 
         private MongoDbQuery(string collectionName)
         {
@@ -48,7 +61,17 @@ namespace AirSnitch.Infrastructure.Persistence
 
         private void AddFilters(IReadOnlyCollection<IColumnFilter> filters)
         {
-            throw new NotImplementedException();
+            if (filters == null || !filters.Any())
+            {
+                return;
+            }
+
+            if (filters.Count > 1)
+            {
+                throw new NotImplementedException("more that 1 filter currently is not supported");
+            }
+            
+            AddFilter(filters.Single());
         }
 
         private void AddFilter(IColumnFilter columnFilter)
@@ -61,7 +84,7 @@ namespace AirSnitch.Infrastructure.Persistence
             var query = new MongoDbQuery(queryScheme.EntityName);
             query.AddColumns(queryScheme.Columns);
             query.PageOptions = queryScheme.PageOptions;
-            query.AddFilter(queryScheme.Filters.First());
+            query.AddFilters(queryScheme.Filters);
             return query;
         }
     }
