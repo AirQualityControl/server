@@ -1,14 +1,16 @@
 using System.Threading.Tasks;
+using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Api.Rest.Resources.ApiUser;
 using AirSnitch.Api.Rest.Resources.Registry;
+using AirSnitch.Api.Rest.ResponseBodyFormatters;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AirSnitch.Api.Controllers
+namespace AirSnitch.Api.Controllers.ApiUser
 {
     [ApiController]
     [Route("apiUser")]
@@ -35,7 +37,7 @@ namespace AirSnitch.Api.Controllers
             //TODO: wrap into rest api result
             if (result.IsSuccess)
             {
-                return new SuccessRestApiResult
+                return new RestApiResult
                 (
                     new RestResponseBody(
                         Request,
@@ -65,7 +67,7 @@ namespace AirSnitch.Api.Controllers
             //TODO: wrap into rest api result
             if (result.IsSuccess)
             {
-                return new SuccessRestApiResult
+                return new RestApiResult
                 (
                     new RestResponseBody(
                         Request,
@@ -84,7 +86,7 @@ namespace AirSnitch.Api.Controllers
         {
             var apiUser = await _apiUserRepository.FindById(apiUserId);
 
-            return new SuccessRestApiResult(
+            return new RestApiResult(
                new ClientResponseBody(apiUser.Clients)
             );
 
@@ -101,7 +103,7 @@ namespace AirSnitch.Api.Controllers
                 return NotFound();
             }
 
-            return new SuccessRestApiResult(
+            return new RestApiResult(
                new SubscriptionPlanResponseBody(apiUser.SubscriptionPlan)
             );
         }

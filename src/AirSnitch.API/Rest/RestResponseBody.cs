@@ -1,19 +1,20 @@
 using System.Collections.Generic;
-using AirSnitch.Api.Rest.Links;
+using System.Net.Mime;
+using System.Text.Json.Serialization;
 using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.ResponseBodyFormatters;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json.Linq;
 
-namespace AirSnitch.Api.Controllers
+namespace AirSnitch.Api.Rest
 {
     public class RestResponseBody : IResponseBody
     {
         private readonly HttpRequest _httpRequest;
         private readonly QueryResult _queryResult;
-        //TODO: introduce IResponseBodyFormatter
         private readonly IReadOnlyCollection<IApiResourceMetaInfo> _relatedResources;
-        
+
+
         public RestResponseBody(HttpRequest httpRequest, 
             QueryResult queryResult, 
             IReadOnlyCollection<IApiResourceMetaInfo> relatedResources)
@@ -23,112 +24,12 @@ namespace AirSnitch.Api.Controllers
             _relatedResources = relatedResources;
         }
 
-        public string Value {
-            get
-            {
-                JObject rootObject = new JObject();
-                AppendLinks(rootObject);
-                if (!_queryResult.IsScalar())
-                {
-                    AppendPageSize(rootObject);
-                    AppendCurrentPageNumber(rootObject);
-                    AppendLastPageNumber(rootObject);
-                }
-                AppendValues(rootObject);
-                return rootObject.ToString();
-            }
-        }
+        public string Value => Formatter.FormatResponse(this);
         
-        private void AppendLinks(JObject rootObject)
-        {
-            rootObject["_links"] = new HalLinksContainer(_queryResult, _httpRequest, _relatedResources).Value;
-        }
-
-        private void AppendPageSize(JObject rootObject)
-        {
-            rootObject["pageSize"] = _queryResult.PageOptions.Items;
-        }
-
-        private void AppendCurrentPageNumber(JObject rootObject)
-        {
-            rootObject["currentPageNumber"] = _queryResult.PageOptions.PageNumber;
-        }
-
-        private void AppendLastPageNumber(JObject rootObject)
-        {
-            rootObject["lastPageNumber"] = _queryResult.PageOptions.LastPageNumber;
-        }
-
-        private void AppendValues(JObject rootObject)
-        {
-            rootObject["items"] = GetItems();
-        }
-
-        private JArray GetItems()
-        {
-            var jArray = new JArray();
-
-            foreach (var item in _queryResult.Value)
-            {
-                jArray.Add(
-                    new JObject(
-                        GetSelfValues(item.ScalarValues),
-                        GetIncludeValues(item.IncludedValues)
-                    )
-                );
-            }
-
-            return jArray;
-        }
+        protected virtual IResponseBodyFormatter Formatter =>
+            new RestfullResponseBodyFormatter(_httpRequest, _queryResult, _relatedResources);
         
-        private JProperty GetSelfValues(Dictionary<string, object> selfValues)
-        {
-            var selfValuesJObject = new JObject();
-            foreach (var value in selfValues)
-            {
-                selfValuesJObject.Add(new JProperty(value.Key, value.Value));
-            }
-
-            return new JProperty("values", selfValuesJObject);
-        }
-        
-        private JProperty GetIncludeValues(Dictionary<string, object> dataIncludedResources)
-        {
-            var includesContainer = new JObject();
-
-            foreach (var includedResource  in dataIncludedResources)
-            {
-                if (includedResource.Value.GetType() != typeof(JArray))
-                {
-                    includesContainer.Add(
-                        new JProperty(includedResource.Key, 
-                            new JObject(
-                                new JProperty("values", includedResource.Value)
-                                )
-                            )
-                        );
-                }
-                else
-                {
-                    var jarray = new JArray();
-                    foreach (var item in (JArray) includedResource.Value)
-                    {
-                        var obj = ((JObject) item);
-                        var selft = new JProperty("values", obj);
-                        jarray.Add(new JObject(selft));
-                    }
-                    
-                    includesContainer.Add(
-                        new JProperty(includedResource.Key,
-                               new JObject(
-                                   new JProperty("items", 
-                                       jarray))
-                            )    
-                    );
-                }
-            }
-
-            return new JProperty("includes", includesContainer);
-        }
+        [JsonIgnore]
+        public ContentType ContentType => new ContentType("application/json");
     }
 }

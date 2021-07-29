@@ -1,25 +1,28 @@
 using System.Collections.Generic;
+using System.Net.Mime;
+using System.Runtime.Serialization;
+using AirSnitch.Api.Rest;
+using AirSnitch.Api.Rest.ResponseBodyFormatters;
 using AirSnitch.Domain.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
-namespace AirSnitch.Api.Controllers
+namespace AirSnitch.Api.Controllers.ApiUser
 {
-    public class ClientResponseBody : IResponseBody
+    internal class ClientResponseBody : IResponseBody
     {
         private readonly IReadOnlyCollection<ApiClient> _clients;
-
+        
         public ClientResponseBody(IReadOnlyCollection<ApiClient> clients)
         {
             _clients = clients;
         }
 
-        //TODO: use formatter instead
-        public string Value => JsonConvert.SerializeObject(
-            ApiClientViewModel.BuildFrom(_clients),new JsonSerializerSettings()
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            }
-        );
+        public string Value => Formatter.FormatResponse(ApiClientViewModel.BuildFrom(_clients));
+
+        [JsonIgnore]
+        protected virtual IResponseBodyFormatter Formatter => new SimpleJsonBodyFormatter();
+        
+        [JsonIgnore]
+        public ContentType ContentType => new ContentType("application/json");
     }
 }

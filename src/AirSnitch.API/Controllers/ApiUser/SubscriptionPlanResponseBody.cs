@@ -1,29 +1,27 @@
+using System.Net.Mime;
 using AirSnitch.Api.Controllers.ApiUser.ViewModels;
+using AirSnitch.Api.Rest;
+using AirSnitch.Api.Rest.ResponseBodyFormatters;
 using AirSnitch.Domain.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
-namespace AirSnitch.Api.Controllers
+namespace AirSnitch.Api.Controllers.ApiUser
 {
-    public class SubscriptionPlanResponseBody : IResponseBody
+    internal class SubscriptionPlanResponseBody : IResponseBody
     {
         private readonly SubscriptionPlan _subscriptionPlan;
-
 
         public SubscriptionPlanResponseBody(SubscriptionPlan subscriptionPlan)
         {
             _subscriptionPlan = subscriptionPlan;
         }
+
+        public string Value => Formatter.FormatResponse(SubscriptionPlanViewModel.BuildFrom(_subscriptionPlan));
+
+        [JsonIgnore]
+        protected virtual IResponseBodyFormatter Formatter => new SimpleJsonBodyFormatter();
         
-        public string Value
-        {
-            get => JsonConvert.SerializeObject(
-                SubscriptionPlanViewModel.BuildFrom(_subscriptionPlan),
-                new JsonSerializerSettings()
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                }
-            );
-        }
+        [JsonIgnore]
+        public ContentType ContentType => new ContentType("application/json");
     }
 }
