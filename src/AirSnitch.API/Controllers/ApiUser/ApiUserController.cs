@@ -32,6 +32,7 @@ namespace AirSnitch.Api.Controllers
 
             QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
+            //TODO: wrap into rest api result
             if (result.IsSuccess)
             {
                 return new SuccessRestApiResult
@@ -61,6 +62,7 @@ namespace AirSnitch.Api.Controllers
             
             QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
+            //TODO: wrap into rest api result
             if (result.IsSuccess)
             {
                 return new SuccessRestApiResult
@@ -80,14 +82,28 @@ namespace AirSnitch.Api.Controllers
         [Route("{apiUserId}/clients")]
         public async Task<IActionResult> GetClients(string apiUserId)
         {
-            return NotFound();
+            var apiUser = await _apiUserRepository.FindById(apiUserId);
+
+            return new SuccessRestApiResult(
+               new ClientResponseBody(apiUser.Clients)
+            );
+
         }
         
         [HttpGet]
         [Route("{apiUserId}/subscriptionPlan")]
         public async Task<IActionResult> GetSubscriptionPlan(string apiUserId)
         {
-            return NotFound();
+            var apiUser = await _apiUserRepository.FindById(apiUserId);
+
+            if (apiUser.IsEmpty)
+            {
+                return NotFound();
+            }
+
+            return new SuccessRestApiResult(
+               new SubscriptionPlanResponseBody(apiUser.SubscriptionPlan)
+            );
         }
     }
 }

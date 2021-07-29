@@ -7,9 +7,9 @@ namespace AirSnitch.Api
 {
     public class SuccessRestApiResult : IActionResult
     {
-        private readonly RestResponseBody _responseBody;
+        private readonly IResponseBody _responseBody;
 
-        public SuccessRestApiResult(RestResponseBody responseBody)
+        public SuccessRestApiResult(IResponseBody responseBody)
         {
             _responseBody = responseBody;
         }

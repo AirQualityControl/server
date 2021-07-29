@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence;
@@ -5,7 +7,6 @@ using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.Query;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
-using DnsClient.Protocol;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
@@ -20,8 +21,28 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         
         public async Task<ApiUser> FindById(string id)
         {
-            var storageModel = await _genericRepository.FindByIdAsync(id);
-            return null;
+            return await Task.FromResult(
+                new ApiUser()
+                {
+                    Profile = new ApiUserProfile()
+                    {
+                        Name = new UserName("Artur"),
+                        LastName = new LastName("Lavrov"),
+                        Email = new Email("arturstylus@gmail.com"),
+                    },
+                    SubscriptionPlan = SubscriptionPlan.Basic,
+                    Clients = new List<ApiClient>()
+                    {
+                        new ApiClient()
+                        {
+                            CreatedOn = DateTime.Now,
+                            Description = new ClientDescription("My awesome IoT App"),
+                            Name = new ClientName("IoT App"),
+                            Status = ClientStatus.Active,
+                            Type = ClientType.Production
+                        }
+                    }
+                });
         }
 
         public async Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme)

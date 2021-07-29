@@ -7,13 +7,13 @@ using Newtonsoft.Json.Linq;
 
 namespace AirSnitch.Api.Controllers
 {
-    public class RestResponseBody
+    public class RestResponseBody : IResponseBody
     {
         private readonly HttpRequest _httpRequest;
         private readonly QueryResult _queryResult;
         //TODO: introduce IResponseBodyFormatter
         private readonly IReadOnlyCollection<IApiResourceMetaInfo> _relatedResources;
-
+        
         public RestResponseBody(HttpRequest httpRequest, 
             QueryResult queryResult, 
             IReadOnlyCollection<IApiResourceMetaInfo> relatedResources)
