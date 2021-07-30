@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Api.Rest.Resources.Relationship;
 using AirSnitch.Infrastructure.Abstract.Persistence;
@@ -30,11 +31,10 @@ namespace AirSnitch.Api.Rest.Graph
         }
         public GraphVisitor From(RelatedVertex<IApiResourceMetaInfo> startingVertex)
         {
-            if(!_visitedGraph.ContainsVertex(startingVertex))
+            if (!_visitedGraph.TryGetVertex(startingVertex, out _rootVertex))
             {
-                throw new Exception("ex");
+                throw new VertexNotFoundException();
             }
-            _rootVertex = _visitedGraph.GetVertex(startingVertex);
             return this;
         }
 
@@ -79,6 +79,26 @@ namespace AirSnitch.Api.Rest.Graph
             {
                 VisitInternal(_vertex);
             }
+        }
+    }
+
+    public class VertexNotFoundException : Exception
+    {
+        private static string _defaultExceptionMessageText = "Requested vertex does not exist in current graph";
+
+        public VertexNotFoundException()
+        {
+            
+        }
+
+        public VertexNotFoundException(string message) : base(message ?? _defaultExceptionMessageText)
+        {
+           
+        }
+
+        public VertexNotFoundException(string message, Exception ex) : base(message, ex)
+        {
+            
         }
     }
 }

@@ -50,7 +50,7 @@ namespace AirSnitch.Api.Controllers.ApiUser
         }
         
         [HttpGet]
-        [Route("{apiUserId}")]
+        [Route("{Id}")]
         public async Task<IActionResult> GetById(string apiUserId, string includedResources)
         {
             var queryScheme = GenerateQueryScheme(includedResources);
