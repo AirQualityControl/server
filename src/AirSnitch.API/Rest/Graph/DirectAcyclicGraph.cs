@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using AirSnitch.Api.Rest.Graph.TraversionStrategy;
 using AirSnitch.Api.Rest.Resources;
@@ -43,39 +45,7 @@ namespace AirSnitch.Api.Rest.Graph
                 _adjacencylist.Add(vertex1);
             }
         }
-
-        /// <summary>
-        /// Method that determines whether current instance of DAG contains certain vertex or not.
-        /// </summary>
-        /// <param name="startingVertex"></param>
-        /// <returns></returns>
-        public bool ContainsVertex(RelatedVertex<IApiResourceMetaInfo> startingVertex)
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vertex"></param>
-        /// <returns></returns>
-        public RelatedVertex<TValue> GetVertex(RelatedVertex<TValue> vertex)
-        {
-            return _adjacencylist
-                .Single(v => v.Value.Equals(vertex.Value));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vertex"></param>
-        /// <returns></returns>
-        public bool TryGetVertex(out RelatedVertex<TValue> vertex)
-        {
-            vertex = null;
-            return true;
-        }
-
+        
         /// <summary>
         /// Method that returns all reachable vertexes from current vertex.
         /// Result read-only collection will determine what resource could be requested together
@@ -84,11 +54,32 @@ namespace AirSnitch.Api.Rest.Graph
         /// <returns></returns>
         public IReadOnlyCollection<TValue> GetAllReachableVertexFrom(RelatedVertex<TValue> requestedVertex)
         {
-            var rootVertex = GetVertex(requestedVertex);
-
+            if (!TryGetVertex(requestedVertex, out RelatedVertex<TValue> rootVertex))
+            {
+                throw new VersionNotFoundException();
+            }
+            
             var reachableVertices = TraversionStrategy.TraverseFrom(rootVertex).Result;
 
             return reachableVertices.Select(vertex => vertex.Value).ToList();
+        }
+
+        public bool TryGetVertex(RelatedVertex<TValue> requestedVertex, out RelatedVertex<TValue> graphVertex)
+        {
+            var startingVertex = _adjacencylist.SingleOrDefault(v => v.Equals(requestedVertex));
+
+            if (startingVertex != null)
+            {
+                graphVertex = startingVertex;
+                return true;
+            }
+
+            var neighbourVertex = _adjacencylist
+                .SelectMany(v => v.Neighbours)
+                .SingleOrDefault(n => n.Equals(requestedVertex));
+            graphVertex = neighbourVertex;
+
+            return neighbourVertex != null;
         }
     }
 }

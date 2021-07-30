@@ -10,6 +10,7 @@ namespace AirSnitch.Di
         public static void ResolveApplicationDependencies(this IServiceCollection services)
         {
             services.AddTransient<IApiUserRepository, ApiUserRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
             services.AddSingleton(MongoDbClient.Create());
         }
     }

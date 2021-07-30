@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Api.Rest.Resources.SubscriptionPlan
 {
@@ -16,6 +18,7 @@ namespace AirSnitch.Api.Rest.Resources.SubscriptionPlan
         public ApiResourceName Name => ApiUserResourceName;
 
         public IReadOnlyCollection<ApiResourceColumn> Columns => ResourceColumns;
+        public QueryColumn QueryColumn => throw new NotImplementedException();
 
         public bool Equals(IApiResourceMetaInfo other)
         {

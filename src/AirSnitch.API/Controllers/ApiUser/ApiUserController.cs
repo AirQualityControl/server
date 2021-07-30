@@ -4,7 +4,6 @@ using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Api.Rest.Resources.ApiUser;
 using AirSnitch.Api.Rest.Resources.Registry;
-using AirSnitch.Api.Rest.ResponseBodyFormatters;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
@@ -16,8 +15,10 @@ namespace AirSnitch.Api.Controllers.ApiUser
     [Route("apiUser")]
     public class ApiUserController : RestApiController
     {
+        private static readonly IApiResourceMetaInfo ApiUserResource = new ApiUserResource();
+        
         private readonly IApiUserRepository _apiUserRepository;
-        protected override IApiResourceMetaInfo CurrentResource => new ApiUserResource();
+        protected override IApiResourceMetaInfo CurrentResource => ApiUserResource;
         
         public ApiUserController(
             DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph,
@@ -50,14 +51,14 @@ namespace AirSnitch.Api.Controllers.ApiUser
         }
         
         [HttpGet]
-        [Route("{apiUserId}")]
+        [Route("{Id}")]
         public async Task<IActionResult> GetById(string apiUserId, string includedResources)
         {
             var queryScheme = GenerateQueryScheme(includedResources);
             
             queryScheme.AddColumnFilter(
                 new EqualColumnFilter(
-                     column:new PrimaryColumn(),
+                     column: CurrentResource.QueryColumn,
                      value:apiUserId
                     )
                 );
@@ -89,7 +90,6 @@ namespace AirSnitch.Api.Controllers.ApiUser
             return new RestApiResult(
                new ClientResponseBody(apiUser.Clients)
             );
-
         }
         
         [HttpGet]
