@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Api.Rest.Resources.ApiUser
 {
     internal class ApiUserResource : IApiResourceMetaInfo
     {
+        private static readonly QueryColumn _queryColumn = new PrimaryColumn();
+        
         private static readonly ApiResourceName ApiUserResourceName = new ApiResourceName("apiUser");
 
         private static readonly List<ApiResourceColumn> ResourceColumns = new List<ApiResourceColumn>()
@@ -15,6 +18,9 @@ namespace AirSnitch.Api.Rest.Resources.ApiUser
         };
         public ApiResourceName Name => ApiUserResourceName;
         public IReadOnlyCollection<ApiResourceColumn> Columns => ResourceColumns;
+        
+        public QueryColumn QueryColumn => new PrimaryColumn();
+
         public bool Equals(IApiResourceMetaInfo other)
         {
             return other != null && Name.Equals(other.Name);

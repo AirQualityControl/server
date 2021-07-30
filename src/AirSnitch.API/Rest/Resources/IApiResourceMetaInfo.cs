@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Api.Rest.Resources
 {
@@ -8,5 +9,7 @@ namespace AirSnitch.Api.Rest.Resources
         public ApiResourceName Name { get; }
 
         public IReadOnlyCollection<ApiResourceColumn> Columns { get; }
+
+        public QueryColumn QueryColumn { get; }
     }
 }
