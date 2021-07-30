@@ -49,6 +49,20 @@ namespace AirSnitch.Infrastructure.Persistence
                 {
                     includedResources.Add(embededDoc.Key, embededDoc.Value);
                 }
+
+                //SWAP here
+                if (!scalarValues.Any())
+                {
+                    if (includedResources.Any())
+                    {
+                        queryResultEntryCollection.Add(new MongoDbQueryResultEntry()
+                        {
+                            ScalarValues = includedResources, 
+                            IncludedValues = scalarValues
+                        });
+                        continue;
+                    }
+                }
                 
                 queryResultEntryCollection.Add(new MongoDbQueryResultEntry()
                 {
