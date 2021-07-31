@@ -51,19 +51,13 @@ namespace AirSnitch.Api.Controllers.ApiUser
 
             QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
-            //TODO: wrap into rest api result
-            if (result.IsSuccess)
-            {
-                return new RestApiResult
-                (
-                    new RestResponseBody(
-                        Request,
-                        result,
-                        RelatedResources
-                    )
-                );
-            }
-            return new NotFoundResult();
+            return new RestApiResult(
+                new RestResponseBody(
+                    Request,
+                    result,
+                    RelatedResources
+                )
+            );
         }
         
         /// <summary>
@@ -94,21 +88,14 @@ namespace AirSnitch.Api.Controllers.ApiUser
                 );
             
             QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
-            
-            //TODO: wrap into rest api result
-            if (result.IsSuccess)
-            {
-                return new RestApiResult
-                (
-                    new RestResponseBody(
-                        Request,
-                        result,
-                        RelatedResources
-                    )
-                );
-            }
 
-            return new NotFoundResult();
+            return new RestApiResult(
+                new RestResponseBody(
+                    Request,
+                    result,
+                    RelatedResources
+                )
+            );
         }
         
         /// <summary>

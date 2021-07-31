@@ -15,6 +15,12 @@ namespace AirSnitch.Api.Rest
         
         public async Task ExecuteResultAsync(ActionContext context)
         {
+            if (_responseBody.IsEmpty)
+            {
+                await new NotFoundResult().ExecuteResultAsync(context);
+                return;
+            }
+
             var formatterResultAsString = _responseBody.Value;
 
             var objectResult = new ObjectResult(formatterResultAsString)
