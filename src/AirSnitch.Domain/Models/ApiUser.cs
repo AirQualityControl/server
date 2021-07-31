@@ -38,11 +38,22 @@ namespace AirSnitch.Domain.Models
             throw new NotImplementedException();
         }
 
-        public void RemoveClient()
+
+        public void RemoveClientById(string apiClientId)
+        {
+            
+        }
+
+        public void RemoveClient(ApiClient client)
         {
             throw new NotImplementedException();
         }
-        
+
+        public void RemoveAllClients()
+        {
+            
+        }
+
         public void Block()
         {
             throw new NotImplementedException();

@@ -7,6 +7,7 @@ using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirSnitch.Api.Controllers.ApiUser
@@ -16,8 +17,8 @@ namespace AirSnitch.Api.Controllers.ApiUser
     public class ApiUserController : RestApiController
     {
         private static readonly IApiResourceMetaInfo ApiUserResource = new ApiUserResource();
-        
         private readonly IApiUserRepository _apiUserRepository;
+        
         protected override IApiResourceMetaInfo CurrentResource => ApiUserResource;
         
         public ApiUserController(
@@ -28,7 +29,19 @@ namespace AirSnitch.Api.Controllers.ApiUser
             _apiUserRepository = apiUserRepository;
         }
         
+        
+        /// <summary>
+        /// Returns all available api users.
+        /// </summary>
+        /// <url>http://apiurl/apiUsers</url>
+        /// <param name="requestParameters">Requested parameter's that will be send alongside with a request.</param>
+        /// <returns>Existing appointment data in an Appointment object or a business error.</returns>
+        /// <response code="200">Returns 200 when everything is correct</response>
+        /// <response code="400">If request parameters has an invalid state</response>   
+        /// <response code="500">Returns if there's an unhandled exception.</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery]RequestParameters requestParameters)
         {
             var queryScheme = GenerateQueryScheme(requestParameters.Includes, requestParameters.PageOptions);
@@ -50,16 +63,26 @@ namespace AirSnitch.Api.Controllers.ApiUser
             return new NotFoundResult();
         }
         
+        /// <summary>
+        /// Returns a requested api user by Id
+        /// </summary>
+        /// <url>http://apiurl/apiUser/Id</url>
+        /// <param name="id">Identifier of api user</param>
+        /// <param name="includedResources">A collection of included resources the will be queried in single request alongside with a main resource(ApiUser)</param>>
+        /// <returns>Existing apiUser</returns>
+        /// <response code="200">Returns 200 when everything is correct</response>
+        /// <response code="400">If request parameters has an invalid state</response>   
+        /// <response code="500">Returns if there's an unhandled exception.</response>
         [HttpGet]
-        [Route("{Id}")]
-        public async Task<IActionResult> GetById(string apiUserId, string includedResources)
+        [Route("{id}")]
+        public async Task<IActionResult> GetById(string id, string includedResources)
         {
             var queryScheme = GenerateQueryScheme(includedResources);
             
             queryScheme.AddColumnFilter(
                 new EqualColumnFilter(
                      column: CurrentResource.QueryColumn,
-                     value:apiUserId
+                     value:id
                     )
                 );
             
@@ -81,31 +104,87 @@ namespace AirSnitch.Api.Controllers.ApiUser
             return new NotFoundResult();
         }
         
-        [HttpGet]
-        [Route("{apiUserId}/clients")]
-        public async Task<IActionResult> GetClients(string apiUserId)
+        /// <summary>
+        /// Delete an api user and all depended information by Id.
+        /// </summary>
+        /// <url>http://apiurl/apiUser/Id</url>
+        /// <param name="id">Identifier of api user</param>
+        /// <response code="200">Returns 204 when api user was successfully deleted.</response>
+        /// <response code="404">If record to delete was not found</response>   
+        /// <response code="500">Returns if there's an unhandled exception.</response>
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteApiUserById(string id)
         {
-            var apiUser = await _apiUserRepository.FindById(apiUserId);
+            var deletionResult = await _apiUserRepository.DeleteById(id);
+
+            return deletionResult == DeletionResult.Success ? NoContent() : NotFound();
+        }
+        
+        /// <summary>
+        /// Returns only clients for specific ApiUser
+        /// </summary>
+        /// <url>http://apiurl/apiUser/Id/clients</url>
+        /// <param name="id">Identifier of api user</param>
+        /// <response code="200">Returns 200 when data was successfully fetched</response>
+        /// <response code="404">If parent record to fetch(ApiUser) was not found</response>   
+        /// <response code="500">Returns if there's an unhandled exception.</response>
+        [HttpGet]
+        [Route("{id}/clients")]
+        public async Task<IActionResult> GetClients(string id)
+        {
+            var apiUser = await _apiUserRepository.FindById(id);
 
             return new RestApiResult(
                new ClientResponseBody(apiUser.Clients)
             );
         }
-        
-        [HttpGet]
-        [Route("{apiUserId}/subscriptionPlan")]
-        public async Task<IActionResult> GetSubscriptionPlan(string apiUserId)
+
+        /// <summary>
+        /// Delete all api user clients
+        /// </summary>
+        /// <url>http://apiurl/apiUser/Id/clients</url>
+        /// <param name="id">Identifier of api user</param>
+        /// <response code="200">Returns 204 when api user clients was successfully deleted.</response>
+        /// <response code="404">If record to delete was not found</response>   
+        /// <response code="500">Returns if there's an unhandled exception.</response>
+        [HttpDelete]
+        [Route("{id}/clients")]
+        public async Task<IActionResult> DeleteClientsById(string id)
         {
-            var apiUser = await _apiUserRepository.FindById(apiUserId);
+            var apiUser = await _apiUserRepository.FindById(id);
 
             if (apiUser.IsEmpty)
             {
                 return NotFound();
             }
+            
+            apiUser.RemoveAllClients();
 
-            return new RestApiResult(
-               new SubscriptionPlanResponseBody(apiUser.SubscriptionPlan)
-            );
+            await _apiUserRepository.Update(apiUser);
+            
+            return NoContent();
+        }
+        
+        /// <summary>
+        /// Returns a subscription plan for specific api user
+        /// </summary>
+        /// <url>http://apiurl/apiUser/Id/subscriptionPlan</url>
+        /// <param name="id">Identifier of api user</param>
+        /// <response code="200">Returns 200 when api user subscription plan was successfully fetched.</response>
+        /// <response code="404">If parent record (ApiUser) was not found</response>   
+        /// <response code="500">Returns if there's an unhandled exception.</response>
+        [HttpGet]
+        [Route("{id}/subscriptionPlan")]
+        public async Task<IActionResult> GetSubscriptionPlan(string id)
+        {
+            var apiUser = await _apiUserRepository.FindById(id);
+
+            return apiUser.IsEmpty
+                ? NotFound()
+                : new RestApiResult(
+                    new SubscriptionPlanResponseBody(apiUser.SubscriptionPlan)
+                );
         }
     }
 }

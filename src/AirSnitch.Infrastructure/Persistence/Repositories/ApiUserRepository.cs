@@ -60,5 +60,15 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
                     totalNumberOfItems: totalNumberOfDocumentsTask.Result, 
                     itemsPerPage:queryScheme.PageOptions.ItemsLimit));
         }
+
+        public Task Update(ApiUser apiUser)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task<DeletionResult> DeleteById(string id)
+        {
+            return Task.FromResult(DeletionResult.Success);
+        }
     }
 }

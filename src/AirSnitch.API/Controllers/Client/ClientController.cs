@@ -11,23 +11,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AirSnitch.Api.Controllers.Client
 {
-    
     [ApiController]
     [Route("client")]
     public class ClientController : RestApiController
     {
         private readonly IClientRepository _clientRepository;
+        private readonly IApiUserRepository _apiUserRepository;
         
         public ClientController(
             DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph, 
             IApiResourceRegistry apiResourceRegistry,
-            IClientRepository clientRepository) : base(apiResourcesGraph, apiResourceRegistry)
+            IClientRepository clientRepository, IApiUserRepository apiUserRepository) : base(apiResourcesGraph, apiResourceRegistry)
         {
             _clientRepository = clientRepository;
+            _apiUserRepository = apiUserRepository;
         }
 
         protected override IApiResourceMetaInfo CurrentResource => new ClientApiResource();
         
+        /// <summary>
+        /// Returns all available clients in system
+        /// </summary>
+        /// <param name="requestParameters"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
         {
@@ -50,16 +56,22 @@ namespace AirSnitch.Api.Controllers.Client
             return new NotFoundResult();
         }
 
+        /// <summary>
+        /// Returns a specific client by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="includedResources"></param>
+        /// <returns></returns>
         [HttpGet]
-        [Route("Id")]
-        public async Task<IActionResult> GetById(string clientId, string includedResources)
+        [Route("{id}")]
+        public async Task<IActionResult> GetById(string id, string includedResources)
         {
             var queryScheme = GenerateQueryScheme(includedResources);
             
             queryScheme.AddColumnFilter(
                 new EqualColumnFilter(
                     column: CurrentResource.QueryColumn,
-                    value:clientId
+                    value:id
                 )
             );
             
@@ -79,6 +91,29 @@ namespace AirSnitch.Api.Controllers.Client
             }
 
             return new NotFoundResult();
+        }
+
+        /// <summary>
+        /// Delete a specific client by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteById(string id)
+        {
+            var apiUser = await _clientRepository.FindClientOwner(clientId: id);
+
+            if (apiUser.IsEmpty)
+            {
+                return NotFound();
+            }
+
+            apiUser.RemoveClientById(id);
+
+            await _apiUserRepository.Update(apiUser);
+
+            return NoContent();
         }
     }
 }
