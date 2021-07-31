@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AirSnitch.Api.Controllers.ApiUser
 {
+    /// <summary>
+    /// Controller that represent a ApiUser resource
+    /// </summary>
     [ApiController]
     [Route("apiUser")]
     public class ApiUserController : RestApiController
@@ -71,10 +74,14 @@ namespace AirSnitch.Api.Controllers.ApiUser
         /// <param name="includedResources">A collection of included resources the will be queried in single request alongside with a main resource(ApiUser)</param>>
         /// <returns>Existing apiUser</returns>
         /// <response code="200">Returns 200 when everything is correct</response>
-        /// <response code="400">If request parameters has an invalid state</response>   
+        /// <response code="400">If request parameters has an invalid state</response>
+        /// <response code="404">Returns 404 when requested resource was not found</response> 
         /// <response code="500">Returns if there's an unhandled exception.</response>
         [HttpGet]
         [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(string id, string includedResources)
         {
             var queryScheme = GenerateQueryScheme(includedResources);
@@ -114,6 +121,9 @@ namespace AirSnitch.Api.Controllers.ApiUser
         /// <response code="500">Returns if there's an unhandled exception.</response>
         [HttpDelete]
         [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteApiUserById(string id)
         {
             var deletionResult = await _apiUserRepository.DeleteById(id);
@@ -131,6 +141,9 @@ namespace AirSnitch.Api.Controllers.ApiUser
         /// <response code="500">Returns if there's an unhandled exception.</response>
         [HttpGet]
         [Route("{id}/clients")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetClients(string id)
         {
             var apiUser = await _apiUserRepository.FindById(id);
@@ -150,6 +163,9 @@ namespace AirSnitch.Api.Controllers.ApiUser
         /// <response code="500">Returns if there's an unhandled exception.</response>
         [HttpDelete]
         [Route("{id}/clients")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteClientsById(string id)
         {
             var apiUser = await _apiUserRepository.FindById(id);
@@ -176,6 +192,9 @@ namespace AirSnitch.Api.Controllers.ApiUser
         /// <response code="500">Returns if there's an unhandled exception.</response>
         [HttpGet]
         [Route("{id}/subscriptionPlan")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSubscriptionPlan(string id)
         {
             var apiUser = await _apiUserRepository.FindById(id);
