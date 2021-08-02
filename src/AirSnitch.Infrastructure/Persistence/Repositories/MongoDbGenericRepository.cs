@@ -21,35 +21,25 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             _collection = client.Db.GetCollection<TEntity>(
                 collectionName ?? typeof(TEntity).Name.ToLowerCamelCase());
         }
-        
-        /// <inheritdoc/>
-        public Task<TEntity> FindByIdAsync(string id)
-        {
-            return null;
-        }
-        
-        /// <inheritdoc/>
-        public Task<TEntity> GetById(string id)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <inheritdoc/>
-        public Task SaveAsync(TEntity entity)
+        public async Task SaveAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            await _collection.InsertOneAsync(entity);
         }
         
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IReadOnlyCollection<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var filter = Builders<TEntity>.Filter.Where(predicate);
+            return await _collection.Find(filter).ToListAsync();
         }
         
         /// <inheritdoc/>
-        public Task<IReadOnlyCollection<TProjection>> GetByAsync<TProjection>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProjection>> projection)
+        public async Task<IReadOnlyCollection<TProjection>> GetByAsync<TProjection>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TProjection>> projection)
         {
-            throw new NotImplementedException();
+            var filter = Builders<TEntity>.Filter.Where(predicate);
+            return await _collection.Find(filter).Project(projection).ToListAsync();
         }
 
         /// <inheritdoc/>

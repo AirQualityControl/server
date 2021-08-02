@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
@@ -30,6 +31,11 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
                     pageNumber: queryScheme.PageOptions.PageNumber, 
                     totalNumberOfItems: totalNumberOfDocumentsTask.Result, 
                     itemsPerPage:queryScheme.PageOptions.ItemsLimit));
+        }
+
+        public Task<ApiUser> FindClientOwner(string clientId)
+        {
+            return Task.FromResult(new ApiUser());
         }
     }
 }

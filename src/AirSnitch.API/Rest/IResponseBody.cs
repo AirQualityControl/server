@@ -7,6 +7,8 @@ namespace AirSnitch.Api.Rest
     {
         string Value { get; }
 
+        bool IsEmpty { get; }
+
         ContentType ContentType { get; }
     }
 }

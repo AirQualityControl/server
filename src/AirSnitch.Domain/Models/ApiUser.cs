@@ -38,11 +38,22 @@ namespace AirSnitch.Domain.Models
             throw new NotImplementedException();
         }
 
-        public void RemoveClient()
+
+        public void RemoveClientById(string apiClientId)
+        {
+            
+        }
+
+        public void RemoveClient(ApiClient client)
         {
             throw new NotImplementedException();
         }
-        
+
+        public void RemoveAllClients()
+        {
+            
+        }
+
         public void Block()
         {
             throw new NotImplementedException();
@@ -64,6 +75,8 @@ namespace AirSnitch.Domain.Models
         }
 
         public bool IsEmpty { get; set; }
+        public static ApiUser Empty { get; set; }
+
         public bool IsValid()
         {
             throw new System.NotImplementedException();

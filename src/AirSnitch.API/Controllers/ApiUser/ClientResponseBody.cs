@@ -18,6 +18,7 @@ namespace AirSnitch.Api.Controllers.ApiUser
         }
 
         public string Value => Formatter.FormatResponse(ApiClientViewModel.BuildFrom(_clients));
+        public bool IsEmpty => false;
 
         [JsonIgnore]
         protected virtual IResponseBodyFormatter Formatter => new SimpleJsonBodyFormatter();
