@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence;
@@ -19,30 +19,35 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             _genericRepository = new MongoDbGenericRepository<ApiUserStorageModel>(client, "apiUser");
         }
         
+        public async Task Save(ApiUser apiUser)
+        {
+            var apiUserStorageModel = ApiUserStorageModel.CreateFromDomainModel(apiUser);
+            
+            await _genericRepository.SaveAsync(apiUserStorageModel);
+        }
+        
+        public async Task<ApiUser> GetById(string id)
+        {
+            var users =  await _genericRepository.GetByAsync(
+                u => u.Id == id
+            );
+
+            var apiUserStorageModel = users.SingleOrDefault();
+            
+            if (apiUserStorageModel != default(ApiUserStorageModel))
+            {
+                return apiUserStorageModel.MapToDomainModel();
+            }
+            throw new ItemNotFoundException();
+        }
+
         public async Task<ApiUser> FindById(string id)
         {
-            return await Task.FromResult(
-                new ApiUser()
-                {
-                    Profile = new ApiUserProfile()
-                    {
-                        Name = new UserName("Artur"),
-                        LastName = new LastName("Lavrov"),
-                        Email = new Email("arturstylus@gmail.com"),
-                    },
-                    SubscriptionPlan = SubscriptionPlan.Basic,
-                    Clients = new List<ApiClient>()
-                    {
-                        new ApiClient()
-                        {
-                            CreatedOn = DateTime.Now,
-                            Description = new ClientDescription("My awesome IoT App"),
-                            Name = new ClientName("IoT App"),
-                            Status = ClientStatus.Active,
-                            Type = ClientType.Production
-                        }
-                    }
-                });
+            var resultSequence = await _genericRepository.GetByAsync(m => m.Id == id);
+
+            var userStorageModel = resultSequence.SingleOrDefault();
+
+            return userStorageModel == default(ApiUserStorageModel) ? ApiUser.Empty : userStorageModel.MapToDomainModel();
         }
 
         public async Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme)
@@ -68,7 +73,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 
         public Task<DeletionResult> DeleteById(string id)
         {
-            return Task.FromResult(DeletionResult.Success);
+            throw new System.NotImplementedException();
         }
     }
 }

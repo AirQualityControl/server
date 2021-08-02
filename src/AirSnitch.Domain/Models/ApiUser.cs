@@ -75,6 +75,8 @@ namespace AirSnitch.Domain.Models
         }
 
         public bool IsEmpty { get; set; }
+        public static ApiUser Empty { get; set; }
+
         public bool IsValid()
         {
             throw new System.NotImplementedException();

@@ -12,21 +12,6 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
     public interface IGenericRepository<TEntity>
     {
         /// <summary>
-        ///     Try to find an entity in DB
-        /// </summary>
-        /// <param name="id">unique identifier(primary key) of entity</param>
-        /// <returns>If entity was found by id fetched record returns, otherwise null object</returns>
-        Task<TEntity> FindByIdAsync(string id);
-        
-        /// <summary>
-        ///     Fetch a whole entity from DB.
-        /// </summary>
-        /// <param name="id">Unique identifier(primary key) of entity</param>
-        /// <returns>Return single entity in case if operation is success</returns>
-        /// <throws>Throws UserNotFoundException in case if entity not found.</throws>
-        Task<TEntity> GetById(string id);
-        
-        /// <summary>
         ///     Save entity asynchronously
         /// </summary>
         /// <param name="entity">Entity to save</param>
