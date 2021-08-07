@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence;
@@ -7,6 +8,7 @@ using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.Query;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
+using MongoDB.Bson;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
@@ -29,7 +31,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         public async Task<ApiUser> GetById(string id)
         {
             var users =  await _genericRepository.GetByAsync(
-                u => u.Id == id
+                u => u.Id == ObjectId.Parse(id)
             );
 
             var apiUserStorageModel = users.SingleOrDefault();
@@ -43,7 +45,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 
         public async Task<ApiUser> FindById(string id)
         {
-            var resultSequence = await _genericRepository.GetByAsync(m => m.Id == id);
+            var resultSequence = await _genericRepository.GetByAsync(m => m.Id == ObjectId.Parse(id));
 
             var userStorageModel = resultSequence.SingleOrDefault();
 
@@ -73,7 +75,11 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 
         public Task<DeletionResult> DeleteById(string id)
         {
-            throw new System.NotImplementedException();
+            Expression<Func<ApiUserStorageModel, bool>> deleteCondition = 
+                apiUserStorageModel => apiUserStorageModel.Id == ObjectId.Parse(id); 
+            
+            return _genericRepository
+                .DeleteOneBy(deleteCondition);
         }
     }
 }

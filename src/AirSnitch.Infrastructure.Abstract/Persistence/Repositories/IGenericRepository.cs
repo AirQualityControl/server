@@ -43,6 +43,10 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// <returns>An instance of QueryResult class</returns>
         Task<QueryResult> ExecuteQueryAsync(IQuery query);
 
+        Task<DeletionResult> DeleteOneBy(Expression<Func<TEntity, bool>> filter);
+
+        Task<DeletionResult> DeleteBy(Expression<Func<TEntity, bool>> filter);
+
         Task<long> Count { get; }
     }
 }

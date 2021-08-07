@@ -99,18 +99,18 @@ namespace AirSnitch.Api.Controllers.ApiUser
         }
         
         /// <summary>
-        /// Delete an api user and all depended information by Id.
+        /// Delete an api user and all associated information with it.
         /// </summary>
         /// <url>http://apiurl/apiUser/Id</url>
-        /// <param name="id">Identifier of api user</param>
-        /// <response code="200">Returns 204 when api user was successfully deleted.</response>
+        /// <param name="id">Identifier of api user to be deleted</param>
+        /// <response code="204">Returns 204 when record was successfully deleted.</response>
         /// <response code="404">If record to delete was not found</response>   
-        /// <response code="500">Returns if there's an unhandled exception.</response>
+        /// <response code="500">Returns in case of unhandled exception during delete operation.</response>
         [HttpDelete]
         [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteApiUserById(string id)
         {
             var deletionResult = await _apiUserRepository.DeleteById(id);

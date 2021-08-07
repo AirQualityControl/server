@@ -23,6 +23,12 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         
         Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme);
         Task Update(ApiUser apiUser);
+        
+        /// <summary>
+        ///     Method that actually deletes API user entity from persistence storage.
+        /// </summary>
+        /// <param name="id">Id of the api user</param>
+        /// <returns>Returns a result of delete operation.</returns>
         Task<DeletionResult> DeleteById(string id);
     }
 
