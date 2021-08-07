@@ -60,6 +60,25 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             );
         }
 
+        public async Task<DeletionResult> DeleteOneBy(Expression<Func<TEntity, bool>> filter)
+        {
+            var deleteResult = await _collection.DeleteOneAsync(filter);
+
+            if (deleteResult.IsAcknowledged)
+            {
+                return deleteResult.DeletedCount > 0 ? DeletionResult.Success : DeletionResult.NotFound;
+            }
+            //TODO: think about write concern and eventual consistency 
+            throw new Exception("");
+        }
+
+        public async Task<DeletionResult> DeleteBy(Expression<Func<TEntity, bool>> filter)
+        {
+            //TODO: think about write concern and eventual consistency
+            await _collection.DeleteManyAsync(filter);
+            return DeletionResult.Success;
+        }
+
         public Task<long> Count {
             get
             {

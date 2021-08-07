@@ -1,3 +1,5 @@
+using AirSnitch.Infrastructure.Persistence.StorageModels.Mappers;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace AirSnitch.Infrastructure.Persistence
@@ -23,6 +25,7 @@ namespace AirSnitch.Infrastructure.Persistence
 
         public MongoDbClientSettings PingDb()
         {
+            _database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
             return this;
         }
     }
