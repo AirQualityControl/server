@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
-using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
 {
-    public interface IClientRepository : IBaseRepository
+    public interface IBaseRepository
     {
-        Task<ApiUser> FindClientOwner(string clientId);
+        Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme);
     }
 }

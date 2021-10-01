@@ -43,10 +43,25 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// <returns>An instance of QueryResult class</returns>
         Task<QueryResult> ExecuteQueryAsync(IQuery query);
 
+        /// <summary>
+        ///     Method deletes exactly one records by specified expression.
+        ///     In case if there are more that one records matched exception will be thrown
+        /// </summary>
+        /// <param name="filter">Predicate that declare how to filter records.</param>
+        /// <returns>Returns not null deletion result</returns>
         Task<DeletionResult> DeleteOneBy(Expression<Func<TEntity, bool>> filter);
 
+        /// <summary>
+        ///     Method deletes all records by specified expression.
+        ///     In case of success deletion result wil be returned.
+        /// </summary>
+        /// <param name="filter">Predicate that declare what kind of records should be deleted</param>
+        /// <returns></returns>
         Task<DeletionResult> DeleteBy(Expression<Func<TEntity, bool>> filter);
 
+        /// <summary>
+        ///     Returns a number of records
+        /// </summary>
         Task<long> Count { get; }
     }
 }
