@@ -4,9 +4,8 @@ using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
 {
-    public interface IClientRepository
+    public interface IClientRepository : IBaseRepository
     {
-        Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme);
         Task<ApiUser> FindClientOwner(string clientId);
     }
 }

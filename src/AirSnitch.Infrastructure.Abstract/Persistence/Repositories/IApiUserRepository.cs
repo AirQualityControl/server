@@ -4,7 +4,7 @@ using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
 namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
 {
-    public interface IApiUserRepository
+    public interface IApiUserRepository : IBaseRepository
     {
         /// <summary>
         ///     Fetch a whole entity from DB.
@@ -21,7 +21,6 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// <returns>If entity was found by id fetched record returns, otherwise null object</returns>
         Task<ApiUser> FindById(string id);
         
-        Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme);
         Task Update(ApiUser apiUser);
         
         /// <summary>
