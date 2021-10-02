@@ -1,3 +1,4 @@
+using System;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Exceptions;
 using AirSnitch.Infrastructure.Abstract.Persistence.Filters;
@@ -31,12 +32,12 @@ namespace AirSnitch.Infrastructure.Persistence.Filters
             return value;
         }
 
-        private static ObjectId ConvertToObjectId(string columnFilterValue)
+        private static string ConvertToObjectId(string columnFilterValue)
         {
-            var isObjectIdFormatValid = ObjectId.TryParse(columnFilterValue, out ObjectId id);
+            var isObjectIdFormatValid = Guid.TryParse(columnFilterValue, out Guid id);
             if (isObjectIdFormatValid)
             {
-                return id;
+                return id.ToString();
             }
             throw new InvalidIdFormatException("Specified resource identifier has an invalid format." +
                                                "Please make sure that you pass a correct id.");
