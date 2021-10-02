@@ -8,7 +8,9 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 {
     internal class ApiUserStorageModel
     {
-        public ObjectId Id { get; internal set; }
+        public ObjectId PrimaryKey { get; internal set; }
+
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string Email { get; set; }
         public string ProfilePicUrl { get; set; }
@@ -29,7 +31,8 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         {
             BsonClassMap.RegisterClassMap<ApiUserStorageModel>(cm =>
             {
-                cm.MapMember(cm => cm.Id).SetElementName("_id");
+                cm.MapMember(cm => cm.PrimaryKey).SetElementName("_id");
+                cm.MapMember(cm => cm.Id).SetElementName("id");
                 cm.MapMember(cm => cm.FirstName).SetElementName("firstName");
                 cm.MapMember(cm => cm.Email).SetElementName("lastName");
                 cm.MapMember(cm => cm.ProfilePicUrl).SetElementName("profilePicUrl");
@@ -62,7 +65,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         {
             BsonClassMap.RegisterClassMap<ApiUserStorageModel>(cm =>
             {
-                cm.MapMember(cm => cm.Id).SetElementName("period");
+                cm.MapMember(cm => cm.PrimaryKey).SetElementName("period");
                 cm.MapMember(cm => cm.FirstName).SetElementName("maxNumberOfRequests");
             });
         }

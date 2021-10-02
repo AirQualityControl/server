@@ -11,6 +11,7 @@ namespace AirSnitch.Api.Rest.Resources.ApiUser
 
         private static readonly List<ApiResourceColumn> ResourceColumns = new List<ApiResourceColumn>()
         {
+            new ApiResourceColumn("id", "id"),
             new ApiResourceColumn("firstName", "firstName"),
             new ApiResourceColumn("lastName", "lastName"),
             new ApiResourceColumn("email", "email"),

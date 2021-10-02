@@ -5,8 +5,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Exceptions" />
-      <Folder Include="UseCases" />
+      <Compile Remove="UseCases\**" />
+      <Compile Remove="Exceptions\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="UseCases\**" />
+      <EmbeddedResource Remove="Exceptions\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="UseCases\**" />
+      <None Remove="Exceptions\**" />
     </ItemGroup>
 
 </Project>
