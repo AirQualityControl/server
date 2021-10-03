@@ -1,5 +1,6 @@
+using System.Collections;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace AirSnitch.Api.Rest.ResponseBodyFormatters
 {
@@ -7,11 +8,30 @@ namespace AirSnitch.Api.Rest.ResponseBodyFormatters
     {
         public string FormatResponse(object responseBody)
         {
-            var serializationSettings = new JsonSerializerSettings()
+            var body = responseBody as IEnumerable;
+            return body != null ? BuildJArrayFromEnumeration(body).ToString() : BuildJObjectFromObject(responseBody).ToString();
+        }
+        private JObject BuildJArrayFromEnumeration(IEnumerable responseBodyItems)
+        {
+            var rootObject = new JObject();
+
+            var jArray = new JArray();
+
+            foreach (var item in responseBodyItems)
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            return JsonConvert.SerializeObject(responseBody, serializationSettings);
+                jArray.Add(BuildJObjectFromObject(item));
+            }
+
+            rootObject["items"] = jArray;
+            return rootObject;
+        }
+        private JObject BuildJObjectFromObject(object targetObject)
+        {
+            return new JObject(
+                new JProperty("values", 
+                    JObject.Parse(
+                        JsonConvert.SerializeObject(targetObject)))
+                );
         }
     }
 }

@@ -1,3 +1,5 @@
+using AirSnitch.Domain.Models;
+
 namespace AirSnitch.Infrastructure.Persistence.StorageModels.Mappers
 {
     internal static class StorageModelsMapper
@@ -5,6 +7,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels.Mappers
         public static void RegisterMapping()
         {
             ApiUserStorageModel.RegisterDbMap();
+            ClientStorageModel.RegisterDbMap();
         }
     }
 }
