@@ -4,11 +4,9 @@ namespace AirSnitch.Api.Controllers.ApiUser.ViewModels
 {
     internal class SubscriptionPlanViewModel
     {
-        public string Name;
-
-        public string Description;
-
-        public RequestQuotaViewModel RequestQuota;
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public RequestQuotaViewModel RequestQuota { get; set; }
 
         public static SubscriptionPlanViewModel BuildFrom(SubscriptionPlan subscriptionPlan)
         {
@@ -23,7 +21,7 @@ namespace AirSnitch.Api.Controllers.ApiUser.ViewModels
                 }
             };
         }
-
+        
         internal class RequestQuotaViewModel
         {
             public string Period;

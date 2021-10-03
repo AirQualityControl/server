@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace AirSnitch.Domain.Models
 {
@@ -12,11 +13,9 @@ namespace AirSnitch.Domain.Models
             }
         };
         
-        
         public string Name { get; private set; }
-
         public string Description { get; private set; }
-
+        
         public RequestQuota RequestQuota { get; private set; }
 
         public static SubscriptionPlan Basic => _basicSubscriptionPlan;
