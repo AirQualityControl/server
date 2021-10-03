@@ -30,7 +30,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         
         public async Task<ApiUser> GetById(string id)
         {
-            ObjectId.Parse(id);
+            Guid.Parse(id);
             
             var users =  await _genericRepository.GetByAsync(
                 u => u.Id == id
@@ -47,7 +47,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 
         public async Task<ApiUser> FindById(string id)
         {
-            ObjectId.Parse(id);
+            Guid.Parse(id);
             
             var resultSequence = await _genericRepository.GetByAsync(m => m.Id == id);
 
@@ -79,7 +79,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 
         public Task<DeletionResult> DeleteById(string id)
         {
-            ObjectId.Parse(id);
+            Guid.Parse(id);
             
             Expression<Func<ApiUserStorageModel, bool>> deleteCondition = 
                 apiUserStorageModel => apiUserStorageModel.Id == id; 

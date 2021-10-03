@@ -37,7 +37,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
     public class PrimaryColumn : QueryColumn
     {
         private static readonly string _primaryColumnName = "id";
-        private static readonly string _primaryColumnValue = "_id";
+        private static readonly string _primaryColumnValue = "id";
         
         public PrimaryColumn() : base(_primaryColumnName, _primaryColumnValue)
         {
