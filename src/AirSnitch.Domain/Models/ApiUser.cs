@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
 
 namespace AirSnitch.Domain.Models
 {
@@ -8,7 +11,7 @@ namespace AirSnitch.Domain.Models
     /// </summary>
     public class ApiUser : IDomainModel<ApiUser>
     {
-        private readonly List<ApiClient> _clients = new List<ApiClient>();
+        private List<ApiClient> _clients = new List<ApiClient>();
         
         public ApiUser() { }
 
@@ -18,6 +21,8 @@ namespace AirSnitch.Domain.Models
         }
 
         public string Id { get; }
+
+        public string PrimaryKey { get; set; }
 
         /// <summary>
         /// Returns a profile information of current user.
@@ -34,38 +39,89 @@ namespace AirSnitch.Domain.Models
         {
             throw new NotImplementedException();
         }
+        
+        /// <summary>
+        ///     Method that adds client for specific api user
+        ///
+        ///     Pre-conditions: require that apiClientId is not null or empty string, and value is a valid client identifier
+        /// </summary>
+        /// <param name="client"></param>
         public void AddClient(ApiClient client)
         {
             _clients.Add(client);
         }
+        
         public void SetSubscriptionPlan(SubscriptionPlan subscriptionPlan)
         {
             this.SubscriptionPlan = subscriptionPlan;
         }
-        public void RemoveClientById(string apiClientId)
+        
+        /// <summary>
+        ///     Methods that remove a specified client by id for current user.
+        ///     If client with specified id does not belongs to current instance - RemovalResult.NotFound will be returned,
+        ///     otherwise RemovalResult.Success will be returned
+        ///
+        ///     Pre-conditions: require that apiClientId is not null or empty string, and value is a valid client identifier
+        ///     Post-condition: not empty removal result returns.
+        /// </summary>
+        /// <param name="apiClientId">Valid apiClientIdentified</param>
+        /// <returns>Removal result</returns>
+        public RemovalResult RemoveClientById(string apiClientId)
         {
+            Require.That(apiClientId, Is.NotNullOrEmptyString);
+
+            var targetClient = _clients.FirstOrDefault(c => c.Id.Equals(apiClientId));
+
+            if (targetClient == null)
+            {
+                return RemovalResult.NotFound;
+            }
+
+            _clients.Remove(targetClient);
             
+            return RemovalResult.Success;
         }
-        public void RemoveClient(ApiClient client)
+        
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="client"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public RemovalResult RemoveClient(ApiClient client)
         {
-            throw new NotImplementedException();
+            Require.That(client, Is.NotNull);
+
+            if (_clients.Contains(client))
+            {
+                _clients.Remove(client);
+                return RemovalResult.Success;
+            }
+            return RemovalResult.NotFound;
         }
+        
+        /// <summary>
+        ///     Methods that removes all client from current ApiUser
+        /// </summary>
         public void RemoveAllClients()
         {
-            
+            _clients = new List<ApiClient>();
         }
+        
         public void Block()
         {
             throw new NotImplementedException();
         }
+        
         public void UnBlock()
         {
             throw new NotImplementedException();
         }
+        
         public bool Equals(ApiUser other)
         {
             throw new System.NotImplementedException();
         }
+        
         public object Clone()
         {
             throw new System.NotImplementedException();
@@ -100,5 +156,11 @@ namespace AirSnitch.Domain.Models
                 throw new InvalidEntityStateException("Subscription plan could not be null. Use empty insted");
             }
         }
+    }
+
+    public enum RemovalResult
+    {
+        Success,
+        NotFound
     }
 }

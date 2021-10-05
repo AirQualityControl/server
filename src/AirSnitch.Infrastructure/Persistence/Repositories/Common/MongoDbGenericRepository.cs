@@ -79,6 +79,21 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             return DeletionResult.Success;
         }
 
+        /// <summary>
+        ///     Asynchronously update a whole entity by specify entity member
+        /// </summary>
+        /// <param name="entity">Entity to update</param>
+        /// <param name="entityMemberSelector">Entity member selector</param>
+        /// <param name="memberValue">Entity member value</param>
+        /// <returns>Task</returns>
+        public async Task UpdateByAsync<TMember>(TEntity entity, Expression<Func<TEntity, TMember>> entityMemberSelector, 
+            TMember memberValue) 
+            where TMember : IEquatable<TMember>
+        {
+            var filter = Builders<TEntity>.Filter.Eq(entityMemberSelector, memberValue);
+            await _collection.ReplaceOneAsync(filter, entity);
+        }
+        
         public Task<long> Count {
             get
             {

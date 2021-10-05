@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AirSnitch.Domain.Models;
 
-namespace AirSnitch.Api.Controllers
+namespace AirSnitch.Api.Controllers.ApiUser.ViewModels
 {
     internal class ApiClientViewModel
     {

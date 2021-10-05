@@ -153,7 +153,7 @@ namespace AirSnitch.Api.Controllers.ApiUser
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteClientsById(string id)
+        public async Task<IActionResult> DeleteAllClients(string id)
         {
             var apiUser = await _apiUserRepository.FindById(id);
 

@@ -8,6 +8,8 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels.Mappers
         {
             ApiUserStorageModel.RegisterDbMap();
             ClientStorageModel.RegisterDbMap();
+            SubscriptionPlanStorageModel.RegisterDbMap();
+            SubscriptionPlanQuotaStorageModel.RegisterDbMap();
         }
     }
 }

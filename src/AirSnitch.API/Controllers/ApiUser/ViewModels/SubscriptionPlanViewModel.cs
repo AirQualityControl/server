@@ -26,7 +26,7 @@ namespace AirSnitch.Api.Controllers.ApiUser.ViewModels
         {
             public string Period;
 
-            public ulong MaxNumberOfRequests;
+            public int MaxNumberOfRequests;
         }
     }
 }
