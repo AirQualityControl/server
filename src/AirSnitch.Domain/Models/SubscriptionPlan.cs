@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Security.Cryptography;
+using System;
 
 namespace AirSnitch.Domain.Models
 {
@@ -7,16 +6,18 @@ namespace AirSnitch.Domain.Models
     {
         private static readonly SubscriptionPlan _basicSubscriptionPlan = new()
         {
-            Name = "Basic", Description = "Basic subscription plan", RequestQuota = new RequestQuota()
+            Id = "5ed0055f8bf184fee385bb9e", Name = "Basic", Description = "Basic subscription plan", ExpirationDate = DateTime.MaxValue, RequestQuota = new RequestQuota()
             {
                 Period = Period.Day, MaxNumberOfRequests = 100
             }
         };
-        
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        
-        public RequestQuota RequestQuota { get; private set; }
+
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+
+        public DateTime ExpirationDate { get; set; }
+        public RequestQuota RequestQuota { get; set; }
 
         public static SubscriptionPlan Basic => _basicSubscriptionPlan;
     }
@@ -25,7 +26,7 @@ namespace AirSnitch.Domain.Models
     {
         public Period Period { get; set; }
 
-        public ulong MaxNumberOfRequests { get; set; }
+        public int MaxNumberOfRequests { get; set; }
     }
 
     public enum Period

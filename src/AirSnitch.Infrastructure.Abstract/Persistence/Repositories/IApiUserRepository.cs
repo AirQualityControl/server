@@ -21,6 +21,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// <returns>If entity was found by id fetched record returns, otherwise null object</returns>
         Task<ApiUser> FindById(string id);
         
+        
         Task Update(ApiUser apiUser);
         
         /// <summary>

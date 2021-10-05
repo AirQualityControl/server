@@ -19,4 +19,8 @@
       <None Remove="Exceptions\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="DeclarativeContracts" Version="1.1.0" />
+    </ItemGroup>
+
 </Project>

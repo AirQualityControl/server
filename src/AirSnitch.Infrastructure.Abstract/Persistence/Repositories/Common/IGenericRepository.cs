@@ -60,6 +60,17 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         Task<DeletionResult> DeleteBy(Expression<Func<TEntity, bool>> filter);
 
         /// <summary>
+        ///     Asynchronously update a whole entity by specify entity member
+        /// </summary>
+        /// <param name="entity">Entity to update</param>
+        /// <param name="entityMemberSelector">Entity member selector</param>
+        /// <param name="memberValue">Entity member value</param>
+        /// <returns>Task</returns>
+        Task UpdateByAsync<TMember>(TEntity entity, Expression<Func<TEntity, TMember>> entityMemberSelector,
+            TMember memberValue)
+            where TMember : IEquatable<TMember>;
+
+        /// <summary>
         ///     Returns a number of records
         /// </summary>
         Task<long> Count { get; }

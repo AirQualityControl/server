@@ -8,6 +8,8 @@ using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.Query;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
+using DeclarativeContracts.Functions;
+using DeclarativeContracts.Precondition;
 using MongoDB.Bson;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
@@ -72,9 +74,17 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
                     itemsPerPage:queryScheme.PageOptions.ItemsLimit));
         }
 
-        public Task Update(ApiUser apiUser)
+        public async Task Update(ApiUser apiUser)
         {
-            return Task.CompletedTask;
+            Require.That(apiUser, Is.NotNull);
+            
+            var userStorageModel = ApiUserStorageModel.CreateFromDomainModel(apiUser);
+
+            await _genericRepository.UpdateByAsync(
+                entity:userStorageModel, 
+                entityMemberSelector:u => u.Id, 
+                memberValue:userStorageModel.Id
+            );
         }
 
         public Task<DeletionResult> DeleteById(string id)
