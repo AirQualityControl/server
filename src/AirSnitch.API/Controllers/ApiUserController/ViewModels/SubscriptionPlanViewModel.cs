@@ -6,7 +6,6 @@ namespace AirSnitch.Api.Controllers.ApiUser.ViewModels
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public RequestQuotaViewModel RequestQuota { get; set; }
 
         public static SubscriptionPlanViewModel BuildFrom(SubscriptionPlan subscriptionPlan)
         {
@@ -14,19 +13,7 @@ namespace AirSnitch.Api.Controllers.ApiUser.ViewModels
             {
                 Name = subscriptionPlan.Name,
                 Description = subscriptionPlan.Description,
-                RequestQuota = new RequestQuotaViewModel()
-                {
-                    Period = subscriptionPlan.RequestQuota.Period.ToString(),
-                    MaxNumberOfRequests = subscriptionPlan.RequestQuota.MaxNumberOfRequests
-                }
             };
-        }
-        
-        internal class RequestQuotaViewModel
-        {
-            public string Period;
-
-            public int MaxNumberOfRequests;
         }
     }
 }

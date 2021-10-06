@@ -1,4 +1,7 @@
 using System.Threading.Tasks;
+using AirSnitch.Api.Controllers.ApiUser;
+using AirSnitch.Api.Controllers.ApiUserController.Dto;
+using AirSnitch.Api.Controllers.ApiUserController.ViewModels;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
@@ -10,7 +13,7 @@ using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AirSnitch.Api.Controllers.ApiUser
+namespace AirSnitch.Api.Controllers.ApiUserController
 {
     /// <summary>
     /// Controller that represent a ApiUser resource
@@ -34,7 +37,7 @@ namespace AirSnitch.Api.Controllers.ApiUser
         
         
         /// <summary>
-        /// Returns all available api users.
+        ///     Returns all available api users.
         /// </summary>
         /// <url>http://apiurl/apiUsers</url>
         /// <param name="requestParameters">Requested parameter's that will be send alongside with a request.</param>
@@ -61,7 +64,7 @@ namespace AirSnitch.Api.Controllers.ApiUser
         }
         
         /// <summary>
-        /// Returns a requested api user by Id
+        ///     Returns a requested api user by Id
         /// </summary>
         /// <url>http://apiurl/apiUser/Id</url>
         /// <param name="id">Identifier of api user</param>
@@ -97,9 +100,62 @@ namespace AirSnitch.Api.Controllers.ApiUser
                 )
             );
         }
-        
+
         /// <summary>
-        /// Delete an api user and all associated information with it.
+        ///     Creates a new ApiUser in system
+        /// </summary>
+        /// <url>http://apiurl/apiUser/</url>
+        /// <param name="apiUserDto">Valid api user data transfer model</param>
+        /// <response code="200">Returns 200 when record was successfully added.Request body contains a unique identifier of created record</response>
+        /// <response code="400">Returns 400(bad request) if clients submit invalid data.</response> 
+        /// <response code="500">Returns in case of unhandled exception during delete operation.</response>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Create(ApiUserDto apiUserDto)
+        {
+            Domain.Models.ApiUser apiUser = apiUserDto.CreateApiUser();
+
+            if (await _apiUserRepository.IsUserAlreadyExists(apiUser))
+            {
+                return BadRequest($"User with email {apiUser.Profile.GetEmailValue()} already exists in the system!");
+            }
+            
+            await _apiUserRepository.Add(apiUser);
+            
+            return Ok(
+                new ApiUserCreatedResult()
+                {
+                    UserId = apiUser.Id
+                });  
+        }
+
+        /// <summary>
+        ///     Updates a whole api user record by specified id
+        /// </summary>
+        /// <param name="id">Valid api user identifier that exists in DB</param>
+        /// <param name="apiUserDto">Valid api user data transfer model</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update(string id, ApiUserDto apiUserDto)
+        {
+            var updatedUserState = apiUserDto.CreateApiUser(id);
+
+            var existingApiUser = await _apiUserRepository.FindById(id);
+
+            if (existingApiUser.IsEmpty)
+            {
+                return NotFound($"User with id {id} does not exist");
+            }
+            
+            existingApiUser.SetState(updatedUserState);
+            
+            await _apiUserRepository.Update(existingApiUser);
+            return Ok();
+        }
+
+        /// <summary>
+        ///     Delete an api user and all associated information with it.
         /// </summary>
         /// <url>http://apiurl/apiUser/Id</url>
         /// <param name="id">Identifier of api user to be deleted</param>
@@ -113,13 +169,13 @@ namespace AirSnitch.Api.Controllers.ApiUser
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteApiUserById(string id)
         {
-            var deletionResult = await _apiUserRepository.DeleteById(id);
+            var deletionResult = await _apiUserRepository.Delete(id);
 
             return deletionResult == DeletionResult.Success ? NoContent() : NotFound();
         }
         
         /// <summary>
-        /// Returns only clients for specific ApiUser
+        ///     Returns only clients for specific ApiUser
         /// </summary>
         /// <url>http://apiurl/apiUser/Id/clients</url>
         /// <param name="id">Identifier of api user</param>
@@ -141,7 +197,7 @@ namespace AirSnitch.Api.Controllers.ApiUser
         }
 
         /// <summary>
-        /// Delete all api user clients
+        ///     Delete all api user clients
         /// </summary>
         /// <url>http://apiurl/apiUser/Id/clients</url>
         /// <param name="id">Identifier of api user</param>
@@ -170,7 +226,7 @@ namespace AirSnitch.Api.Controllers.ApiUser
         }
         
         /// <summary>
-        /// Returns a subscription plan for specific api user
+        ///     Returns a subscription plan for specific api user
         /// </summary>
         /// <url>http://apiurl/apiUser/Id/subscriptionPlan</url>
         /// <param name="id">Identifier of api user</param>

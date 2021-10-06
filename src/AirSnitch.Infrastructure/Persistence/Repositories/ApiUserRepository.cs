@@ -23,7 +23,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             _genericRepository = new MongoDbGenericRepository<ApiUserStorageModel>(client, "apiUser");
         }
         
-        public async Task Save(ApiUser apiUser)
+        public async Task Add(ApiUser apiUser)
         {
             var apiUserStorageModel = ApiUserStorageModel.CreateFromDomainModel(apiUser);
             
@@ -87,7 +87,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             );
         }
 
-        public Task<DeletionResult> DeleteById(string id)
+        public Task<DeletionResult> Delete(string id)
         {
             Guid.Parse(id);
             
@@ -96,6 +96,18 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             
             return _genericRepository
                 .DeleteOneBy(deleteCondition);
+        }
+
+        public async Task<bool> IsUserAlreadyExists(ApiUser apiUser)
+        {
+            var apiUserEmail = apiUser.Profile.GetEmailValue();
+            
+            var user = await _genericRepository.GetByAsync(
+                predicate:usrStorageModel => usrStorageModel.Email.Equals(apiUserEmail),
+                projection:u => u.PrimaryKey
+            );
+
+            return user.Any();
         }
     }
 }

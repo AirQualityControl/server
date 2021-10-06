@@ -30,33 +30,6 @@ namespace AirSnitch.Api.Controllers.Client
         protected override IApiResourceMetaInfo CurrentResource => new ClientApiResource();
         
         /// <summary>
-        /// Returns all available clients in system
-        /// </summary>
-        /// <param name="requestParameters"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
-        {
-            var queryScheme = GenerateQueryScheme(requestParameters.Includes, requestParameters.PageOptions);
-
-            QueryResult result = await _clientRepository.ExecuteQueryFromSchemeAsync(queryScheme);
-            
-            //TODO: wrap into rest api result
-            if (result.IsSuccess)
-            {
-                return new RestApiResult
-                (
-                    new RestResponseBody(
-                        Request,
-                        result,
-                        RelatedResources
-                    )
-                );
-            }
-            return new NotFoundResult();
-        }
-
-        /// <summary>
         /// Returns a specific client by id
         /// </summary>
         /// <param name="id"></param>
