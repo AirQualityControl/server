@@ -15,11 +15,13 @@ namespace AirSnitch.Domain.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
         public DateTime ExpirationDate { get; set; }
         public RequestQuota RequestQuota { get; set; }
 
-        public static SubscriptionPlan Basic => _basicSubscriptionPlan;
+        public static SubscriptionPlan CreateFromCode(string subscriptionPlanCode)
+        {
+            return _basicSubscriptionPlan;
+        }
     }
 
     public class RequestQuota

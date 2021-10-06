@@ -11,6 +11,8 @@ namespace AirSnitch.Domain.Models
     /// </summary>
     public class ApiUser : IDomainModel<ApiUser>
     {
+        private static ApiUser _empty = new ApiUser() {IsEmpty = true};
+        
         private List<ApiClient> _clients = new List<ApiClient>();
         
         public ApiUser() { }
@@ -20,7 +22,15 @@ namespace AirSnitch.Domain.Models
             Id = id;
         }
 
-        public string Id { get; }
+        /// <summary>
+        /// Generate a unique identifier for current user
+        /// </summary>
+        public void GenerateId()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+        
+        public string Id { get; private set; }
 
         public string PrimaryKey { get; set; }
 
@@ -29,12 +39,30 @@ namespace AirSnitch.Domain.Models
         /// For more details what is profile take a look at 
         /// </summary>
         public ApiUserProfile Profile { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public IReadOnlyCollection<ApiClient> Clients => _clients;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public SubscriptionPlan SubscriptionPlan { get; private set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public void PromoteSubscriptionPlan()
         {
             throw new NotImplementedException();
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public void DowngradeSubscriptionPlan()
         {
             throw new NotImplementedException();
@@ -127,7 +155,8 @@ namespace AirSnitch.Domain.Models
             throw new System.NotImplementedException();
         }
         public bool IsEmpty { get; set; }
-        public static ApiUser Empty { get; set; }
+        public static ApiUser Empty => _empty;
+
         public bool IsValid()
         {
             if (Clients == null) return false;
@@ -155,6 +184,17 @@ namespace AirSnitch.Domain.Models
             {
                 throw new InvalidEntityStateException("Subscription plan could not be null. Use empty insted");
             }
+        }
+
+        /// <summary>
+        /// Method that change the state of current user 
+        /// </summary>
+        /// <param name="updatedUserState"></param>
+        public void SetState(ApiUser updatedUserState)
+        {
+            this.Profile = updatedUserState.Profile;
+            _clients = updatedUserState.Clients.ToList();
+            SubscriptionPlan = updatedUserState.SubscriptionPlan;
         }
     }
 

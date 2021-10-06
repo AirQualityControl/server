@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using AirSnitch.Domain.Models;
 using MongoDB.Bson.Serialization;
 
@@ -12,7 +13,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         public string Description { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public string CreatedOn { get; set; }
 
         public string Type { get; set; }
         
@@ -33,8 +34,9 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
             return new ClientStorageModel()
             {
                 Id = client.Id,
+                Name = client.Name.Value,
                 Description = client.Description.Value,
-                CreatedOn = client.CreatedOn,
+                CreatedOn = client.CreatedOn.ToString(CultureInfo.InvariantCulture),
                 Type = client.Type.ToString()
             };
         }
@@ -45,8 +47,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
             {
                 Name = new ClientName(clientStorageModel.Name),
                 Description = new ClientDescription(clientStorageModel.Description),
-                CreatedOn = clientStorageModel.CreatedOn,
-                Status = ClientStatus.Active,
+                CreatedOn = DateTime.Parse(clientStorageModel.CreatedOn),
                 Type = ClientType.Testing,
             };
         }

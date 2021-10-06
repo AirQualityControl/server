@@ -20,8 +20,9 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// <param name="id">unique identifier(primary key) of entity</param>
         /// <returns>If entity was found by id fetched record returns, otherwise null object</returns>
         Task<ApiUser> FindById(string id);
-        
-        
+
+        Task Add(ApiUser apiUser);
+
         Task Update(ApiUser apiUser);
         
         /// <summary>
@@ -29,7 +30,9 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// </summary>
         /// <param name="id">Id of the api user</param>
         /// <returns>Returns a result of delete operation.</returns>
-        Task<DeletionResult> DeleteById(string id);
+        Task<DeletionResult> Delete(string id);
+
+        Task<bool> IsUserAlreadyExists(ApiUser apiUser);
     }
 
     public enum DeletionResult

@@ -47,16 +47,15 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         public static ApiUserStorageModel CreateFromDomainModel(ApiUser apiUser)
         {
             Require.That(apiUser.IsValid);
-
             return new ApiUserStorageModel()
             {
                 Id = apiUser.Id,
-                PrimaryKey = ObjectId.Parse(apiUser.PrimaryKey),
-                FirstName = apiUser.Profile.Name.Value,
-                LastName = apiUser.Profile.LastName.Value,
-                Gender = apiUser.Profile.Gender.ToString(),
-                Email = apiUser.Profile.Email.Value,
-                ProfilePicUrl = apiUser.Profile.ProfilePic.Value,
+                PrimaryKey = String.IsNullOrEmpty(apiUser.PrimaryKey) ? ObjectId.GenerateNewId() : ObjectId.Parse(apiUser.PrimaryKey),
+                FirstName = apiUser.Profile.GetDisplayName(),
+                LastName = apiUser.Profile.GetLastName(),
+                Gender = apiUser.Profile.GetGenderValue(),
+                Email = apiUser.Profile.GetEmailValue(),
+                ProfilePicUrl = apiUser.Profile.GetProfilePicUrl(),
                 CreatedOn = apiUser.Profile.CreatedOn.ToString(CultureInfo.InvariantCulture),
                 Clients = apiUser.Clients.Select(ClientStorageModel.BuildFromDomainModel).ToList(),
                 Plan = SubscriptionPlanStorageModel.BuildFromDomainModel(apiUser.SubscriptionPlan),

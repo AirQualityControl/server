@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using AirSnitch.Api.Rest.Links;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
@@ -84,8 +83,8 @@ namespace AirSnitch.Api.Rest.ResponseBodyFormatters
             {
                 if (value.Value.GetType() == typeof(JArray))
                 {
-                    var a = (JArray) value.Value;
-                    selfValuesJObject.Add(new JProperty(value.Key, a.First()));
+                    JArray jArrayValue = (JArray) value.Value;
+                    selfValuesJObject.Add(new JProperty(value.Key, jArrayValue.First));
                     continue;
                 }
                 selfValuesJObject.Add(new JProperty(value.Key, value.Value));
