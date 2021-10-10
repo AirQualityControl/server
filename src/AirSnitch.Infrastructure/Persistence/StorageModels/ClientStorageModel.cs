@@ -36,7 +36,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 Id = client.Id,
                 Name = client.Name.Value,
                 Description = client.Description.Value,
-                CreatedOn = client.CreatedOn.ToString(CultureInfo.InvariantCulture),
+                CreatedOn = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
                 Type = client.Type.ToString()
             };
         }

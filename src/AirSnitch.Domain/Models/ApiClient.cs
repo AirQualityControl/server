@@ -2,7 +2,7 @@ using System;
 
 namespace AirSnitch.Domain.Models
 {
-    public class ApiClient
+    public class ApiClient : IDomainModel<ApiClient>
     {
         private string _id;
 
@@ -36,6 +36,34 @@ namespace AirSnitch.Domain.Models
         public void Deactive()
         {
 
+        }
+
+        public void SetState(ApiClient newClientState)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ApiClient? other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsEmpty { get; set; }
+        public static ApiClient Empty => new ApiClient() {IsEmpty = true};
+
+        public bool IsValid()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Validate()
+        {
+            throw new NotImplementedException();
         }
     }
 

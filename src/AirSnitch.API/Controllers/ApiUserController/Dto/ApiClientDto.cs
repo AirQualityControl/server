@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using AirSnitch.Domain.Models;
 
 namespace AirSnitch.Api.Controllers.ApiUserController.Dto
 {
@@ -12,5 +13,18 @@ namespace AirSnitch.Api.Controllers.ApiUserController.Dto
 
         [JsonPropertyName("type")]
         public string Type { get; set; }
+
+        public ApiClient CreateApiClient()
+        {
+            var apiClient = new ApiClient()
+            {
+                Name = new ClientName(Name),
+                Description = new ClientDescription(Description),
+                Type = ClientType.Production
+            };
+            
+            apiClient.GenerateId();
+            return apiClient;
+        }
     }
 }

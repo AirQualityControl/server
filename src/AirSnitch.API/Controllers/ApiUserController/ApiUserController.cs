@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.ApiUser;
 using AirSnitch.Api.Controllers.ApiUserController.Dto;
@@ -174,6 +175,39 @@ namespace AirSnitch.Api.Controllers.ApiUserController
             return deletionResult == DeletionResult.Success ? NoContent() : NotFound();
         }
         
+        
+        /// <summary>
+        ///     Add a new client for api user
+        /// </summary>
+        /// <url>http://apiurl/apiUser/Id/clients</url>
+        /// <param name="id">Identifier of api user</param>
+        /// <param name="apiClientDto">Valid model that represent an api client</param>
+        /// <response code="200">Returns 204 when api user clients was successfully deleted.</response>
+        /// <response code="404">If record to delete was not found</response>
+        /// <response code="400">Bad request.Body contains the explanation what has happened </response>
+        [HttpPost]
+        [Route("{id}/clients")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AddClient(string id, ApiClientDto apiClientDto)
+        {
+            var client = apiClientDto.CreateApiClient();
+            
+            var apiUser = await _apiUserRepository.FindById(id);
+
+            if (apiUser.IsEmpty)
+            {
+                return NotFound();
+            }
+            
+            apiUser.AddClient(client);
+
+            await _apiUserRepository.Update(apiUser);
+            
+            return Ok();
+        }
+
         /// <summary>
         ///     Returns only clients for specific ApiUser
         /// </summary>
@@ -224,7 +258,7 @@ namespace AirSnitch.Api.Controllers.ApiUserController
             
             return NoContent();
         }
-        
+
         /// <summary>
         ///     Returns a subscription plan for specific api user
         /// </summary>
