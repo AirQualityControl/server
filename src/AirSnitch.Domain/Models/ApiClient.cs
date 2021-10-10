@@ -38,9 +38,11 @@ namespace AirSnitch.Domain.Models
 
         }
 
-        public void SetState(ApiClient newClientState)
+        public void SetState(ApiClient clientState)
         {
-            throw new NotImplementedException();
+            this.Name = clientState.Name;
+            this.Description = clientState.Description;
+            this.Type = ClientType.Production;
         }
 
         public bool Equals(ApiClient? other)

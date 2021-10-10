@@ -7,7 +7,5 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
     public interface IClientRepository : IBaseRepository
     {
         Task<ApiUser> FindClientOwner(string clientId);
-        Task<ApiClient> FindById(string id);
-        Task Update(ApiClient existingClient);
     }
 }

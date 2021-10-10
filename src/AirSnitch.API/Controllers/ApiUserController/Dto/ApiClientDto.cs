@@ -22,8 +22,6 @@ namespace AirSnitch.Api.Controllers.ApiUserController.Dto
                 Description = new ClientDescription(Description),
                 Type = ClientType.Production
             };
-            
-            apiClient.GenerateId();
             return apiClient;
         }
     }

@@ -45,27 +45,5 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 
             return ownerStorageModel == null ? ApiUser.Empty : ownerStorageModel.MapToDomainModel();
         }
-
-        public async Task<ApiClient> FindById(string id)
-        {
-            Guid.Parse(id);
-
-            var filter = Builders<ApiUserStorageModel>.Filter.ElemMatch(x => x.Clients, c => c.Id == id);
-            var owners = await _apiUserCollection.Find(filter).Project(apiUser => apiUser.Clients).ToListAsync();
-            var clientsStorageModel = owners.SingleOrDefault();
-
-            if (clientsStorageModel != null)
-            {
-                var targetClient = clientsStorageModel.Single(c => c.Id == id);
-                return ClientStorageModel.BuildFromStorageModel(targetClient);
-            }
-
-            return ApiClient.Empty;
-        }
-
-        public Task Update(ApiClient existingClient)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

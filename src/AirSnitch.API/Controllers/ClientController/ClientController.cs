@@ -93,6 +93,7 @@ namespace AirSnitch.Api.Controllers.Client
         /// <summary>
         /// Updates an existing api client record
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="apiClientDto"></param>
         /// <returns></returns>
         [HttpPut]
@@ -101,16 +102,18 @@ namespace AirSnitch.Api.Controllers.Client
         {
             var newClientState = apiClientDto.CreateApiClient();
 
-            var existingClient = await _clientRepository.FindById(id);
-            
-            if (existingClient.IsEmpty)
+            Domain.Models.ApiUser apiUser = await _clientRepository.FindClientOwner(id);
+
+            if (apiUser.IsEmpty)
             {
                 return NotFound();
             }
 
-            existingClient.SetState(newClientState);
+            var targetClient = apiUser.GetClient(clientId: id);
             
-            await _clientRepository.Update(existingClient);
+            targetClient.SetState(newClientState);
+
+            await _apiUserRepository.Update(apiUser);
             
             return Ok();
         }

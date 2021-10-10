@@ -193,7 +193,9 @@ namespace AirSnitch.Api.Controllers.ApiUserController
         public async Task<IActionResult> AddClient(string id, ApiClientDto apiClientDto)
         {
             var client = apiClientDto.CreateApiClient();
-            
+
+            client.GenerateId();
+
             var apiUser = await _apiUserRepository.FindById(id);
 
             if (apiUser.IsEmpty)

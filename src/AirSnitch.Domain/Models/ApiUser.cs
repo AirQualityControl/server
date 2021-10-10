@@ -78,7 +78,17 @@ namespace AirSnitch.Domain.Models
         {
             _clients.Add(client);
         }
-        
+
+        /// <summary>
+        /// Returns a reference to a requested client
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
+        public ApiClient GetClient(string clientId)
+        {
+            return _clients.SingleOrDefault(c => c.Id == clientId);
+        }
+
         public void SetSubscriptionPlan(SubscriptionPlan subscriptionPlan)
         {
             this.SubscriptionPlan = subscriptionPlan;
