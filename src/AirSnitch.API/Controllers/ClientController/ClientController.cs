@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using AirSnitch.Api.Controllers.ApiUserController.Dto;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
@@ -87,6 +88,34 @@ namespace AirSnitch.Api.Controllers.Client
             await _apiUserRepository.Update(apiUser);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Updates an existing api client record
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="apiClientDto"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update(string id, ApiClientDto apiClientDto)
+        {
+            var newClientState = apiClientDto.CreateApiClient();
+
+            Domain.Models.ApiUser apiUser = await _clientRepository.FindClientOwner(id);
+
+            if (apiUser.IsEmpty)
+            {
+                return NotFound();
+            }
+
+            var targetClient = apiUser.GetClient(clientId: id);
+            
+            targetClient.SetState(newClientState);
+
+            await _apiUserRepository.Update(apiUser);
+            
+            return Ok();
         }
     }
 }

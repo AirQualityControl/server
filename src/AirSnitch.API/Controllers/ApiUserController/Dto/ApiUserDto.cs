@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using AirSnitch.Domain.Models;
-using Newtonsoft.Json;
 
 namespace AirSnitch.Api.Controllers.ApiUserController.Dto
 {
