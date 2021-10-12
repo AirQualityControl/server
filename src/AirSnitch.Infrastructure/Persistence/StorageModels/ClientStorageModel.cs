@@ -16,7 +16,9 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         public string CreatedOn { get; set; }
 
         public string Type { get; set; }
-        
+
+        public ApiKeyStorageModel ApiKey { get; set; }
+
         public static void RegisterDbMap()
         {
             BsonClassMap.RegisterClassMap<ClientStorageModel>(cm =>
@@ -26,6 +28,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 cm.MapMember(cm => cm.Description).SetElementName("description");
                 cm.MapMember(cm => cm.Type).SetElementName("type");
                 cm.MapMember(cm => cm.CreatedOn).SetElementName("createdOn");
+                cm.MapMember(cm => cm.ApiKey).SetElementName("apiKey");
             });
         }
 
@@ -37,7 +40,8 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 Name = client.Name.Value,
                 Description = client.Description.Value,
                 CreatedOn = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
-                Type = client.Type.ToString()
+                Type = client.Type.ToString(),
+                ApiKey = ApiKeyStorageModel.BuildFromDomainModel(client.ApiKey)
             };
         }
 
@@ -49,7 +53,49 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 Description = new ClientDescription(clientStorageModel.Description),
                 CreatedOn = DateTime.Parse(clientStorageModel.CreatedOn),
                 Type = ClientType.Testing,
+                ApiKey = ApiKeyStorageModel.BuildFromStorageModel(clientStorageModel.ApiKey),
             };
+        }
+    }
+
+    internal class ApiKeyStorageModel
+    {
+        public string IssueDate { get; set; }
+
+        public string ExpirationDate { get; set; }
+
+        public string Value { get; set; }
+
+        public static ApiKeyStorageModel BuildFromDomainModel(ApiKey apiKey)
+        {
+            return new ApiKeyStorageModel()
+            {
+                IssueDate = apiKey.IssueDate.ToString(CultureInfo.InvariantCulture),
+                ExpirationDate = apiKey.IssueDate.ToString(CultureInfo.InvariantCulture),
+                Value = apiKey.Value
+            };
+        }
+
+        public static ApiKey BuildFromStorageModel(ApiKeyStorageModel apiKeyStorageModel)
+        {
+            if (apiKeyStorageModel != null)
+            {
+                var apiKey =  ApiKey.FromString(apiKeyStorageModel.Value);
+                apiKey.IssueDate = apiKey.IssueDate;
+                apiKey.ExpirationDate = apiKey.ExpirationDate;
+                return apiKey;
+            }
+            return ApiKey.Empty;
+        }
+
+        public static void RegisterDbMap()
+        {
+            BsonClassMap.RegisterClassMap<ApiKeyStorageModel>(cm =>
+            {
+                cm.MapMember(cm => cm.Value).SetElementName("value");
+                cm.MapMember(cm => cm.IssueDate).SetElementName("issueDate");
+                cm.MapMember(cm => cm.ExpirationDate).SetElementName("expiryDate");
+            });
         }
     }
 }

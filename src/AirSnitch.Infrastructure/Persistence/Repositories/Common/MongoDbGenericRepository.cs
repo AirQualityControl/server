@@ -9,7 +9,7 @@ using AirSnitch.Infrastructure.Persistence.Extensions;
 using AirSnitch.Infrastructure.Persistence.Query;
 using MongoDB.Driver;
 
-namespace AirSnitch.Infrastructure.Persistence.Repositories
+namespace AirSnitch.Infrastructure.Persistence.Repositories.Common
 {
     /// <inheritdoc/>
     internal sealed class MongoDbGenericRepository<TEntity> : IGenericRepository<TEntity>

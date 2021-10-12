@@ -1,16 +1,18 @@
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.ApiUserController.Dto;
+using AirSnitch.Api.Controllers.ClientController.ViewModel;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Api.Rest.Resources.Client;
 using AirSnitch.Api.Rest.Resources.Registry;
+using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AirSnitch.Api.Controllers.Client
+namespace AirSnitch.Api.Controllers.ClientController
 {
     [ApiController]
     [Route("client")]
@@ -51,7 +53,6 @@ namespace AirSnitch.Api.Controllers.Client
             
             QueryResult result = await _clientRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
-            //TODO: wrap into rest api result
             if (result.IsSuccess)
             {
                 return new RestApiResult
@@ -116,6 +117,60 @@ namespace AirSnitch.Api.Controllers.Client
             await _apiUserRepository.Update(apiUser);
             
             return Ok();
+        }
+
+        
+        /// <summary>
+        /// Revoke api key for specified api client
+        /// </summary>
+        /// <param name="id">client id</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("{id}/apiKey")]
+        public async Task<IActionResult> RevokeApiKey(string id)
+        {
+            ApiClient client = await _clientRepository.GetById(id);
+
+            if (client.IsEmpty)
+            {
+                return NotFound();
+            }
+
+            client.RevokeApikey();
+
+            await _clientRepository.Update(client);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Generate api key for specified api client.
+        /// Keep in mind in case if api key exists it will be override 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("{id}/apiKey")]
+        public async Task<IActionResult> GenerateApiKey(string id)
+        {
+            ApiClient client = await _clientRepository.GetById(id);
+
+            if (client.IsEmpty)
+            {
+                return NotFound();
+            }
+
+            var apiKey = client.RegenerateApiKey();
+
+            await _clientRepository.Update(client);
+            
+            return Ok(new ApiKeyCreatedResult()
+            {
+                Value = apiKey.Value, 
+                ExpiryDate = apiKey.ExpirationDate, 
+                IssueDate = apiKey.IssueDate
+            });
+                
         }
     }
 }
