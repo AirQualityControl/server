@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
@@ -6,6 +5,7 @@ using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.Query;
+using AirSnitch.Infrastructure.Persistence.Repositories.Common;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
 using MongoDB.Driver;
 
@@ -21,6 +21,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             _genericRepository = new MongoDbGenericRepository<ApiUser>(client, "apiUser");
         }
         
+        //TODO: move to base class to avoid duplication
         public async Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme)
         {
             var query = MongoDbQuery.CreateFromScheme(queryScheme);
@@ -44,6 +45,34 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             var ownerStorageModel = owners.FirstOrDefault();
 
             return ownerStorageModel == null ? ApiUser.Empty : ownerStorageModel.MapToDomainModel();
+        }
+
+        public async Task<ApiClient> GetById(string clientId)
+        {
+            var filter = Builders<ApiUserStorageModel>.Filter.ElemMatch(x => x.Clients, c => c.Id == clientId);
+            var clients = await _apiUserCollection.Find(filter).Project(c => c.Clients).ToListAsync();
+            var client = clients.Single().Single(c => c.Id == clientId);
+
+            return ClientStorageModel.BuildFromStorageModel(client);
+        }
+
+        public async Task Update(ApiClient client)
+        {
+            var clientStorageModel = ClientStorageModel.BuildFromDomainModel(client);
+
+            var update = Builders<ApiUserStorageModel>.Update.Combine(
+                Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].Name, clientStorageModel.Name),
+                Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].Description, clientStorageModel.Description),
+                Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].Type, clientStorageModel.Type),
+                Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].CreatedOn, clientStorageModel.CreatedOn),
+                Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].ApiKey, clientStorageModel.ApiKey)
+            );
+
+            var filter = Builders<ApiUserStorageModel>.Filter.And(
+                Builders<ApiUserStorageModel>.Filter.ElemMatch(
+                    x => x.Clients, c => c.Id == clientStorageModel.Id));
+
+            await _apiUserCollection.UpdateOneAsync(filter, update);
         }
     }
 }

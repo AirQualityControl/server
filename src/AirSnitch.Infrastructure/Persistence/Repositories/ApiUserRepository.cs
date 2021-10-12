@@ -7,6 +7,7 @@ using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.Query;
+using AirSnitch.Infrastructure.Persistence.Repositories.Common;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
 using DeclarativeContracts.Functions;
 using DeclarativeContracts.Precondition;
