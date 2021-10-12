@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using AirSnitch.Domain.Models;
+using AirSnitch.Infrastructure.Cryptography.Hashing;
 using MongoDB.Bson.Serialization;
 
 namespace AirSnitch.Infrastructure.Persistence.StorageModels
@@ -72,10 +73,9 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
             {
                 IssueDate = apiKey.IssueDate.ToString(CultureInfo.InvariantCulture),
                 ExpirationDate = apiKey.IssueDate.ToString(CultureInfo.InvariantCulture),
-                Value = apiKey.Value
+                Value = Pbkdf2Hash.Generate(apiKey.Value)
             };
         }
-
         public static ApiKey BuildFromStorageModel(ApiKeyStorageModel apiKeyStorageModel)
         {
             if (apiKeyStorageModel != null)

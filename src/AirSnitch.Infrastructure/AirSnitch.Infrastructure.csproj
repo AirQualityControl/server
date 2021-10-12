@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="DeclarativeContracts" Version="1.1.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="5.0.10" />
       <PackageReference Include="MongoDB.Driver" Version="2.12.4" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>

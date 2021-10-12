@@ -163,14 +163,13 @@ namespace AirSnitch.Api.Controllers.ClientController
             var apiKey = client.RegenerateApiKey();
 
             await _clientRepository.Update(client);
-            
+
             return Ok(new ApiKeyCreatedResult()
             {
-                Value = apiKey.Value, 
-                ExpiryDate = apiKey.ExpirationDate, 
+                Value = apiKey.Value,
+                ExpiryDate = apiKey.ExpirationDate,
                 IssueDate = apiKey.IssueDate
             });
-                
         }
     }
 }

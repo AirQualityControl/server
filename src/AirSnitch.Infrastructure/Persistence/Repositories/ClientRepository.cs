@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
@@ -60,7 +59,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         public async Task Update(ApiClient client)
         {
             var clientStorageModel = ClientStorageModel.BuildFromDomainModel(client);
-            
+
             var update = Builders<ApiUserStorageModel>.Update.Combine(
                 Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].Name, clientStorageModel.Name),
                 Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].Description, clientStorageModel.Description),
