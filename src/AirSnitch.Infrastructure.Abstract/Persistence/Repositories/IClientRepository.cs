@@ -11,5 +11,6 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         Task<ApiClient> GetById(string clientId);
 
         Task Update(ApiClient client);
+        Task<ApiClient> GetClientByApiKey(ApiKey fromString);
     }
 }

@@ -30,4 +30,9 @@
     <ProjectReference Include="..\AirSnitch.Infrastructure.Abstract\AirSnitch.Infrastructure.Abstract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middleware\Authrorization" />
+    <Folder Include="Middleware\Ratelimiting" />
+  </ItemGroup>
+
 </Project>

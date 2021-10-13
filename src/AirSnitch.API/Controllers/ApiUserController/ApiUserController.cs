@@ -1,8 +1,8 @@
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.ApiUser;
 using AirSnitch.Api.Controllers.ApiUserController.Dto;
 using AirSnitch.Api.Controllers.ApiUserController.ViewModels;
+using AirSnitch.Api.Middleware.Authentication;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
@@ -11,6 +11,7 @@ using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,7 @@ namespace AirSnitch.Api.Controllers.ApiUserController
     /// Controller that represent a ApiUser resource
     /// </summary>
     [ApiController]
+    [Authorize(AuthenticationSchemes = ApiKeyAuthenticationOptions.Name)]
     [Route("apiUser")]
     public class ApiUserController : RestApiController
     {
