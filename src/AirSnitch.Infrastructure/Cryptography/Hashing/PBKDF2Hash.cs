@@ -5,15 +5,17 @@ namespace AirSnitch.Infrastructure.Cryptography.Hashing
 {
     public class Pbkdf2Hash
     {
+        private static byte[] _salt = Convert.FromBase64String("sePmpdNzIG0ASbIx6u7BMkqY2Ls+XXbEQOM18v24qOM=");
+        
         public static string Generate(string stringToHash)
         {
             return Convert.ToBase64String(
                 KeyDerivation.Pbkdf2
                 (
                     password: stringToHash,
-                    salt: BitBasedSalt.BytesValue,
+                    salt: _salt,
                     prf: KeyDerivationPrf.HMACSHA256,
-                    iterationCount: 100000,
+                    iterationCount: 50000,
                     numBytesRequested: 256 / 8
                 )
             );

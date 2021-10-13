@@ -4,6 +4,7 @@ using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
+using AirSnitch.Infrastructure.Cryptography.Hashing;
 using AirSnitch.Infrastructure.Persistence.Query;
 using AirSnitch.Infrastructure.Persistence.Repositories.Common;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
@@ -73,6 +74,23 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
                     x => x.Clients, c => c.Id == clientStorageModel.Id));
 
             await _apiUserCollection.UpdateOneAsync(filter, update);
+        }
+
+        public async Task<ApiClient> GetClientByApiKey(ApiKey apiKey)
+        {
+            string apiKeyHash = Pbkdf2Hash.Generate(apiKey.Value);
+            
+            var filter = Builders<ApiUserStorageModel>.Filter.ElemMatch(
+                    x => x.Clients, c => c.ApiKey.Value == apiKeyHash);
+            
+            var clients = await _apiUserCollection.Find(filter).Project(c => c.Clients).ToListAsync();
+
+            if (clients.Any())
+            {
+                var client = clients.Single().Single(c => c.ApiKey.Value == apiKeyHash);
+                return ClientStorageModel.BuildFromStorageModel(client);
+            }
+            return ApiClient.Empty;
         }
     }
 }

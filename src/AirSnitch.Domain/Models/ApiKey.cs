@@ -71,9 +71,9 @@ namespace AirSnitch.Domain.Models
         /// Checks weather api key is valid or not
         /// </summary>
         /// <returns></returns>
-        public static bool IsValid()
+        public static bool IsValid(string apiKeyString)
         {
-            return false;
+            return true;
         }
     }
 }
