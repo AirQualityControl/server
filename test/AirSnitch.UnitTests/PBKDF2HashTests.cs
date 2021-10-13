@@ -16,6 +16,16 @@ namespace AirSnitch.UnitTests
             Assert.AreEqual("IbcDRYz5zdyQGEv/ITX+Y+a9dLzOvtsrESysZBwBQTA=", hash);
         }
 
+        [Test]
+        public void Generate_ValidNonEmptyString_ReturnValidHashValue()
+        {
+            var targetString = "stringToHash2";
+
+            var hash = Pbkdf2Hash.Generate(targetString);
+            
+            Assert.AreEqual("IbcDRYz5zdyQGEv/ITX+Y+a9dLzOvtsrESysZBwBQTA=", hash);
+        }
+        
         [TestCase("stringToHash")]
         [TestCase("stringToHash")]
         [TestCase("stringToHash")]
@@ -29,7 +39,6 @@ namespace AirSnitch.UnitTests
             var hashedResult = Pbkdf2Hash.Generate(inputString);
             
             Assert.AreEqual(expectedHash, hashedResult);
-
         }
     }
 }
