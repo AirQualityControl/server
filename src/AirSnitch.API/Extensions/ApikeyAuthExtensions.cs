@@ -8,7 +8,7 @@ namespace AirSnitch.Api.Extensions
         public static AuthenticationBuilder AddApiKey(this AuthenticationBuilder builder)
         {
             return builder.AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(
-                ApiKeyAuthenticationOptions.Name, 
+                Constants.Authentication.SchemeName, 
                 null
             );
         }
