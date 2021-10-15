@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using DeclarativeContracts.Exceptions;
-using DeclarativeContracts.Precondition;
 
 namespace AirSnitch.Api.Middleware.Authrorization
 {
@@ -17,7 +16,7 @@ namespace AirSnitch.Api.Middleware.Authrorization
             DevPanelClientId
         };
         
-        public static bool IsEqualsTo(ClaimsPrincipal userPrincipal)
+        public static bool VerifyPrincipal(ClaimsPrincipal userPrincipal)
         {
             var idClaim = GetIdClaim(userPrincipal.Claims);
 
@@ -33,7 +32,7 @@ namespace AirSnitch.Api.Middleware.Authrorization
                 throw new ContractViolationException($"{Constants.Claim.ClientId} was not found in current user claims");
             }
 
-            if (idClaims.Count() > 1)
+            if (idClaims.Count > 1)
             {
                 throw new ConstraintException($"There are more that one {Constants.Claim.ClientId} claims was found!");
             }

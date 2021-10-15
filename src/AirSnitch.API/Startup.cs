@@ -31,7 +31,7 @@ namespace AirSnitch.Api
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(Constants.Authorization.Policy.InternalApp, 
-                    policy => policy.Requirements.Add(new InteralAppRequirement()));
+                    policy => policy.Requirements.Add(new InternalAppRequirement()));
             });
             
             services.AddMvc();

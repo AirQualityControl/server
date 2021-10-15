@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.ApiUser;
 using AirSnitch.Api.Controllers.ApiUserController.Dto;
 using AirSnitch.Api.Controllers.ApiUserController.ViewModels;
-using AirSnitch.Api.Middleware.Authentication;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
