@@ -25,12 +25,12 @@ namespace AirSnitch.Api
         {
             services.AddControllers();
             
-            services.AddAuthentication(Constants.Authentication.SchemeName)
+            services.AddAuthentication(Constants.Authentication.Scheme.ApiKey)
                 .AddApiKey();
             
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Constants.Authorization.InternalAppPolicyName, 
+                options.AddPolicy(Constants.Authorization.Policy.InternalApp, 
                     policy => policy.Requirements.Add(new InteralAppRequirement()));
             });
             
