@@ -11,10 +11,8 @@ namespace AirSnitch.UnitTests
         public void Generate_ValidNonEmptyString_ReturnsHashValue()
         {
             var targetString = "stringToHash";
-
-            var apiKey = ApiKey.Generate();
             
-            var hash = Pbkdf2Hash.Generate(apiKey.Value);
+            var hash = Pbkdf2Hash.Generate(targetString);
             
             Assert.AreEqual("IbcDRYz5zdyQGEv/ITX+Y+a9dLzOvtsrESysZBwBQTA=", hash);
         }
