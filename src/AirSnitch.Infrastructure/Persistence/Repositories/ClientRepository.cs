@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
+using AirSnitch.Infrastructure.Abstract.Cryptography;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
@@ -14,10 +15,12 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
     public class ClientRepository : IClientRepository
     {
+        private readonly IApiKeyHashAlgorithm _apiKeyHashAlgorithm;
         private readonly IGenericRepository<ApiUser> _genericRepository;
         private readonly IMongoCollection<ApiUserStorageModel> _apiUserCollection;
-        public ClientRepository(MongoDbClient client)
+        public ClientRepository(MongoDbClient client, IApiKeyHashAlgorithm apiKeyHashAlgorithm)
         {
+            _apiKeyHashAlgorithm = apiKeyHashAlgorithm;
             _apiUserCollection = client.Db.GetCollection<ApiUserStorageModel>("apiUser");
             _genericRepository = new MongoDbGenericRepository<ApiUser>(client, "apiUser");
         }
@@ -61,6 +64,8 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         {
             var clientStorageModel = ClientStorageModel.BuildFromDomainModel(client);
 
+            clientStorageModel.SetApiKeyValue(_apiKeyHashAlgorithm.GetHash(client.ApiKey));
+            
             var update = Builders<ApiUserStorageModel>.Update.Combine(
                 Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].Name, clientStorageModel.Name),
                 Builders<ApiUserStorageModel>.Update.Set(p => p.Clients[0].Description, clientStorageModel.Description),

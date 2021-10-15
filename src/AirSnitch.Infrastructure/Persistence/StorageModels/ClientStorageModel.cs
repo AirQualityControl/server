@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using AirSnitch.Domain.Models;
+using AirSnitch.Infrastructure.Abstract.Cryptography;
 using AirSnitch.Infrastructure.Cryptography.Hashing;
 using MongoDB.Bson.Serialization;
 
@@ -56,6 +57,11 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 Type = ClientType.Testing,
                 ApiKey = ApiKeyStorageModel.BuildFromStorageModel(clientStorageModel.ApiKey),
             };
+        }
+        
+        public void SetApiKeyValue(string hashValue)
+        {
+            this.ApiKey.Value = hashValue;
         }
     }
 
