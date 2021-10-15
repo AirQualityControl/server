@@ -8,8 +8,4 @@
       <ProjectReference Include="..\AirSnitch.Domain\AirSnitch.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Cryptography" />
-    </ItemGroup>
-
 </Project>
