@@ -1,3 +1,4 @@
+using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Cryptography.Hashing;
 using NUnit.Framework;
 
@@ -10,7 +11,7 @@ namespace AirSnitch.UnitTests
         public void Generate_ValidNonEmptyString_ReturnsHashValue()
         {
             var targetString = "stringToHash";
-
+            
             var hash = Pbkdf2Hash.Generate(targetString);
             
             Assert.AreEqual("IbcDRYz5zdyQGEv/ITX+Y+a9dLzOvtsrESysZBwBQTA=", hash);

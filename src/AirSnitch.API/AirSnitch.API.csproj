@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Middleware\Authrorization" />
     <Folder Include="Middleware\Ratelimiting" />
   </ItemGroup>
 

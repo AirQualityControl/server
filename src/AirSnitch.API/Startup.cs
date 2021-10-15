@@ -1,6 +1,8 @@
 using AirSnitch.Api.Extensions;
 using AirSnitch.Api.Middleware.Authentication;
+using AirSnitch.Api.Middleware.Authrorization;
 using AirSnitch.Di;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +25,14 @@ namespace AirSnitch.Api
         {
             services.AddControllers();
             
-            services.AddAuthentication(ApiKeyAuthenticationOptions.Name)
+            services.AddAuthentication(Constants.Authentication.Scheme.ApiKey)
                 .AddApiKey();
+            
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Constants.Authorization.Policy.InternalApp, 
+                    policy => policy.Requirements.Add(new InternalAppRequirement()));
+            });
             
             services.AddMvc();
             services.ResolveApplicationDependencies();

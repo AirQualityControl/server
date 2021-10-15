@@ -27,7 +27,7 @@ namespace AirSnitch.Api.Middleware.Authentication
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             StringValues headerValues;
-            if (!Request.Headers.TryGetValue("X-API-KEY", out headerValues))
+            if (!Request.Headers.TryGetValue(Constants.Authentication.Headers.ApiKey, out headerValues))
             {
                 return AuthenticateResult.NoResult();
             }
@@ -61,6 +61,7 @@ namespace AirSnitch.Api.Middleware.Authentication
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, apiClient.Name.Value),
+                new Claim(Constants.Claim.ClientId, apiClient.Id)
             };
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);

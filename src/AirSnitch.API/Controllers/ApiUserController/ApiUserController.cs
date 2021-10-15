@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.ApiUser;
 using AirSnitch.Api.Controllers.ApiUserController.Dto;
 using AirSnitch.Api.Controllers.ApiUserController.ViewModels;
-using AirSnitch.Api.Middleware.Authentication;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
@@ -21,7 +20,10 @@ namespace AirSnitch.Api.Controllers.ApiUserController
     /// Controller that represent a ApiUser resource
     /// </summary>
     [ApiController]
-    [Authorize(AuthenticationSchemes = ApiKeyAuthenticationOptions.Name)]
+    [Authorize(
+        AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey, 
+        Policy = Constants.Authorization.Policy.InternalApp
+    )]
     [Route("apiUser")]
     public class ApiUserController : RestApiController
     {
