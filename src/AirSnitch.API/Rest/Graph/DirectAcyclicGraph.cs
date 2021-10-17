@@ -56,7 +56,7 @@ namespace AirSnitch.Api.Rest.Graph
         {
             if (!TryGetVertex(requestedVertex, out RelatedVertex<TValue> rootVertex))
             {
-                throw new VersionNotFoundException();
+                return new List<TValue>();
             }
             
             var reachableVertices = TraversionStrategy.TraverseFrom(rootVertex).Result;
