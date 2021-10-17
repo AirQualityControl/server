@@ -1,5 +1,6 @@
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.AirQualityIndex;
 using AirSnitch.Api.Rest.Resources.ApiUser;
 using AirSnitch.Api.Rest.Resources.Client;
 using AirSnitch.Api.Rest.Resources.Registry;
@@ -21,6 +22,7 @@ namespace AirSnitch.Api.Extensions
         public static void AddApiResourceRegistry(this IServiceCollection serviceCollection)
         {
             var apiResourceRegistry = new ApiResourceRegistry();
+            apiResourceRegistry.RegisterApiResource(new AirQualityIndexResource());
             apiResourceRegistry.RegisterApiResource(new ApiUserResource());
             apiResourceRegistry.RegisterApiResource(new ClientApiResource());
             apiResourceRegistry.RegisterApiResource(new SubscriptionPlanApiResource());
@@ -47,7 +49,7 @@ namespace AirSnitch.Api.Extensions
                 subscriptionPlanVertex, 
                 new IncludeRelationship()
             );
-
+            
             return graph;
         }
     }

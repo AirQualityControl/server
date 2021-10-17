@@ -131,6 +131,5 @@ namespace AirSnitch.Api.Rest.ResponseBodyFormatters
 
             return new JProperty("includes", includesContainer);
         }
-
     }
 }
