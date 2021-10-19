@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using AirSnitch.Api.Rest.Links;
 using AirSnitch.Api.Rest.Resources;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
@@ -12,12 +13,18 @@ namespace AirSnitch.Api.Rest.ResponseBodyFormatters
         private readonly HttpRequest _httpRequest;
         private readonly QueryResult _queryResult;
         private readonly IReadOnlyCollection<IApiResourceMetaInfo> _relatedResources;
+        private readonly IReadOnlyCollection<IApiResourceMetaInfo> _requestedRelatedResources;
 
-        public RestfullResponseBodyFormatter(HttpRequest httpRequest, QueryResult queryResult, IReadOnlyCollection<IApiResourceMetaInfo> relatedResources)
+        public RestfullResponseBodyFormatter(
+            HttpRequest httpRequest, 
+            QueryResult queryResult, 
+            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources,
+            IReadOnlyCollection<IApiResourceMetaInfo> requestedRelatedResources)
         {
             _httpRequest = httpRequest;
             _queryResult = queryResult;
             _relatedResources = relatedResources;
+            _requestedRelatedResources = requestedRelatedResources;
         }
 
         public string FormatResponse(object responseBody)
@@ -63,7 +70,9 @@ namespace AirSnitch.Api.Rest.ResponseBodyFormatters
         {
             var jArray = new JArray();
 
-            foreach (var item in _queryResult.Value)
+            var includes = _requestedRelatedResources.Select(r => r.Name.Value).ToList();
+            
+            foreach (var item in _queryResult.GetFormattedValue(includes))
             {
                 jArray.Add(
                     new JObject(

@@ -42,7 +42,7 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
                     IncludedValues = new Dictionary<string, object>(){}
                 }
             };
-            return new QueryResult(resultEntries, new PageOptions());
+            return new QueryResult(data, new InMemoryQueryResultFormatter(),new PageOptions());
         }
     }
 }

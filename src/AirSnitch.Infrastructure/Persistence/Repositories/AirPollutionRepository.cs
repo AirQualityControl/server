@@ -6,7 +6,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
     public class AirPollutionRepository : IAirPollutionRepository
     {
-        public Task<AirPollution> GetLatestAirPollutionByGeolocation(GeoLocation geoLocation)
+        public Task<AirPollution> GetLatestAirPollutionByGeolocation(GeoCoordinates geoCoordinates)
         {
             return Task.FromResult(new AirPollution());
         }

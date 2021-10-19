@@ -55,7 +55,8 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories.Common
             .ToListAsync();
 
             return new QueryResult(
-                MongoDbQueryResultEntry.BuildFrom(bsonDocuments), 
+                bsonDocuments, 
+                new MongoDbQueryResultFormatter(),
                 mongoQuery.PageOptions
             );
         }

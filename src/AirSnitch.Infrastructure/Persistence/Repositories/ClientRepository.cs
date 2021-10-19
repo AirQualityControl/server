@@ -35,7 +35,8 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             
             await Task.WhenAll(queryResultTask, totalNumberOfDocumentsTask);
 
-            return new QueryResult(queryResultTask.Result.Value, 
+            return new QueryResult(queryResultTask.Result,
+                new MongoDbQueryResultFormatter(),
                 new PageOptions(
                     pageNumber: queryScheme.PageOptions.PageNumber, 
                     totalNumberOfItems: totalNumberOfDocumentsTask.Result, 

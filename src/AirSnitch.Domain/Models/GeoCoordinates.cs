@@ -1,8 +1,8 @@
 using System;
 
-namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
+namespace AirSnitch.Domain.Models
 {
-    public struct GeoLocation
+    public struct GeoCoordinates
     {
         private const int LatitudeMinValue = 0;
         private const int LatitudeMaxValue = 90;
@@ -61,7 +61,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         
         public object Clone()
         {
-            return new GeoLocation()
+            return new GeoCoordinates()
             {
                 Longitude = this._longitudeValue,
                 Latitude = this._latitudeValue
@@ -79,7 +79,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
             
         }
         
-        public bool Equals(GeoLocation other)
+        public bool Equals(GeoCoordinates other)
         {
             return _longitudeValue.Equals(other._longitudeValue) 
                    && _latitudeValue.Equals(other._latitudeValue) 
@@ -90,7 +90,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         {
             if (ReferenceEquals(null, obj)) return false;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((GeoLocation) obj);
+            return Equals((GeoCoordinates) obj);
         }
     }
 }

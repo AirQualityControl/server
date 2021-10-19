@@ -28,7 +28,6 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
         /// Returns query scheme page options
         /// </summary>
         public PageOptions PageOptions => _pageOptions;
-
         
         /// <summary>
         ///     Returns read-only collection of added columns filters.
