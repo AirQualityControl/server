@@ -41,7 +41,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// </summary>
         /// <param name="query">QueryScheme incoming scheme that will be converted to query and executed in db</param>
         /// <returns>An instance of QueryResult class</returns>
-        Task<QueryResult> ExecuteQueryAsync(IQuery query);
+        Task<object> ExecuteQueryAsync(IQuery query);
 
         /// <summary>
         ///     Method deletes exactly one records by specified expression.

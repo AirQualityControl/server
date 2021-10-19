@@ -18,7 +18,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
     /// Controller that represent a MonitoringStation resource
     /// </summary>
     [ApiController]
-    [Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
+    //[Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
     [Route("monitoringStation")]
     public class MonitoringStationController : RestApiController
     {
@@ -47,7 +47,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery]RequestParameters requestParameters)
         {
-            var queryScheme = GenerateQueryScheme(requestParameters.Includes, requestParameters.PageOptions);
+            var queryScheme = GenerateQueryScheme(requestParameters.IncludesString, requestParameters.PageOptions);
 
             QueryResult result = await _monitoringStationRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
@@ -56,7 +56,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
                     Request,
                     result,
                     RelatedResources,
-                    base.GetIncludes(requestParameters.Includes)
+                    GetIncludedResources(requestParameters.IncludesString)
                 )
             );
         }
@@ -94,7 +94,8 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
                 new RestResponseBody(
                     Request,
                     result,
-                    RelatedResources
+                    RelatedResources,
+                    base.GetIncludedResources(includedResources)//TODO: not from base
                 )
             );
         }

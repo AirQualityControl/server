@@ -84,7 +84,7 @@ namespace AirSnitch.Api.Controllers
             return queryScheme;
         }
 
-        protected IReadOnlyCollection<IApiResourceMetaInfo> GetIncludes(string includesString)
+        protected IReadOnlyCollection<IApiResourceMetaInfo> GetIncludedResources(string includesString)
         {
             var predicate = BuildPredicate(includesString);
             

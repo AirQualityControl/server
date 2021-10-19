@@ -11,6 +11,7 @@ namespace AirSnitch.Api.Rest.Resources.MonitoringStation
             {
                 new ApiResourceColumn("id", "id"),
                 new ApiResourceColumn("displayName", "displayName"),
+                new ApiResourceColumn("location", "location"),
             };
 
         public QueryColumn QueryColumn => new PrimaryColumn();

@@ -20,10 +20,10 @@ namespace AirSnitch.Api.Controllers.ApiUserController
     /// Controller that represent a ApiUser resource
     /// </summary>
     [ApiController]
-    [Authorize(
-        AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey, 
-        Policy = Constants.Authorization.Policy.InternalApp
-    )]
+    //[Authorize(
+        //AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey, 
+        //Policy = Constants.Authorization.Policy.InternalApp
+    //)]
     [Route("apiUser")]
     public class ApiUserController : RestApiController
     {
@@ -55,7 +55,7 @@ namespace AirSnitch.Api.Controllers.ApiUserController
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery]RequestParameters requestParameters)
         {
-            var queryScheme = GenerateQueryScheme(requestParameters.Includes, requestParameters.PageOptions);
+            var queryScheme = GenerateQueryScheme(requestParameters.IncludesString, requestParameters.PageOptions);
 
             QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
             
@@ -63,7 +63,8 @@ namespace AirSnitch.Api.Controllers.ApiUserController
                 new RestResponseBody(
                     Request,
                     result,
-                    RelatedResources
+                    RelatedResources,
+                    base.GetIncludedResources(requestParameters.IncludesString)
                 )
             );
         }
@@ -101,7 +102,8 @@ namespace AirSnitch.Api.Controllers.ApiUserController
                 new RestResponseBody(
                     Request,
                     result,
-                    RelatedResources
+                    RelatedResources,
+                    base.GetIncludedResources(includedResources)
                 )
             );
         }

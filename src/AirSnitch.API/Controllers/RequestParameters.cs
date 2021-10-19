@@ -12,7 +12,7 @@ namespace AirSnitch.Api.Controllers
         public int PageSize { get; set; }
 
         [FromQuery(Name = "includes")]
-        public string Includes { get; set; }
+        public string IncludesString { get; set; }
         internal PageOptions PageOptions => new PageOptions(PageNumber, PageSize);
     }
 }

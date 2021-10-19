@@ -21,6 +21,12 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
 
         public bool IsSuccess => true;
 
+
+        public object GetValue()
+        {
+            return _result;
+        }
+
         public IReadOnlyCollection<IQueryResultEntry> GetFormattedValue(ICollection<string> includedResources)
         {
             return _queryResultFormatter.FormatResult(_result, includedResources);

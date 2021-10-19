@@ -18,7 +18,7 @@ namespace AirSnitch.Api.Rest
 
         public RestResponseBody(HttpRequest httpRequest, 
             QueryResult queryResult, 
-            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources, IReadOnlyCollection<IApiResourceMetaInfo> requestedRelatedResources)
+            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources, IReadOnlyCollection<IApiResourceMetaInfo> requestedRelatedResources = default)
         {
             _httpRequest = httpRequest;
             _queryResult = queryResult;

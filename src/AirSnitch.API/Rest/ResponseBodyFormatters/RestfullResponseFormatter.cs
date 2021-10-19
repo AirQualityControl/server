@@ -70,8 +70,7 @@ namespace AirSnitch.Api.Rest.ResponseBodyFormatters
         {
             var jArray = new JArray();
 
-            var includes = _requestedRelatedResources.Select(r => r.Name.Value).ToList();
-            
+            var includes = _requestedRelatedResources?.Select(r => r.Name.Value).ToList();
             foreach (var item in _queryResult.GetFormattedValue(includes))
             {
                 jArray.Add(
