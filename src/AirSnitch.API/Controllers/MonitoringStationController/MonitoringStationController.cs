@@ -18,7 +18,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
     /// Controller that represent a MonitoringStation resource
     /// </summary>
     [ApiController]
-    //[Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
+    [Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
     [Route("monitoringStation")]
     public class MonitoringStationController : RestApiController
     {

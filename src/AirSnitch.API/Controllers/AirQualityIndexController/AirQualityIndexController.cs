@@ -7,6 +7,7 @@ using AirSnitch.Api.Rest.Resources.AirQualityIndex;
 using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
     /// Controller that represent a ApiUser resource
     /// </summary>
     [ApiController]
-    //[Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
+    [Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
     [Route("airQualityIndex")]
     public class AirQualityIndexController : RestApiController
     {
