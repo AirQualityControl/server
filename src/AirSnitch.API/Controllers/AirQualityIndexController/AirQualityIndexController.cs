@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
@@ -6,7 +7,6 @@ using AirSnitch.Api.Rest.Resources.AirQualityIndex;
 using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,12 +1,8 @@
 using System.Collections.Generic;
-using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
-using AirSnitch.Api.Extensions;
 using AirSnitch.Domain.Models;
-using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
-using Newtonsoft.Json.Linq;
 
-namespace AirSnitch.Api.Controllers.AirQualityIndexController
+namespace AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel
 {
     public class AirQualityIndexViewModel
     {
@@ -33,8 +29,7 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
 
             return new QueryResult(
                 new List<Dictionary<string, object>>(){resultDictionary},
-                new AirQualityIndexResponseFormatter(),
-                new PageOptions()
+                new AirQualityIndexResponseFormatter()
             );
         }
     }

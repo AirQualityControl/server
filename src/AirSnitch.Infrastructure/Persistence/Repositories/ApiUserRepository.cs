@@ -11,7 +11,6 @@ using AirSnitch.Infrastructure.Persistence.Repositories.Common;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
 using DeclarativeContracts.Functions;
 using DeclarativeContracts.Precondition;
-using MongoDB.Bson;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {

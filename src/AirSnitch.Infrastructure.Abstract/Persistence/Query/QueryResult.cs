@@ -12,7 +12,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
         public QueryResult(
             object resultData,
             IQueryResultFormatter queryResultFormatter,
-            PageOptions pageOptions)
+            PageOptions pageOptions = default)
         {
             _result = resultData;
             _queryResultFormatter = queryResultFormatter;
@@ -20,13 +20,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
         }
 
         public bool IsSuccess => true;
-
-
-        public object GetValue()
-        {
-            return _result;
-        }
-
+        
         public IReadOnlyCollection<IQueryResultEntry> GetFormattedValue(ICollection<string> includedResources)
         {
             return _queryResultFormatter.FormatResult(_result, includedResources);

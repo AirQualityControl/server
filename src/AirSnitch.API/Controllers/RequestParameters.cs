@@ -1,3 +1,4 @@
+using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Infrastructure.Abstract.Persistence;
 using Microsoft.AspNetCore.Mvc;
 

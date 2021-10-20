@@ -95,7 +95,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
                     Request,
                     result,
                     RelatedResources,
-                    base.GetIncludedResources(includedResources)//TODO: not from base
+                    base.GetIncludedResources(includedResources)
                 )
             );
         }
