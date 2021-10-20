@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
@@ -49,9 +50,11 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
             var aqiViewModel = new AirQualityIndexViewModel(index: usaAqi,  indexValue:indexValue);
             
             return new RestApiResult(
-                new RestResponseBody(Request, 
+                new RestResponseBody(
+                    Request, 
                     aqiViewModel.GetResult(),
-                    RelatedResources)
+                    RelatedResources
+                )
             );
         }
     }

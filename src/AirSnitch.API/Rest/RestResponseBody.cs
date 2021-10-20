@@ -13,22 +13,25 @@ namespace AirSnitch.Api.Rest
         private readonly HttpRequest _httpRequest;
         private readonly QueryResult _queryResult;
         private readonly IReadOnlyCollection<IApiResourceMetaInfo> _relatedResources;
+        private readonly IReadOnlyCollection<IApiResourceMetaInfo> _requestedRelatedResources;
 
 
         public RestResponseBody(HttpRequest httpRequest, 
             QueryResult queryResult, 
-            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources)
+            IReadOnlyCollection<IApiResourceMetaInfo> relatedResources, 
+            IReadOnlyCollection<IApiResourceMetaInfo> requestedRelatedResources = default)
         {
             _httpRequest = httpRequest;
             _queryResult = queryResult;
             _relatedResources = relatedResources;
+            _requestedRelatedResources = requestedRelatedResources;
         }
 
         public string Value => Formatter.FormatResponse(this);
         public bool IsEmpty => !_queryResult.IsSuccess;
 
         protected virtual IResponseBodyFormatter Formatter =>
-            new RestfullResponseBodyFormatter(_httpRequest, _queryResult, _relatedResources);
+            new RestfullResponseBodyFormatter(_httpRequest, _queryResult, _relatedResources, _requestedRelatedResources);
         
         [JsonIgnore]
         public ContentType ContentType => new ContentType("application/json");

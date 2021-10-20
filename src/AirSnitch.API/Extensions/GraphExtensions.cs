@@ -1,8 +1,10 @@
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
+using AirSnitch.Api.Rest.Resources.AirPollution;
 using AirSnitch.Api.Rest.Resources.AirQualityIndex;
 using AirSnitch.Api.Rest.Resources.ApiUser;
 using AirSnitch.Api.Rest.Resources.Client;
+using AirSnitch.Api.Rest.Resources.MonitoringStation;
 using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Api.Rest.Resources.Relationship;
 using AirSnitch.Api.Rest.Resources.SubscriptionPlan;
@@ -26,6 +28,8 @@ namespace AirSnitch.Api.Extensions
             apiResourceRegistry.RegisterApiResource(new ApiUserResource());
             apiResourceRegistry.RegisterApiResource(new ClientApiResource());
             apiResourceRegistry.RegisterApiResource(new SubscriptionPlanApiResource());
+            apiResourceRegistry.RegisterApiResource(new MonitoringStationResource());
+            apiResourceRegistry.RegisterApiResource(new AirPollutionResource());
 
             serviceCollection.AddSingleton<IApiResourceRegistry>(apiResourceRegistry);
         }
@@ -37,6 +41,14 @@ namespace AirSnitch.Api.Extensions
             var apiUserVertex = new RelatedVertex<IApiResourceMetaInfo>(new ApiUserResource());
             var clientVertex = new RelatedVertex<IApiResourceMetaInfo>(new ClientApiResource());
             var subscriptionPlanVertex = new RelatedVertex<IApiResourceMetaInfo>(new SubscriptionPlanApiResource());
+            var monitoringStationVertex = new RelatedVertex<IApiResourceMetaInfo>(new MonitoringStationResource());
+            var airQualityIndexVertex = new RelatedVertex<IApiResourceMetaInfo>(new AirQualityIndexResource());
+            var airPollutionVertex = new RelatedVertex<IApiResourceMetaInfo>(new AirPollutionResource());
+            
+            
+            graph.AddDirectedEdge(monitoringStationVertex, airQualityIndexVertex, new IncludeRelationship());
+            graph.AddDirectedEdge(monitoringStationVertex, airPollutionVertex, new IncludeRelationship());
+            
             
             graph.AddDirectedEdge(
                 apiUserVertex,

@@ -11,6 +11,8 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence
 
     public readonly struct PageOptions
     {
+        private static PageOptions _empty = new PageOptions();
+        
         private readonly int _pageNumber;
 
         private readonly long? _totalNumberOfItems;

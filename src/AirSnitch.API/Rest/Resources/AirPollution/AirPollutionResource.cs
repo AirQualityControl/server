@@ -1,23 +1,20 @@
 using System.Collections.Generic;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
-namespace AirSnitch.Api.Rest.Resources.AirQualityIndex
+namespace AirSnitch.Api.Rest.Resources.AirPollution
 {
-    public class AirQualityIndexResource : IApiResourceMetaInfo
+    public class AirPollutionResource : IApiResourceMetaInfo
     {
-        public ApiResourceName Name
-        {
-            get => new ApiResourceName("airQualityIndex");
-        }
+        public ApiResourceName Name => new ApiResourceName("airPollution");
+
         public IReadOnlyCollection<ApiResourceColumn> Columns =>
             new List<ApiResourceColumn>()
             {
-                new ApiResourceColumn("type", "type"),
-                new ApiResourceColumn("value", "value"),
+                new ApiResourceColumn("particles", "particles")
             };
 
         public QueryColumn QueryColumn => new PrimaryColumn();
-
+        
         public bool Equals(IApiResourceMetaInfo other)
         {
             return other != null && Name.Equals(other.Name);
@@ -27,7 +24,7 @@ namespace AirSnitch.Api.Rest.Resources.AirQualityIndex
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((AirQualityIndexResource) obj);
+            return Equals((AirPollutionResource) obj);
         }
         public override int GetHashCode()
         {

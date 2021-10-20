@@ -60,7 +60,8 @@ namespace AirSnitch.Api.Controllers.ClientController
                     new RestResponseBody(
                         Request,
                         result,
-                        RelatedResources
+                        RelatedResources,
+                        base.GetIncludedResources(includedResources)
                     )
                 );
             }

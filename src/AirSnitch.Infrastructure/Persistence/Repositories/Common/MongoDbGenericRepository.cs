@@ -43,7 +43,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories.Common
         }
 
         /// <inheritdoc/>
-        public async Task<QueryResult> ExecuteQueryAsync(IQuery query)
+        public async Task<object> ExecuteQueryAsync(IQuery query)
         {
             var mongoQuery = (MongoDbQuery) query;
             
@@ -54,10 +54,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories.Common
                 .Project(mongoQuery.Projection)
             .ToListAsync();
 
-            return new QueryResult(
-                MongoDbQueryResultEntry.BuildFrom(bsonDocuments), 
-                mongoQuery.PageOptions
-            );
+            return bsonDocuments;
         }
 
         public async Task<DeletionResult> DeleteOneBy(Expression<Func<TEntity, bool>> filter)

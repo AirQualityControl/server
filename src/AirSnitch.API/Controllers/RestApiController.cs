@@ -84,6 +84,16 @@ namespace AirSnitch.Api.Controllers
             return queryScheme;
         }
 
+        protected IReadOnlyCollection<IApiResourceMetaInfo> GetIncludedResources(string includesString)
+        {
+            var predicate = BuildPredicate(includesString);
+            
+            var includedResources = _apiResourceRegistry.GetBy(predicate);
+
+            return includedResources;
+        }
+
+
         private static Func<IApiResourceMetaInfo, bool> BuildPredicate(string includesString) 
         {
             if (string.IsNullOrEmpty(includesString))

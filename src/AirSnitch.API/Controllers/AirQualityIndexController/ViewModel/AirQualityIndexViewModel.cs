@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using AirSnitch.Api.Extensions;
 using AirSnitch.Domain.Models;
-using AirSnitch.Infrastructure.Abstract.Persistence;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 
-namespace AirSnitch.Api.Controllers.AirQualityIndexController
+namespace AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel
 {
     public class AirQualityIndexViewModel
     {
@@ -29,20 +27,10 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
                 {"advice", _value.GetAdvice().Text}
             };
 
-            return WrapAsQueryResult(resultDictionary);
-        }
-
-        private QueryResult WrapAsQueryResult(Dictionary<string, object> data)
-        {
-            var resultEntries = new List<InMemoryQueryResultEntry>()
-            {
-                new InMemoryQueryResultEntry()
-                {
-                    ScalarValues = data,
-                    IncludedValues = new Dictionary<string, object>(){}
-                }
-            };
-            return new QueryResult(resultEntries, new PageOptions());
+            return new QueryResult(
+                new List<Dictionary<string, object>>(){resultDictionary},
+                new AirQualityIndexResponseFormatter()
+            );
         }
     }
 }

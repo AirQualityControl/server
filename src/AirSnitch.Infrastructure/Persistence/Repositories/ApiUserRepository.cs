@@ -11,7 +11,6 @@ using AirSnitch.Infrastructure.Persistence.Repositories.Common;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
 using DeclarativeContracts.Functions;
 using DeclarativeContracts.Precondition;
-using MongoDB.Bson;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
@@ -68,11 +67,14 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             
             await Task.WhenAll(queryResultTask, totalNumberOfDocumentsTask);
 
-            return new QueryResult(queryResultTask.Result.Value, 
+            return new QueryResult(
+                queryResultTask.Result,
+                new MongoDbQueryResultFormatter(),
                 new PageOptions(
                     pageNumber: queryScheme.PageOptions.PageNumber, 
                     totalNumberOfItems: totalNumberOfDocumentsTask.Result, 
-                    itemsPerPage:queryScheme.PageOptions.ItemsLimit));
+                    itemsPerPage:queryScheme.PageOptions.ItemsLimit)
+                );
         }
 
         public async Task Update(ApiUser apiUser)

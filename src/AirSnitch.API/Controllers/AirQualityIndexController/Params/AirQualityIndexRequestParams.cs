@@ -1,3 +1,4 @@
+using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,6 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
         [FromQuery(Name = "radius")]
         public int Radius { get; set; }
 
-        internal GeoLocation Geolocation => new() {Latitude = LatitudeValue, Longitude = LongitudeValue};
+        internal GeoCoordinates Geolocation => new() {Latitude = LatitudeValue, Longitude = LongitudeValue};
     }
 }

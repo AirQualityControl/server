@@ -1,26 +1,43 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
 {
     public class QueryResult
     {
-        private readonly IReadOnlyCollection<IQueryResultEntry> _result;
+        private readonly object _result;
+        private readonly IQueryResultFormatter _queryResultFormatter;
 
         public QueryResult(
-            IReadOnlyCollection<IQueryResultEntry> result, 
-            PageOptions pageOptions)
+            object resultData,
+            IQueryResultFormatter queryResultFormatter,
+            PageOptions pageOptions = default)
         {
-            _result = result;
+            _result = resultData;
+            _queryResultFormatter = queryResultFormatter;
             PageOptions = pageOptions;
         }
 
         public bool IsSuccess => true;
-        public IReadOnlyCollection<IQueryResultEntry> Value => _result;
+        
+        public IReadOnlyCollection<IQueryResultEntry> GetFormattedValue(ICollection<string> includedResources)
+        {
+            return _queryResultFormatter.FormatResult(_result, includedResources);
+        }
+
         public PageOptions PageOptions { get; }
 
         public bool IsScalar()
         {
-            if (_result.Count > 1)
+            var collectionResult = _result as ICollection;
+
+            if (collectionResult == null)
+            {
+                throw new Exception();
+            }
+
+            if (collectionResult.Count > 1)
             { 
                 return false;
             }
