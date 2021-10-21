@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.Graph;
 using AirSnitch.Api.Rest.Resources;
@@ -8,7 +10,6 @@ using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
     /// Controller that represent a MonitoringStation resource
     /// </summary>
     [ApiController]
-    [Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
+    //[Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
     [Route("monitoringStation")]
     public class MonitoringStationController : RestApiController
     {
@@ -66,7 +67,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
         /// </summary>
         /// <url>http://apiurl/apiUser/Id</url>
         /// <param name="id">Valid identifier of monitoring station</param>
-        /// <param name="includedResources">A collection of included resources the will be queried in single request alongside with a main resource(MonitoringStation)</param>>
+        /// <param name="includes">A collection of included resources the will be queried in single request alongside with a main resource(MonitoringStation)</param>>
         /// <returns>Existing apiUser</returns>
         /// <response code="200">Returns 200 when everything is correct</response>
         /// <response code="400">If request parameters has an invalid state</response>
@@ -77,9 +78,9 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById(string id, string includedResources)
+        public async Task<IActionResult> GetById(string id, string includes)
         {
-            var queryScheme = GenerateQueryScheme(includedResources);
+            var queryScheme = GenerateQueryScheme(includes);
             
             queryScheme.AddColumnFilter(
                 new EqualColumnFilter(
@@ -95,7 +96,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
                     Request,
                     result,
                     RelatedResources,
-                    base.GetIncludedResources(includedResources)
+                    base.GetIncludedResources(includes)
                 )
             );
         }
@@ -117,7 +118,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAirPollution(string id)
         {
-            var station = await _monitoringStationRepository.GetByIdAsync(id);
+            var station = await _monitoringStationRepository.FindByIdAsync(id);
 
             if (station.IsEmpty)
             {
@@ -126,13 +127,14 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
 
             var airPollution = station.GetAirPollution();
 
-            var stationAirPollutionViewModel = new StationAirPollutionViewModel(airPollution);
+            var stationAirPollutionViewModel = new StationAirPollutionViewModel(airPollution, Request);
+            stationAirPollutionViewModel.SetStationId(station.Id);
             
             return new RestApiResult(
                 new RestResponseBody(
                     Request,
                     stationAirPollutionViewModel.GetResult(),
-                    RelatedResources
+                    new List<IApiResourceMetaInfo>()//TODO:empty of
                 )
             );
         }
@@ -154,7 +156,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAirQualityIndex(string id)
         {
-            var station = await _monitoringStationRepository.GetByIdAsync(id);
+            var station = await _monitoringStationRepository.FindByIdAsync(id);
 
             if (station.IsEmpty)
             {
@@ -167,13 +169,18 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
             
             var airQualityIndexValue = usaAqi.Calculate(airPollution);
 
-            var stationAirQualityIndexViewModel = new StationAirQualityIndexViewModel(usaAqi, airQualityIndexValue);
+            var stationAirQualityIndexViewModel = new AirQualityIndexViewModel(
+                usaAqi, 
+                airQualityIndexValue, 
+                Request);
+            
+            stationAirQualityIndexViewModel.SetMeasurementDateTime(airPollution.GetMeasurementsDateTime());
             
             return new RestApiResult(
                 new RestResponseBody(
                     Request,
                     stationAirQualityIndexViewModel.GetResult(),
-                    RelatedResources
+                    new List<IApiResourceMetaInfo>()//TODO:empty of
                 )
             );
         }
@@ -195,7 +202,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetDataProvider(string id)
         {
-            var station = await _monitoringStationRepository.GetByIdAsync(id);
+            var station = await _monitoringStationRepository.FindByIdAsync(id);
 
             if (station.IsEmpty)
             {
@@ -205,12 +212,12 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
             var stationOwner = station.GetOwner();
 
             var dataProviderViewModel = new StationDataProviderViewModel(stationOwner);
-            
+
             return new RestApiResult(
                 new RestResponseBody(
                     Request,
                     dataProviderViewModel.GetResult(),
-                    RelatedResources
+                    new List<IApiResourceMetaInfo>()//TODO:empty of
                 )
             );
         }

@@ -16,8 +16,9 @@ namespace AirSnitch.Api.Rest.Links
             _requestPath = requestPath;
         }
 
-        public Uri Value => new Uri(new Uri($"{_scheme}://{_hostValue}"), _requestPath);
-
+        public Uri IncludePathValue => new Uri(new Uri($"{_scheme}://{_hostValue}"), _requestPath);
+        public Uri Value => new Uri($"{_scheme}://{_hostValue}");
+        
         public static BaseApiLink From(HttpRequest httpRequest)
         {
             return new BaseApiLink(

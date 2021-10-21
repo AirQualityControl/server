@@ -20,6 +20,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>AirSnitch.Infrastructure</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+    
+    <ItemGroup>
       <PackageReference Include="DeclarativeContracts" Version="1.1.0" />
     </ItemGroup>
 

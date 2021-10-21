@@ -11,6 +11,13 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels.Mappers
             SubscriptionPlanStorageModel.RegisterDbMap();
             SubscriptionPlanQuotaStorageModel.RegisterDbMap();
             ApiKeyStorageModel.RegisterDbMap();
+            
+            MonitoringStationStorageModel.RegisterDbMap();
+            LocationStorageModel.RegisterDbMap();
+            CityStorageModel.RegisterDbMap();
+            AirQualityIndexStorageModel.RegisterDbMap();
+            AirPollutionStorageModel.RegisterDbMap();
+            ParticleStorageModel.RegisterDbMap();
         }
     }
 }

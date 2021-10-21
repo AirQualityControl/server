@@ -14,7 +14,6 @@ namespace AirSnitch.Di
             services.AddTransient<IApiUserRepository, ApiUserRepository>();
             services.AddTransient<IClientRepository, ClientRepository>();
             services.AddScoped<IApiKeyHashAlgorithm, Pbkdf2HashAlgorithm>();
-            services.AddTransient<IAirPollutionRepository, AirPollutionRepository>();
             services.AddTransient<IMonitoringStationRepository, MonitoringStationRepository>();
             services.AddSingleton(MongoDbClient.Create());
         }
