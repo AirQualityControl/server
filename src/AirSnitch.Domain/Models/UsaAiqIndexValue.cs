@@ -2,9 +2,9 @@ namespace AirSnitch.Domain.Models
 {
     public class UsaAiqIndexValue : IAirQualityIndexValue
     {
-        private readonly float _calculatedValue;
+        private readonly decimal _calculatedValue;
 
-        internal UsaAiqIndexValue(float calculatedValue)
+        internal UsaAiqIndexValue(decimal calculatedValue)
         {
             _calculatedValue = calculatedValue;
         }

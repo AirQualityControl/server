@@ -21,14 +21,14 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
     [Route("airQualityIndex")]
     public class AirQualityIndexController : RestApiController
     {
-        private readonly IAirPollutionRepository _airPollutionRepository;
+        private readonly IMonitoringStationRepository _monitoringStationRepository;
         
         public AirQualityIndexController(
-            IAirPollutionRepository airPollutionRepository,
             DirectAcyclicGraph<IApiResourceMetaInfo> apiResourcesGraph, 
+            IMonitoringStationRepository repository,
             IApiResourceRegistry apiResourceRegistry) : base(apiResourcesGraph, apiResourceRegistry)
         {
-            _airPollutionRepository = airPollutionRepository;
+            _monitoringStationRepository = repository;
         }
 
         protected override IApiResourceMetaInfo CurrentResource => new AirQualityIndexResource();
@@ -41,14 +41,31 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetIndexValue([FromQuery]AirQualityIndexRequestParams requestParams)
         {
-            var airPollution = await _airPollutionRepository.GetLatestAirPollutionByGeolocation(requestParams.Geolocation);
+            //TODO:https://github.com/AirQualityControl/server/issues/93
+            var nearestStation =
+                await _monitoringStationRepository.GetNearestStation(requestParams.Geolocation, requestParams.Radius);
+
+            if (nearestStation.IsEmpty)
+            {
+                return NotFound();
+            }
+
+            var airPollution = nearestStation.GetAirPollution();
 
             var usaAqi = new UsaAirQualityIndex();
+
+            var indexValue = usaAqi.Calculate(airPollution);
             
-            IAirQualityIndexValue indexValue = usaAqi.Calculate(airPollution);
+            var aqiViewModel = new AirQualityIndexViewModel(
+                index: usaAqi,
+                indexValue:indexValue,
+                Request);
+
             
-            var aqiViewModel = new AirQualityIndexViewModel(index: usaAqi,  indexValue:indexValue);
+            //aqiViewModel.SetMeasurementDateTime(airPollution.GetMeasurementsDateTime());
             
+            aqiViewModel.SetStationId("5480d666-cd1e-45ff-9e63-f283592c72e2");
+
             return new RestApiResult(
                 new RestResponseBody(
                     Request, 

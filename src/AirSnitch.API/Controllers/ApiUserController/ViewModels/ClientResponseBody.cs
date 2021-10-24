@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Net.Mime;
-using System.Runtime.Serialization;
 using AirSnitch.Api.Controllers.ApiUser.ViewModels;
 using AirSnitch.Api.Rest;
 using AirSnitch.Api.Rest.ResponseBodyFormatters;
 using AirSnitch.Domain.Models;
 using Newtonsoft.Json;
 
-namespace AirSnitch.Api.Controllers.ApiUser
+namespace AirSnitch.Api.Controllers.ApiUserController.ViewModels
 {
     internal class ClientResponseBody : IResponseBody
     {

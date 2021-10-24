@@ -8,7 +8,7 @@ namespace AirSnitch.Domain.Models
 
         public IAirQualityIndexValue Calculate(AirPollution airPollution)
         {
-            return new UsaAiqIndexValue(34.5f);
+            return new UsaAiqIndexValue(34.5m);
         }
     }
 }

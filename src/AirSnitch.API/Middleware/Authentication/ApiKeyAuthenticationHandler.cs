@@ -29,7 +29,7 @@ namespace AirSnitch.Api.Middleware.Authentication
             StringValues headerValues;
             if (!Request.Headers.TryGetValue(Constants.Authentication.Headers.ApiKey, out headerValues))
             {
-                return AuthenticateResult.NoResult();
+                return AuthenticateResult.Fail($"{Constants.Authentication.Headers.ApiKey} header was not found in request headers!");
             }
 
             if (headerValues.Count > 1)

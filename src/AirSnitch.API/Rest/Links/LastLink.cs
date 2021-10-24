@@ -25,7 +25,7 @@ namespace AirSnitch.Api.Rest.Links
                 var queryStringDictionary = _httpRequest.Query.ToDictionary(keySelector: k => k.Key, k => k.Value);
                 queryStringDictionary["page"] = new StringValues(_pageOptions.LastPageNumber.ToString());
                     
-                var baseUri = BaseApiLink.From(_httpRequest).Value;
+                var baseUri = BaseApiLink.From(_httpRequest).IncludePathValue;
                 return $"{baseUri}{QueryString.Create(queryStringDictionary)}";
             }
         }

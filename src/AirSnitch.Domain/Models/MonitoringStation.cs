@@ -1,15 +1,32 @@
+using System;
+
 namespace AirSnitch.Domain.Models
 {
     public class MonitoringStation : IDomainModel<MonitoringStation>
     {
-        public string Id { get; }
+        private AirPollution _airPollution;
+        private Location _location;
+        private MonitoringStationOwner _owner;
 
-        public string DisplayName { get; }
 
+        /// <summary>
+        ///     Returns an internal identifier of monitoring station.
+        /// </summary>
+        public string Id { get; private set; }
 
-        public Location GetLocation()
+        /// <summary>
+        ///     Returns station display name
+        /// </summary>
+        public string DisplayName { get; private set; }
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        internal void SetLocation(Location location)
         {
-            return null;
+            _location = location;
         }
 
         /// <summary>
@@ -18,16 +35,25 @@ namespace AirSnitch.Domain.Models
         /// <returns>Valid air pollution measurements</returns>
         public AirPollution GetAirPollution()
         {
-            throw new System.NotImplementedException();
+            return _airPollution;
+        }
+
+        /// <summary>
+        ///     Set the latest air pollution values that was collection from station
+        /// </summary>
+        /// <param name="airPollution"></param>
+        internal void SetAirPollution(AirPollution airPollution)
+        {
+            _airPollution = airPollution;
         }
 
         /// <summary>
         ///     Returns a monitoring station owner.
         /// </summary>
         /// <returns></returns>
-        public MonitoringStationOwner GetOwner()
+        public MonitoringStationOwner GetStationOwner()
         {
-            throw new System.NotImplementedException();
+            return _owner;
         }
         
         public bool Equals(MonitoringStation? other)
@@ -41,15 +67,32 @@ namespace AirSnitch.Domain.Models
         }
 
         public bool IsEmpty { get; set; }
-        
+        public static MonitoringStation Empty { get; set; }
+
         public bool IsValid()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public void Validate()
         {
-            throw new System.NotImplementedException();
+            
+        }
+
+        internal void SetId(string id)
+        {
+            Id = id;
+        }
+
+        internal void SetName(string name)
+        {
+            //TODO:check contracts
+            DisplayName = name;
+        }
+
+        internal void SetOwnerInfo(MonitoringStationOwner owner)
+        {
+            _owner = owner;
         }
     }
 }

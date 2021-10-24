@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence;
@@ -11,11 +13,11 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
     public class MonitoringStationRepository : IMonitoringStationRepository
     {
-        private readonly IGenericRepository<ApiUserStorageModel> _genericRepository;
+        private readonly IGenericRepository<MonitoringStationStorageModel> _genericRepository;
 
         public MonitoringStationRepository(MongoDbClient client)
         {
-            _genericRepository = new MongoDbGenericRepository<ApiUserStorageModel>(client, "airMonitoringStation");
+            _genericRepository = new MongoDbGenericRepository<MonitoringStationStorageModel>(client, "airMonitoringStation");
         }
         
         public async Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme)
@@ -37,9 +39,45 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             );
         }
 
-        public Task<MonitoringStation> GetByIdAsync(string id)
+        public async Task<MonitoringStation> GetByIdAsync(string id)
         {
-            throw new System.NotImplementedException();
+            Guid.Parse(id);
+            
+            var users =  await _genericRepository.GetByAsync(
+                u => u.Id == id
+            );
+
+            var monitoringStationStorageModel = users.SingleOrDefault();
+            
+            if (monitoringStationStorageModel != default(MonitoringStationStorageModel))
+            {
+                return monitoringStationStorageModel.MapToDomainModel();
+            }
+            throw new ItemNotFoundException();
+        }
+
+        public async Task<MonitoringStation> FindByIdAsync(string id)
+        {
+            Guid.Parse(id);
+            
+            var users =  await _genericRepository.GetByAsync(
+                u => u.Id == id
+            );
+
+            var monitoringStationStorageModel = users.SingleOrDefault();
+            
+            if (monitoringStationStorageModel != default(MonitoringStationStorageModel))
+            {
+                return monitoringStationStorageModel.MapToDomainModel();
+            }
+
+            return MonitoringStation.Empty;
+        }
+
+        public Task<MonitoringStation> GetNearestStation(GeoCoordinates geoCoordinates, int radius = default)
+        {
+            var monitoringStation = new MonitoringStation();
+            return Task.FromResult(monitoringStation);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace AirSnitch.Api.Middleware.Authrorization
         public static bool VerifyPrincipal(ClaimsPrincipal userPrincipal)
         {
             var idClaim = GetIdClaim(userPrincipal.Claims);
-
+            
             return _internalApps.FirstOrDefault(id =>  id.Equals(idClaim)) != Guid.Empty;
         }
 
@@ -29,12 +29,12 @@ namespace AirSnitch.Api.Middleware.Authrorization
 
             if (!idClaims.Any())
             {
-                throw new ContractViolationException($"{Constants.Claim.ClientId} was not found in current user claims");
+                return Guid.Empty;
             }
 
             if (idClaims.Count > 1)
             {
-                throw new ConstraintException($"There are more that one {Constants.Claim.ClientId} claims was found!");
+                return Guid.Empty;
             }
 
             return new Guid(idClaims.Single().Value);
