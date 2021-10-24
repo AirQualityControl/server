@@ -19,7 +19,9 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         public AirQualityIndexStorageModel AirQualityIndex { get; set; }
 
         public AirPollutionStorageModel AirPollution { get; set; }
-        
+
+        public DataProviderStorageModel DataProviderStorageModel { get; set; }
+
         public static void RegisterDbMap()
         {
             BsonClassMap.RegisterClassMap<MonitoringStationStorageModel>(cm =>
@@ -30,6 +32,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 cm.MapMember(cm => cm.Location).SetElementName("location");
                 cm.MapMember(cm => cm.AirQualityIndex).SetElementName("airQualityIndex");
                 cm.MapMember(cm => cm.AirPollution).SetElementName("airPollution");
+                cm.MapMember(cm => cm.DataProviderStorageModel).SetElementName("dataProvider");
             });
         }
 
@@ -47,7 +50,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         private MonitoringStationOwner BuildOwnerInfo()
         {
-            return new MonitoringStationOwner("Lun", new Uri("https://misto.lun.ua/air"));
+           return DataProviderStorageModel.MapToDomainModel();
         }
 
         private Location BuildLocationModel()

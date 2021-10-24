@@ -1,3 +1,5 @@
+using System;
+
 namespace AirSnitch.Domain.Models
 {
     public class MonitoringStation : IDomainModel<MonitoringStation>
@@ -5,7 +7,8 @@ namespace AirSnitch.Domain.Models
         private AirPollution _airPollution;
         private Location _location;
         private MonitoringStationOwner _owner;
-        
+
+
         /// <summary>
         ///     Returns an internal identifier of monitoring station.
         /// </summary>
@@ -48,7 +51,7 @@ namespace AirSnitch.Domain.Models
         ///     Returns a monitoring station owner.
         /// </summary>
         /// <returns></returns>
-        public MonitoringStationOwner GetOwner()
+        public MonitoringStationOwner GetStationOwner()
         {
             return _owner;
         }

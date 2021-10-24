@@ -10,6 +10,7 @@ using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
     /// Controller that represent a MonitoringStation resource
     /// </summary>
     [ApiController]
-    //[Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
+    [Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
     [Route("monitoringStation")]
     public class MonitoringStationController : RestApiController
     {
@@ -209,7 +210,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
                 return NotFound();
             }
 
-            var stationOwner = station.GetOwner();
+            var stationOwner = station.GetStationOwner();
 
             var dataProviderViewModel = new StationDataProviderViewModel(stationOwner);
 
@@ -217,7 +218,7 @@ namespace AirSnitch.Api.Controllers.MonitoringStationController
                 new RestResponseBody(
                     Request,
                     dataProviderViewModel.GetResult(),
-                    new List<IApiResourceMetaInfo>()//TODO:empty of
+                    new List<IApiResourceMetaInfo>()
                 )
             );
         }

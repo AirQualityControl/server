@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
 using AirSnitch.Api.Rest;
@@ -18,7 +17,7 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
     /// Controller that represent a ApiUser resource
     /// </summary>
     [ApiController]
-    //[Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
+    [Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
     [Route("airQualityIndex")]
     public class AirQualityIndexController : RestApiController
     {

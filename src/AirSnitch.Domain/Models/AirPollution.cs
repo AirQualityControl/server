@@ -14,13 +14,17 @@ namespace AirSnitch.Domain.Models
 
         public IReadOnlyCollection<IAirPollutionParticle> Particles => _particles;
 
+        /// <summary>
+        ///     Returns a measurement date and time
+        /// </summary>
+        /// <returns></returns>
         public DateTime GetMeasurementsDateTime()
         {
             return DateTime.UtcNow;
         }
 
         /// <summary>
-        /// Set already calculated air quality index data alongside with a particle collection.
+        ///     Set already calculated air quality index data alongside with a particle collection.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="indexValue"></param>
@@ -36,6 +40,7 @@ namespace AirSnitch.Domain.Models
         decimal Value { get; }
     }
 
+    //???Replace with AirPollution.TryParseParticle(name, value, out IAirPollutionParticle);
     public class UnknownParticle
     {
         public static IAirPollutionParticle CreateInstance(string name, decimal value)
@@ -44,7 +49,6 @@ namespace AirSnitch.Domain.Models
             {
                 return new Pm25Particle(value);
             }
-
             return new Pm10Particle(value);
         }
     }

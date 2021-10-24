@@ -4,6 +4,7 @@ using AirSnitch.Api.Rest.Resources.AirPollution;
 using AirSnitch.Api.Rest.Resources.AirQualityIndex;
 using AirSnitch.Api.Rest.Resources.ApiUser;
 using AirSnitch.Api.Rest.Resources.Client;
+using AirSnitch.Api.Rest.Resources.DataProvider;
 using AirSnitch.Api.Rest.Resources.MonitoringStation;
 using AirSnitch.Api.Rest.Resources.Registry;
 using AirSnitch.Api.Rest.Resources.Relationship;
@@ -30,6 +31,7 @@ namespace AirSnitch.Api.Extensions
             apiResourceRegistry.RegisterApiResource(new SubscriptionPlanApiResource());
             apiResourceRegistry.RegisterApiResource(new MonitoringStationResource());
             apiResourceRegistry.RegisterApiResource(new AirPollutionResource());
+            apiResourceRegistry.RegisterApiResource(new DataProviderApiResource());
 
             serviceCollection.AddSingleton<IApiResourceRegistry>(apiResourceRegistry);
         }
@@ -44,10 +46,12 @@ namespace AirSnitch.Api.Extensions
             var monitoringStationVertex = new RelatedVertex<IApiResourceMetaInfo>(new MonitoringStationResource());
             var airQualityIndexVertex = new RelatedVertex<IApiResourceMetaInfo>(new AirQualityIndexResource());
             var airPollutionVertex = new RelatedVertex<IApiResourceMetaInfo>(new AirPollutionResource());
+            var dataProviderVertex = new RelatedVertex<IApiResourceMetaInfo>(new DataProviderApiResource());
             
             
             graph.AddDirectedEdge(monitoringStationVertex, airQualityIndexVertex, new IncludeRelationship());
             graph.AddDirectedEdge(monitoringStationVertex, airPollutionVertex, new IncludeRelationship());
+            graph.AddDirectedEdge(monitoringStationVertex, dataProviderVertex, new IncludeRelationship());
             
             
             graph.AddDirectedEdge(

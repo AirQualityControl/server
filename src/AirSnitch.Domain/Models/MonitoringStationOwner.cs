@@ -4,17 +4,25 @@ namespace AirSnitch.Domain.Models
 {
     public class MonitoringStationOwner
     {
+        private readonly string _id;
         private readonly string _name;
-        private readonly Uri _webSite;
+        private Uri _webSite;
 
-        public MonitoringStationOwner(string name, Uri webSite = default)
+        public MonitoringStationOwner(string id, string name)
         {
+            _id = id;
             _name = name;
-            _webSite = webSite;
         }
-           
+
+        public string Id => _id;
+        
         public string Name => _name;
 
         public Uri WebSite => _webSite;
+
+        public void SetWebSite(Uri webSiteUri)
+        {
+            _webSite = webSiteUri;
+        }
     }
 }

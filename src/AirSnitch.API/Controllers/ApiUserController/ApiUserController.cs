@@ -20,10 +20,10 @@ namespace AirSnitch.Api.Controllers.ApiUserController
     /// Controller that represent a ApiUser resource
     /// </summary>
     [ApiController]
-    //[Authorize(
-        //AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey, 
-        //Policy = Constants.Authorization.Policy.InternalApp
-    //)]
+    [Authorize(
+        AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey, 
+        Policy = Constants.Authorization.Policy.InternalApp
+    )]
     [Route("apiUser")]
     public class ApiUserController : RestApiController
     {
