@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.ApiUser;
+using AirSnitch.Api.Controllers.ApiUser.ViewModels;
 using AirSnitch.Api.Controllers.ApiUserController.Dto;
 using AirSnitch.Api.Controllers.ApiUserController.ViewModels;
 using AirSnitch.Api.Rest;
@@ -233,8 +235,14 @@ namespace AirSnitch.Api.Controllers.ApiUserController
         {
             var apiUser = await _apiUserRepository.FindById(id);
 
+            var apiClientViewModel = new ApiClientViewModel(apiUser.Clients, Request);
+
             return new RestApiResult(
-               new ClientResponseBody(apiUser.Clients)
+                new RestResponseBody(
+                    Request,
+                    apiClientViewModel.GetResult(),
+                    new List<IApiResourceMetaInfo>()
+                )
             );
         }
 
