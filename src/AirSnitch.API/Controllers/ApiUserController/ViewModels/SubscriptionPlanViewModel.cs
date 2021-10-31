@@ -1,19 +1,36 @@
+using System.Collections.Generic;
+using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
 using AirSnitch.Domain.Models;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
+using Newtonsoft.Json.Linq;
 
-namespace AirSnitch.Api.Controllers.ApiUser.ViewModels
+namespace AirSnitch.Api.Controllers.ApiUserController.ViewModels
 {
     internal class SubscriptionPlanViewModel
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        private readonly SubscriptionPlan _subscriptionPlan;
+        private Dictionary<string, object> _resultDictionary;
 
-        public static SubscriptionPlanViewModel BuildFrom(SubscriptionPlan subscriptionPlan)
+        public SubscriptionPlanViewModel(SubscriptionPlan subscriptionPlan)
         {
-            return new SubscriptionPlanViewModel()
+            _subscriptionPlan = subscriptionPlan;
+            _resultDictionary = new Dictionary<string, object>()
             {
-                Name = subscriptionPlan.Name,
-                Description = subscriptionPlan.Description,
+                {"values", null},
             };
+        }
+        
+        public QueryResult GetResult()
+        {
+            _resultDictionary["values"] = new JObject(
+                new JProperty("name", _subscriptionPlan.Name),
+                new JProperty("description", _subscriptionPlan.Description)
+            );
+
+            return new QueryResult(
+                new List<Dictionary<string, object>>(){_resultDictionary},
+                new AirQualityIndexResponseFormatter()
+            );
         }
     }
 }

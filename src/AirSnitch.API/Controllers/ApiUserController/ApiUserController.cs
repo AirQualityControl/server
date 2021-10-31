@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirSnitch.Api.Controllers.ApiUser;
-using AirSnitch.Api.Controllers.ApiUser.ViewModels;
 using AirSnitch.Api.Controllers.ApiUserController.Dto;
 using AirSnitch.Api.Controllers.ApiUserController.ViewModels;
 using AirSnitch.Api.Rest;
@@ -292,11 +290,20 @@ namespace AirSnitch.Api.Controllers.ApiUserController
         {
             var apiUser = await _apiUserRepository.FindById(id);
 
-            return apiUser.IsEmpty
-                ? NotFound()
-                : new RestApiResult(
-                    new SubscriptionPlanResponseBody(apiUser.SubscriptionPlan)
-                );
+            if (apiUser.IsEmpty)
+            {
+                return NotFound();
+            }
+
+            var subscriptionPlanVm = new SubscriptionPlanViewModel(apiUser.SubscriptionPlan);
+            
+            return new RestApiResult(
+                new RestResponseBody(
+                    Request,
+                    subscriptionPlanVm.GetResult(),
+                    new List<IApiResourceMetaInfo>()
+                )
+            );
         }
     }
 }
