@@ -17,8 +17,9 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
     /// Controller that represent a ApiUser resource
     /// </summary>
     [ApiController]
+    [ApiVersion( "1" )]
     [Authorize(AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey)]
-    [Route("airQualityIndex")]
+    [Route( "v{version:apiVersion}/airQualityIndex" )]
     public class AirQualityIndexController : RestApiController
     {
         private readonly IMonitoringStationRepository _monitoringStationRepository;
