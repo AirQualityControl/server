@@ -1,29 +1,47 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
 using AirSnitch.Domain.Models;
+using AirSnitch.Infrastructure.Abstract.Persistence.Query;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
 
-namespace AirSnitch.Api.Controllers.ApiUser.ViewModels
+namespace AirSnitch.Api.Controllers.ApiUserController.ViewModels
 {
     internal class ApiClientViewModel
     {
-        public string Id { get; set; }
-        public string CreatedOn { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Type { get; set; }
-        public static List<ApiClientViewModel> BuildFrom(IReadOnlyCollection<ApiClient> clients)
+        private readonly IReadOnlyCollection<ApiClient> _clients;
+        private readonly HttpRequest _request;
+        private readonly Dictionary<string, object> _resultDictionary;
+
+        public ApiClientViewModel(IReadOnlyCollection<ApiClient> clients, HttpRequest request)
         {
-            return clients.Select(
-                c => new ApiClientViewModel()
-                {
-                    Id = c.Id,
-                    CreatedOn = c.CreatedOn.ToString(CultureInfo.InvariantCulture),
-                    Name = c.Name.Value,
-                    Description = c.Description.Value,
-                    Type = c.Type.ToString()
-                }
-            ).ToList();
+            _clients = clients;
+            _request = request;
+            _resultDictionary = new Dictionary<string, object>()
+            {
+                {"values", null},
+            };
+        }
+
+        public QueryResult GetResult()
+        {
+            _resultDictionary["values"] = new JArray(
+                _clients.
+                    Select(c => new JObject(
+                            new JProperty("id", c.Id), 
+                            new JProperty("createdOn",c.CreatedOn),
+                            new JProperty("name",c.Name.Value),
+                            new JProperty("description",c.Status),
+                            new JProperty("type",c.Type)
+                        )
+                    )
+            );
+           
+            return new QueryResult(
+                new List<Dictionary<string, object>>(){_resultDictionary},
+                new AirQualityIndexResponseFormatter()
+            );
         }
     }
 }
