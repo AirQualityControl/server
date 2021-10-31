@@ -15,7 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace AirSnitch.Api.Controllers.ClientController
 {
     [ApiController]
-    [Route("client")]
+    [ApiVersion( "1" )]
+    [Route( "v{version:apiVersion}/client" )]
     public class ClientController : RestApiController
     {
         private readonly IClientRepository _clientRepository;

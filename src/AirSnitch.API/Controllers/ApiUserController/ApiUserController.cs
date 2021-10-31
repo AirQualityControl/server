@@ -20,11 +20,12 @@ namespace AirSnitch.Api.Controllers.ApiUserController
     /// Controller that represent a ApiUser resource
     /// </summary>
     [ApiController]
+    [ApiVersion( "1" )]
     [Authorize(
         AuthenticationSchemes = Constants.Authentication.Scheme.ApiKey, 
         Policy = Constants.Authorization.Policy.InternalApp
     )]
-    [Route("apiUser")]
+    [Route( "v{version:apiVersion}/apiUser" )]
     public class ApiUserController : RestApiController
     {
         private static readonly IApiResourceMetaInfo ApiUserResource = new ApiUserResource();

@@ -35,6 +35,10 @@ namespace AirSnitch.Api
             });
             
             services.AddMvc();
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = false;
+            });
             services.ResolveApplicationDependencies();
             services.AddApiResourceRegistry();
             services.BuildApiResourceGraph();
