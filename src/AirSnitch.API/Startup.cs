@@ -28,7 +28,7 @@ namespace AirSnitch.Api
             services.AddAuthentication(Constants.Authentication.Scheme.ApiKey)
                 .AddApiKey();
             
-            services.AddAuthorization(options =>
+            services.AddAuthorization(options =>    
             {
                 options.AddPolicy(Constants.Authorization.Policy.InternalApp, 
                     policy => policy.Requirements.Add(new InternalAppRequirement()));
@@ -70,7 +70,25 @@ namespace AirSnitch.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AirSnitch Api", Version = "v1" });
+                c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme()
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Name = Constants.Authentication.Headers.ApiKey,
+                    Description = "Your api key",
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "ApiKey" }
+                        },
+                        new string[] { }
+                    }
+                });
             });
+            
         }
     }
 }
