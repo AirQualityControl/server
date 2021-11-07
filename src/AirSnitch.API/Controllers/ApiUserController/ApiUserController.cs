@@ -59,7 +59,7 @@ namespace AirSnitch.Api.Controllers.ApiUserController
             var queryScheme = GenerateQueryScheme(requestParameters.IncludesString, requestParameters.PageOptions);
 
             QueryResult result = await _apiUserRepository.ExecuteQueryFromSchemeAsync(queryScheme);
-            
+
             return new RestApiResult(
                 new RestResponseBody(
                     Request,

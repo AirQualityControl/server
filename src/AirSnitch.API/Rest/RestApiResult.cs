@@ -28,6 +28,8 @@ namespace AirSnitch.Api.Rest
                 StatusCode = StatusCodes.Status200OK,
             };
 
+            context.HttpContext.Response.ContentType = "application/json";
+            
             await objectResult.ExecuteResultAsync(context);
         }
     }

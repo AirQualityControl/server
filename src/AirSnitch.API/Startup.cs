@@ -1,8 +1,6 @@
 using AirSnitch.Api.Extensions;
-using AirSnitch.Api.Middleware.Authentication;
 using AirSnitch.Api.Middleware.Authrorization;
 using AirSnitch.Di;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +21,10 @@ namespace AirSnitch.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.OutputFormatters.Insert(0,new CustomJsonFormatter());
+            });
             
             services.AddAuthentication(Constants.Authentication.Scheme.ApiKey)
                 .AddApiKey();
@@ -88,7 +89,6 @@ namespace AirSnitch.Api
                     }
                 });
             });
-            
         }
     }
 }
