@@ -10,7 +10,7 @@ namespace AirSnitch.Infrastructure.Persistence
         
         public MongoDbClientSettings InitConnection()
         {
-            var client = new MongoClient("mongodb://localhost:27017");
+            var client = new MongoClient("mongodb://root:example@mongo:27017/");
             _database =  client.GetDatabase("AirQ");
             return this;
         }
