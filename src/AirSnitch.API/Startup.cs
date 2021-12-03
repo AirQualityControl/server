@@ -39,7 +39,7 @@ namespace AirSnitch.Api
             {
                 options.AssumeDefaultVersionWhenUnspecified = false;
             });
-            services.ResolveApplicationDependencies();
+            services.ResolveApplicationDependencies(Configuration);
             services.AddApiResourceRegistry();
             services.BuildApiResourceGraph();
             

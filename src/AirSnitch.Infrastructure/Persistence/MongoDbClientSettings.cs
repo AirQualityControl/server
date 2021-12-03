@@ -8,10 +8,10 @@ namespace AirSnitch.Infrastructure.Persistence
     {
         private IMongoDatabase _database;
         
-        public MongoDbClientSettings InitConnection()
+        public MongoDbClientSettings InitConnection(string connectionString, string dbName)
         {
-            var client = new MongoClient("mongodb://localhost:27017");
-            _database =  client.GetDatabase("AirQ");
+            var client = new MongoClient(connectionString);
+            _database =  client.GetDatabase(dbName);
             return this;
         }
 
