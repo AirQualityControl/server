@@ -14,6 +14,6 @@ namespace AirSnitch.Api.Rest.Links
             _id = id;
         }
 
-        public String Value => $"{BaseApiLink.From(_request).Value}/monitoringStation/{_id}";
+        public String Value => $"{BaseApiLink.From(_request).Value}monitoringStation/{_id}";
     }
 }

@@ -12,12 +12,12 @@ namespace AirSnitch.Infrastructure.Persistence
             _instance = settings.Database;
         }
 
-        public static MongoDbClient Create()
+        public static MongoDbClient Create(string connectionString, string dbName)
         {
             lock (Locker)
             {
                 var settings = new MongoDbClientSettings()
-                    .InitConnection()
+                    .InitConnection(connectionString, dbName)
                     .RegisterMap()
                     .PingDb();
                 
