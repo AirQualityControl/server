@@ -1,0 +1,93 @@
+[{
+    "_id": {
+      "$oid": "616d830dbb241317debda16a"
+    },
+    "id": "3f13b204-a6a8-4ebe-98a8-fefa8725cf2a",
+    "displayName": "LUN_345",
+    "location": {
+      "countryCode": "UA",
+      "city": {
+        "code": "Kyiv",
+        "name": "Kyiv"
+      },
+      "geoCoordinates": [
+        35.072505,
+        48.408944
+      ],
+      "address": "Geroev Avenue, 40"
+    },
+    "geoLocation": {
+      "type": "Point",
+      "coordinates": [
+        35.072505,
+        48.408944
+      ]
+    },
+    "airQualityIndex": {
+      "type": "US_AQI",
+      "value": 45.8
+    },
+    "airPollution": {
+      "particles": [
+        {
+          "name": "PM2.5",
+          "value": 49
+        },
+        {
+          "name": "PM10",
+          "value": 49
+        }
+      ]
+    },
+    "dataProvider": {
+      "id": "0c6031bc-4668-4efa-a9df-bbb0731c6ddd",
+      "name": "LUN Misto Air",
+      "web-site": "https://misto.lun.ua/air"
+    }
+  },{
+    "_id": {
+      "$oid": "61702dfd6ab96ee75b8dc272"
+    },
+    "id": "5480d666-cd1e-45ff-9e63-f283592c72e2",
+    "displayName": "LUN_398",
+    "location": {
+      "countryCode": "UA",
+      "city": {
+        "code": "Kyiv",
+        "name": "Kyiv"
+      },
+      "geoCoordinates": [
+        50.438686,
+        30.53331
+      ],
+      "address": "vulytsia Ivana Marianenka, 14"
+    },
+    "geoLocation": {
+      "type": "Point",
+      "coordinates": [
+        50.438686,
+        30.53331
+      ]
+    },
+    "airQualityIndex": {
+      "type": "US_AQI",
+      "value": 45.8
+    },
+    "airPollution": {
+      "particles": [
+        {
+          "name": "PM2.5",
+          "value": 49
+        },
+        {
+          "name": "PM10",
+          "value": 49
+        }
+      ]
+    },
+    "dataProvider": {
+      "id": "89c0ef61-c92e-4b78-9e3b-13d502baaac7",
+      "name": "LUN Misto Air",
+      "web-site": "https://misto.lun.ua/air"
+    }
+  }]

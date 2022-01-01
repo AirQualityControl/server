@@ -1,0 +1,183 @@
+[{
+    "_id": {
+      "$oid": "60f1a1f51ea1a8752b1b2f72"
+    },
+    "id": "8fbc50d4-00c0-4ce7-8c52-c77a00e183ae",
+    "firstName": "Artur",
+    "lastName": "Lavrov",
+    "email": "arturstylus@gmail.com",
+    "profilePicUrl": "www.awss3/bucket/pic.jpeg",
+    "createdOn": "01/22/2020 23:02:18",
+    "gender": "Male",
+    "clients": [],
+    "subscriptionPlan": {
+      "id": "5ed0055f8bf184fee385bb9e",
+      "name": "basic subscription plan",
+      "description": "basic subscription plan",
+      "expirationDate": "01/22/2020 23:02:18"
+    }
+  },{
+    "_id": {
+      "$oid": "60f1a2061ea1a8752b1b2f74"
+    },
+    "id": "e22f7d10-75c8-4de3-9ba5-8e6874df78c1",
+    "firstName": "Artur",
+    "lastName": "Lavrov",
+    "email": "arturstylus@gmail.com",
+    "profilePicUrl": "www.awss3/bucket/pic.jpeg",
+    "createdOn": "01/22/2020 23:02:18",
+    "gender": "Male",
+    "clients": [],
+    "subscriptionPlan": {
+      "id": "5ed0055f8bf184fee385bb9e",
+      "name": "basic subscription plan",
+      "description": "basic subscription plan",
+      "expirationDate": "01/22/2020 23:02:18"
+    }
+  },{
+    "_id": {
+      "$oid": "60f1a2141ea1a8752b1b2f76"
+    },
+    "id": "5de30ccf-117a-4ba4-b46a-eb246524af96",
+    "firstName": "Artur",
+    "lastName": "Lavrov",
+    "email": "arturstylus@gmail.com",
+    "profilePicUrl": "www.awss3/bucket/pic.jpeg",
+    "createdOn": "01/22/2020 23:02:18",
+    "gender": "Male",
+    "clients": [
+      ""
+    ],
+    "subscriptionPlan": {
+      "id": "5ed0055f8bf184fee385bb9e",
+      "name": "basic subscription plan",
+      "description": "basic subscription plan",
+      "expirationDate": "01/22/2020 23:02:18"
+    }
+  },{
+    "_id": {
+      "$oid": "60f1a22e1ea1a8752b1b2f78"
+    },
+    "id": "b7c29fb4-a688-4487-a1a5-8c890a80da73",
+    "firstName": "Artur",
+    "lastName": "Lavrov",
+    "email": "arturstylus@gmail.com",
+    "profilePicUrl": "www.awss3/bucket/pic.jpeg",
+    "createdOn": "01/22/2020 23:02:18",
+    "gender": "Male",
+    "clients": [
+      ""
+    ],
+    "subscriptionPlan": {
+      "id": "5ed0055f8bf184fee385bb9e",
+      "name": "basic subscription plan",
+      "description": "basic subscription plan",
+      "expirationDate": "01/22/2020 23:02:18"
+    }
+  },{
+    "_id": {
+      "$oid": "615ddb48b3425a12991523b4"
+    },
+    "id": "716abf85-a2da-4d14-9543-1008b34ab914",
+    "firstName": "Nikita",
+    "lastName": "Shlapov",
+    "email": "shlapov@dev.com",
+    "profilePicUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
+    "createdOn": "01/01/0001 00:00:00",
+    "gender": "Male",
+    "clients": [
+      {
+        "id": "cddc7469-8e6f-413d-838d-3ec135fc5e09",
+        "name": "My IoT app for home",
+        "description": "my IoT app for hone",
+        "type": "Testing",
+        "createdOn": "10/07/2021 07:15:00"
+      }
+    ],
+    "subscriptionPlan": {
+      "id": "5ed0055f8bf184fee385bb9e",
+      "name": "Basic",
+      "description": "Basic subscription plan",
+      "expirationDate": "12/31/9999 23:59:59"
+    }
+  },{
+    "_id": {
+      "$oid": "6162d726031af9908f2ad2cf"
+    },
+    "id": "842a0edf-8dc4-4232-a381-1939bea5cc66",
+    "firstName": "Nikita",
+    "lastName": "Lytvynenko",
+    "email": "nkt.lytvynenko@gmail.com",
+    "profilePicUrl": "https://avatars.githubusercontent.com/u/11552351?v=4",
+    "createdOn": "01/01/0001 00:00:00",
+    "gender": "Male",
+    "clients": [
+      {
+        "id": "d0d6b74b-4c41-47b6-a2a2-bce1abc13540",
+        "name": "Trebuhiv IoT nature hub",
+        "description": "App that monitor air pollution situation in trebuchiv",
+        "type": "Testing",
+        "createdOn": "10/13/2021 15:28:45",
+        "apiKey": {
+          "value": "I38JE+lSQnnAIEPuKvIgab7wH5poFudnJa/3TWSGhPw=",
+          "issueDate": "10/13/2021 15:28:45",
+          "expiryDate": "10/13/2021 15:28:45"
+        }
+      }
+    ],
+    "subscriptionPlan": {
+      "id": "5ed0055f8bf184fee385bb9e",
+      "name": "Basic",
+      "description": "Basic subscription plan",
+      "expirationDate": "12/31/9999 23:59:59"
+    }
+  },{
+    "_id": {
+      "$oid": "61697d0af1b4c19787f9bc7a"
+    },
+    "id": "ccd8b4a9-22da-469b-8a1d-d447e07559a4",
+    "firstName": "AirSnitch Supervisor",
+    "lastName": "Supervisor",
+    "email": "airsnitch@gmail.com",
+    "profilePicUrl": "https://avatars.githubusercontent.com/u/11552351?v=4",
+    "createdOn": "01/01/0001 00:00:00",
+    "gender": "Male",
+    "clients": [
+      {
+        "id": "16bc361c-30aa-4f4a-9056-6f3d1ef34f0e",
+        "name": "AirSnitchDevPanle",
+        "description": "Dev panel for airsnitch users",
+        "type": "PRODUCTION",
+        "createdOn": "10/13/2021 15:28:45",
+        "apiKey": {
+          "value": "jTIDV7JPV/NxJhNtq+19ngtrmOC/+fACX7PtZUL4r0k=",
+          "issueDate": "10/13/2021 15:28:45",
+          "expiryDate": "10/13/2022 15:28:45"
+        }
+      }
+    ],
+    "subscriptionPlan": {
+      "id": "5ed0055f8bf184fee385bb9e",
+      "name": "INTERNAL_APP",
+      "description": "Subscription plan for internal AirSnitch products",
+      "expirationDate": "12/31/9999 23:59:59"
+    }
+  },{
+    "_id": {
+      "$oid": "618fcfa5e77d152c1d1d1557"
+    },
+    "id": "8f40c291-32b4-4eed-a4fe-c706452080a8",
+    "firstName": "Ivan",
+    "lastName": "Sidoror",
+    "email": "sidor@gmail.com",
+    "profilePicUrl": "https://avatars.githubusercontent.com/u/10619880?v=4",
+    "createdOn": "01/01/0001 00:00:00",
+    "gender": "Male",
+    "clients": [],
+    "subscriptionPlan": {
+      "id": "5ed0055f8bf184fee385bb9e",
+      "name": "Basic",
+      "description": "Basic subscription plan",
+      "expirationDate": "12/31/9999 23:59:59"
+    }
+  }]

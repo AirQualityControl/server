@@ -1,3 +1,4 @@
+using System;
 using MongoDB.Driver;
 
 namespace AirSnitch.Infrastructure.Persistence
@@ -20,7 +21,11 @@ namespace AirSnitch.Infrastructure.Persistence
                     .InitConnection(connectionString, dbName)
                     .RegisterMap()
                     .PingDb();
-                
+
+                if (Boolean.TryParse(Environment.GetEnvironmentVariable("IsSeedData"), out bool _))
+                {
+                    settings.SeedData();
+                }
                 return new MongoDbClient(settings);
             }
         }
