@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\AirSnitch.Infrastructure\AirSnitch.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\src\AirSnitch.Infrastructure\AirSnitch.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
