@@ -21,7 +21,7 @@ The server project is written in C# using .NET Core with ASP.NET Core. DataBase 
 ```
 cd src
 docker-compose build --no-cache
-MongoDbConnectionString=mongodb://root:example@mongo:27017/ MongoDbName=AirQ docker-compose up
+MongoDbConnectionString=mongodb://root:example@mongo:27017/ MongoDbName=AirQ IsSeedData=true docker-compose up
 ```
 visit http://localhost:5000/swagger/index.html
 
