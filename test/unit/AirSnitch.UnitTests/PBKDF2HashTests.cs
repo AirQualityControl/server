@@ -1,4 +1,3 @@
-using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Cryptography.Hashing;
 using NUnit.Framework;
 

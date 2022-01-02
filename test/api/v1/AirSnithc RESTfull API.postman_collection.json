@@ -1,0 +1,283 @@
+{
+	"info": {
+		"_postman_id": "9e7eae79-d103-4e62-972d-13bacc962f41",
+		"name": "AirSnithc RESTfull API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "AirQualityIndex",
+					"item": [
+						{
+							"name": "Get AirQualityIndex by location",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-API-KEY",
+										"value": "E5isbxa8bQO1Rtr+86TbHSyOQ6tVIVc5nZRm5yqxyqA=",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:5000/v1/airQualityIndex?long=30.523333&lat=50.450001&radius=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"v1",
+										"airQualityIndex"
+									],
+									"query": [
+										{
+											"key": "long",
+											"value": "30.523333"
+										},
+										{
+											"key": "lat",
+											"value": "50.450001"
+										},
+										{
+											"key": "radius",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Apiuser",
+					"item": [
+						{
+							"name": "Get All ApiUsers",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 and body is not null\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.have.body;",
+											"});",
+											"pm.test(\"Response pagination is correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.pageSize).to.eql(10);",
+											"    pm.expect(jsonData.currentPageNumber).to.eql(1);",
+											"    pm.expect(jsonData.lastPageNumber).to.eql(10);",
+											"});",
+											"pm.test(\"Body contains exectly 10 items in response\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.items.length).to.eql(10);",
+											"});",
+											"pm.test(\"Every document in response has included resource\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    jsonData.items.forEach((result) => {",
+											"        pm.expect(result.includes).to.have.property('clients');",
+											"    });",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "E5isbxa8bQO1Rtr+86TbHSyOQ6tVIVc5nZRm5yqxyqA=",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "X-API-KEY",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/v1/apiUser?page=1&pageSize=10&includes=clients",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"v1",
+										"apiUser"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "10"
+										},
+										{
+											"key": "includes",
+											"value": "clients"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Api User By Id",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "E5isbxa8bQO1Rtr+86TbHSyOQ6tVIVc5nZRm5yqxyqA=",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "X-API-KEY",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/apiUser/842a0edf-8dc4-4232-a381-1939bea5cc66",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"apiUser",
+										"842a0edf-8dc4-4232-a381-1939bea5cc66"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Api User Clients",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "E5isbxa8bQO1Rtr+86TbHSyOQ6tVIVc5nZRm5yqxyqA=",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "X-API-KEY",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/apiUser/842a0edf-8dc4-4232-a381-1939bea5cc66/clients",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"apiUser",
+										"842a0edf-8dc4-4232-a381-1939bea5cc66",
+										"clients"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get ApiUser Subscription plan",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "E5isbxa8bQO1Rtr+86TbHSyOQ6tVIVc5nZRm5yqxyqA=",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "X-API-KEY",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/v1/apiUser/842a0edf-8dc4-4232-a381-1939bea5cc66/subscriptionPlan",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"v1",
+										"apiUser",
+										"842a0edf-8dc4-4232-a381-1939bea5cc66",
+										"subscriptionPlan"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "MonitoringStation",
+					"item": [
+						{
+							"name": "Get MonitoringStations",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": null
+							},
+							"response": []
+						},
+						{
+							"name": "Get Monitoring Station By ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": null
+							},
+							"response": []
+						},
+						{
+							"name": "monitoringStation/{id}/airQualityIndex",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": null
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
