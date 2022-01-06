@@ -21,17 +21,13 @@ namespace AirSnitch.Api.Controllers.ApiUserController.ViewModels
 
         public QueryResult GetResult()
         {
-            var resultDictionary = new Dictionary<string, object>()
-            {
-                {"values", null},
-            };
-            
+            var resultDictionary = new Dictionary<string, object>();
             foreach (var client in _clients)
             {
                 resultDictionary["id"] = client.Id;
                 resultDictionary["createdOn"] = client.CreatedOn;
-                resultDictionary["name"] = client.Name;
-                resultDictionary["description"] = client.Description;
+                resultDictionary["name"] = client.Name.Value;
+                resultDictionary["description"] = client.Description.Value;
                 resultDictionary["type"] = client.Type;
             }
             return new QueryResult(

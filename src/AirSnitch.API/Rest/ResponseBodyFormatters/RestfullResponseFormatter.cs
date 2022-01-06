@@ -86,6 +86,11 @@ namespace AirSnitch.Api.Rest.ResponseBodyFormatters
         
         private JProperty GetSelfValues(Dictionary<string, object> selfValues)
         {
+            if (selfValues == null)
+            {
+                return new JProperty("values", Enumerable.Empty<Dictionary<string, object>>());
+            }
+
             var selfValuesJObject = new JObject();
             foreach (var value in selfValues)
             {
