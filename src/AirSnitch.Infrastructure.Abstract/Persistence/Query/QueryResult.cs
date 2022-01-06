@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
 {
@@ -42,6 +43,21 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Query
                 return false;
             }
             return true;
+        }
+
+        public bool HasValues
+        {
+            get
+            {
+                var collection = _result as ICollection;
+
+                if (collection == null)
+                {
+                    throw new Exception();
+                }
+
+                return collection.GetEnumerator().MoveNext();
+            }
         }
     }
 }

@@ -28,7 +28,8 @@ namespace AirSnitch.Api.Rest
         }
 
         public string Value => Formatter.FormatResponse(this);
-        public bool IsEmpty => !_queryResult.IsSuccess;
+
+        public bool IsEmpty => _queryResult.HasValues;
 
         protected virtual IResponseBodyFormatter Formatter =>
             new RestfullResponseBodyFormatter(_httpRequest, _queryResult, _relatedResources, _requestedRelatedResources);
