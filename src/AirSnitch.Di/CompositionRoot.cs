@@ -1,6 +1,8 @@
 using AirSnitch.Infrastructure.Abstract.Cryptography;
+using AirSnitch.Infrastructure.Abstract.MessageQueue;
 using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Cryptography.Hashing;
+using AirSnitch.Infrastructure.MessageQueue;
 using AirSnitch.Infrastructure.Persistence;
 using AirSnitch.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +24,8 @@ namespace AirSnitch.Di
                     configuration["MongoDbName"]
                 )
             );
+            services.AddSingleton(_ => configuration.GetSection("AmazonSqsSettings").Get<AmazonSqsSettings>());
+            services.AddTransient<IDistributedMessageQueue, AmazonSqsQueue>();
         }
     }
 }

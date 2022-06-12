@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AWSSDK.SQS" Version="3.7.2.68" />
       <PackageReference Include="DeclarativeContracts" Version="1.1.0" />
       <PackageReference Include="Faker.Net" Version="2.0.154" />
       <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="5.0.10" />

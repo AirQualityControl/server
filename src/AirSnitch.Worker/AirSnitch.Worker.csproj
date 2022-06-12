@@ -3,9 +3,12 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <UserSecretsId>dotnet-AirSnitch.MessageConsumer-1368FCBB-4992-4B91-BB85-649C6464EB4B</UserSecretsId>
+        <AssemblyName>AirSnitch.Worker</AssemblyName>
+        <RootNamespace>AirSnitch.Worker</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AWSSDK.SQS" Version="3.7.2.68" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
         <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0" />
     </ItemGroup>
