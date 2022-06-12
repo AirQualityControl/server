@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSnitch.Di", "src\AirSnit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSnitch.UnitTests", "test\unit\AirSnitch.UnitTests\AirSnitch.UnitTests.csproj", "{1B46017D-93EB-44CB-9D7D-991087A79CBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSnitch.MessageConsumer", "src\AirSnitch.MessageConsumer\AirSnitch.MessageConsumer.csproj", "{BE46C165-E603-488B-B606-1D850C73C88A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSnitch.Worker", "src\AirSnitch.Worker\AirSnitch.Worker.csproj", "{BE46C165-E603-488B-B606-1D850C73C88A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
