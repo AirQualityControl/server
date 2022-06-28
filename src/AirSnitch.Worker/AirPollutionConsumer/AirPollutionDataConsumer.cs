@@ -3,19 +3,25 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AirSnitch.Infrastructure.Abstract.MessageQueue;
+using AirSnitch.Worker.AirPollutionConsumer.Pipeline;
 using Microsoft.Extensions.Logging;
 
-namespace AirSnitch.Worker
+namespace AirSnitch.Worker.AirPollutionConsumer
 {
-    public class SensorsDataConsumer
+    public class AirPollutionDataConsumer
     {
-        private readonly ILogger<SensorsDataConsumer> _logger;
+        private readonly ILogger<AirPollutionDataConsumer> _logger;
         private readonly IDistributedMessageQueue _sensorsDataQueue;
+        private readonly AirPollutionDataProcessingPipeline _airPollutionDataProcessingPipeline;
 
-        public SensorsDataConsumer(ILogger<SensorsDataConsumer> logger, IDistributedMessageQueue sensorsDataQueue)
+        public AirPollutionDataConsumer(
+            ILogger<AirPollutionDataConsumer> logger, 
+            IDistributedMessageQueue sensorsDataQueue, 
+            AirPollutionDataProcessingPipeline airPollutionDataProcessingPipeline)
         {
             _logger = logger;
             _sensorsDataQueue = sensorsDataQueue;
+            _airPollutionDataProcessingPipeline = airPollutionDataProcessingPipeline;
         }
         
         public void Start(CancellationToken token)
@@ -32,7 +38,7 @@ namespace AirSnitch.Worker
                         {
                             foreach (var msg in messages)
                             {
-                                Console.WriteLine(msg.Body);
+                                _airPollutionDataProcessingPipeline.PostMessage(msg);
                             }
                             await _sensorsDataQueue.DeleteMessageBatchAsync(messages);
                             messageCount -= 10;

@@ -30,7 +30,7 @@ namespace AirSnitch.Domain.Models
         }
 
         /// <summary>
-        ///     Returns a latest air pollution value from current station
+        ///     Returns a latest air pollution value from current station 
         /// </summary>
         /// <returns>Valid air pollution measurements</returns>
         public AirPollution GetAirPollution()

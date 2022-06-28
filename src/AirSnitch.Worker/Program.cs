@@ -1,4 +1,5 @@
 using AirSnitch.Di;
+using AirSnitch.Worker.AirPollutionConsumer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +19,7 @@ namespace AirSnitch.Worker
                 {
                     IConfiguration configuration = hostContext.Configuration;
                     services.ResolveApplicationDependencies(configuration);
-                    services.AddSingleton<SensorsDataConsumer>();
+                    services.AddSingleton<AirPollutionDataConsumer>();
                     services.AddHostedService<Host>();
                 });
     }
