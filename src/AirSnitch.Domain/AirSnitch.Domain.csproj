@@ -23,6 +23,9 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
             <_Parameter1>AirSnitch.Infrastructure</_Parameter1>
         </AssemblyAttribute>
+         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>AirSnitch.Worker</_Parameter1>
+        </AssemblyAttribute>
     </ItemGroup>
     
     <ItemGroup>

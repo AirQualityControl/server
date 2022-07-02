@@ -2,22 +2,22 @@ namespace AirSnitch.Domain.Models
 {
     public class City
     {
+        private readonly string _name;
+        private readonly string _code;
+
         private City()
         {
             
         }
-
-        public string Name { get; private set; }
-
-        public string Code { get; private set; }
         
-        public static City FromString(string cityString)
+        internal City(string name, string code)
         {
-            return new City()
-            {
-                Name = "Kyiv",
-                Code = "IEV"
-            };
+            _name = name;
+            _code = code;
         }
+
+        public string Name => _name;
+
+        public string Code => _code;
     }
 }

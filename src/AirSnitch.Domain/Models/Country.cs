@@ -4,11 +4,13 @@ namespace AirSnitch.Domain.Models
 {
     public class Country
     {
-        public static Country UA => new Country();
-
-        private static void FromString(string countryCode)
+        internal Country(string code)
         {
-            throw new NotImplementedException();
+            Code = code;
         }
+
+        public string Code { get; }
+
+        public static Country UA => new Country("UA");
     }
 }

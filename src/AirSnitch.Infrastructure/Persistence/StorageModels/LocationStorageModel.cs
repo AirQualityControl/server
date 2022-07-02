@@ -37,7 +37,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         public City MapToDomainModel()
         {
-            return City.FromString(Code);
+            return new City(name: Name, code: Code);
         }
 
         public static void RegisterDbMap()
