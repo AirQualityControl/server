@@ -23,7 +23,7 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
         private void BuildPipeline()
         {
             _pipelineHead = _validateMessageBlock.Instance;
-            var updateStationBlockInstance = _updateStationInfoBlock.Instanse;
+            var updateStationBlockInstance = _updateStationInfoBlock.Instance;
             var acknowledgeMessageBlockMessageBlockInstance = _acknowledgeMessageBlock.Instance;
             
             var linkOptions = new DataflowLinkOptions { PropagateCompletion = true };

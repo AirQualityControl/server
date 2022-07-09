@@ -27,5 +27,8 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// </summary>
         /// <returns></returns>
         Task<MonitoringStation> GetNearestStation(GeoCoordinates geoCoordinates, int radius = default);
+
+        Task AddAsync(MonitoringStation monitoringStation);
+        Task UpdateAsync(MonitoringStation monitoringStation);
     }
 }

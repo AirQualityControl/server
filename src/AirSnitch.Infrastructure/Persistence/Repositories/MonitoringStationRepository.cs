@@ -79,5 +79,15 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             var monitoringStation = new MonitoringStation();
             return Task.FromResult(monitoringStation);
         }
+
+        public async Task AddAsync(MonitoringStation monitoringStation)
+        {
+            await Task.Delay(300);
+        }
+
+        public async Task UpdateAsync(MonitoringStation monitoringStation)
+        {
+            await Task.Delay(300);
+        }
     }
 }

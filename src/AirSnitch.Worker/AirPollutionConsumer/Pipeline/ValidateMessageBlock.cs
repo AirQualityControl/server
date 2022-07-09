@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using AirSnitch.Domain.Models;
@@ -14,7 +13,14 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
 {
     public class ValidateMessageBlock
     {
-        public readonly TransformBlock<Message, ValueTuple<Message, MonitoringStation>> Instance = new(async receivedMsg =>
+        public ValidateMessageBlock()
+        {
+                
+        }
+        
+        public TransformBlock<Message, ValueTuple<Message, MonitoringStation>> Instance => new TransformBlock<Message, ValueTuple<Message, MonitoringStation>>(Transform);
+
+        private async Task<(Message, MonitoringStation)> Transform(Message receivedMsg)
         {
             var dataPoint = JsonConvert.DeserializeObject<DataPoint>(receivedMsg.Body);
             if (dataPoint == null)
@@ -22,46 +28,39 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
                 throw new ArgumentException("");
             }
 
-            var airMonitoringStation = new MonitoringStation
-            {
-                IsEmpty = false
-            };
+            var airMonitoringStation = new MonitoringStation { IsEmpty = false };
             airMonitoringStation.SetId(dataPoint.StationInfo.StationId);
             airMonitoringStation.SetName(dataPoint.StationInfo.StationName);
-            airMonitoringStation.SetLocation(GetStationLocation());
-            airMonitoringStation.SetAirPollution(GetAirPollution());
-            
+            airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
+            airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
+
             await Task.Delay(300);
             return (receivedMsg, airMonitoringStation);
-            
-            AirPollution GetAirPollution()
-            {
-                var particlesCollection = new List<IAirPollutionParticle>(dataPoint.Measurements.Count);
+        }
 
-                foreach (var measurement in dataPoint.Measurements)
-                {
-                    //particlesCollection.Add(ne);
-                }
-                
-                var airPollution = new AirPollution(null);
-                airPollution.SetAirQualityIndexValue(null, null);
-                return airPollution;
+        private AirPollution GetAirPollution(DataPoint? dataPoint)
+        {
+            var particlesCollection = new List<IAirPollutionParticle>(dataPoint.Measurements.Count);
+
+            foreach (var measurement in dataPoint.Measurements)
+            {
+                //particlesCollection.Add(ne);
             }
 
-            Location GetStationLocation()
-            {
-                var stationLocation = new Location();
-                stationLocation.SetAddress(dataPoint.StationInfo.Address);
-                stationLocation.SetCity(new City(name:dataPoint.StationInfo.CityName, "N/A"));
-                stationLocation.SetAddress(dataPoint.StationInfo.Address);
-                stationLocation.SetCountry(new Country(dataPoint.StationInfo.CountryCode));
-                stationLocation.SetGeoCoordinates(new GeoCoordinates()
-                {
-                    Latitude = dataPoint.StationInfo.GeoCoordinates.Latitude,
-                    Longitude = dataPoint.StationInfo.GeoCoordinates.Longitude
-                });
-                return stationLocation;
-            }
-        });
+            var airPollution = new AirPollution(null);
+            airPollution.SetAirQualityIndexValue(null, null);
+            return airPollution;
+        }
+
+        private Location GetStationLocation(DataPoint? dataPoint)
+        {
+            var stationLocation = new Location();
+            stationLocation.SetAddress(dataPoint.StationInfo.Address);
+            stationLocation.SetCity(new City(name: dataPoint.StationInfo.CityName, "N/A"));
+            stationLocation.SetAddress(dataPoint.StationInfo.Address);
+            stationLocation.SetCountry(new Country(dataPoint.StationInfo.CountryCode));
+            stationLocation.SetGeoCoordinates(new GeoCoordinates() { Latitude = dataPoint.StationInfo.GeoCoordinates.Latitude, Longitude = dataPoint.StationInfo.GeoCoordinates.Longitude });
+            return stationLocation;
+        }
     }
 }
