@@ -30,5 +30,15 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
             owner.SetWebSite(new Uri(WebSite));
             return owner;
         }
+
+        public static DataProviderStorageModel MapFromDomainModel(MonitoringStationOwner stationOwner)
+        {
+            return new DataProviderStorageModel()
+            {
+                Id = stationOwner.Id,
+                Name = stationOwner.Name,
+                WebSite = stationOwner.WebSite.ToString()
+            };
+        }
     }
 }

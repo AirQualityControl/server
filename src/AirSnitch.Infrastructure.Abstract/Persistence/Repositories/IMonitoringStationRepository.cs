@@ -28,6 +28,13 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// <returns></returns>
         Task<MonitoringStation> GetNearestStation(GeoCoordinates geoCoordinates, int radius = default);
 
+        /// <summary>
+        ///     Search station by provider station name
+        /// </summary>
+        /// <param name="providerStationName"></param>
+        /// <returns></returns>
+        Task<MonitoringStation> FindByProviderNameAsync(string providerStationName);
+
         Task AddAsync(MonitoringStation monitoringStation);
         Task UpdateAsync(MonitoringStation monitoringStation);
     }

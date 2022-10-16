@@ -2,14 +2,14 @@ namespace AirSnitch.Domain.Models
 {
     public class UsaAiqIndexValue : IAirQualityIndexValue
     {
-        private readonly decimal _calculatedValue;
+        private readonly int _calculatedValue;
 
-        internal UsaAiqIndexValue(decimal calculatedValue)
+        internal UsaAiqIndexValue(int calculatedValue)
         {
             _calculatedValue = calculatedValue;
         }
         
-        public int NumericValue => (int)_calculatedValue;
+        public int NumericValue => _calculatedValue;
 
         public DangerLevel GetDangerLevel()
         {

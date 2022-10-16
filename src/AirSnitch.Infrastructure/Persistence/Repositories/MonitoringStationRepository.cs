@@ -74,6 +74,22 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             return MonitoringStation.Empty;
         }
 
+        public async Task<MonitoringStation> FindByProviderNameAsync(string providerStationName)
+        {
+            var stations =  await _genericRepository.GetByAsync(
+                u => u.DisplayName == providerStationName
+            );
+
+            var monitoringStationStorageModel = stations.SingleOrDefault();
+            
+            if (monitoringStationStorageModel != default(MonitoringStationStorageModel))
+            {
+                return monitoringStationStorageModel.MapToDomainModel();
+            }
+
+            return MonitoringStation.Empty;
+        }
+
         public Task<MonitoringStation> GetNearestStation(GeoCoordinates geoCoordinates, int radius = default)
         {
             var monitoringStation = new MonitoringStation();
@@ -82,12 +98,19 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
 
         public async Task AddAsync(MonitoringStation monitoringStation)
         {
-            await Task.Delay(300);
+            var storageModel = MonitoringStationStorageModel.CreateFromDomainModel(monitoringStation);
+            await _genericRepository.SaveAsync(storageModel);
         }
 
         public async Task UpdateAsync(MonitoringStation monitoringStation)
         {
-            await Task.Delay(300);
+            var monitoringStationStorageModel = MonitoringStationStorageModel.CreateFromDomainModel(monitoringStation);
+            
+            await _genericRepository.UpdateByAsync(
+                entity: monitoringStationStorageModel, 
+                entityMemberSelector:u => u.DisplayName, 
+                memberValue: monitoringStation.DisplayName
+            );
         }
     }
 }

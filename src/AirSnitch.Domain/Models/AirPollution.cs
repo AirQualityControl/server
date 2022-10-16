@@ -6,6 +6,8 @@ namespace AirSnitch.Domain.Models
     public class AirPollution
     {
         private readonly IReadOnlyCollection<IAirPollutionParticle> _particles;
+        private IAirQualityIndex _airQualityIndex;
+        private IAirQualityIndexValue _calculatedAirQualityIndex;
 
         public AirPollution(IReadOnlyCollection<IAirPollutionParticle> particles)
         {
@@ -28,22 +30,28 @@ namespace AirSnitch.Domain.Models
         /// </summary>
         /// <param name="index"></param>
         /// <param name="indexValue"></param>
-        internal void SetAirQualityIndexValue(IAirQualityIndex index, IAirQualityIndexValue indexValue)
+        internal void SetAirQualityIndex(IAirQualityIndex index, IAirQualityIndexValue value)
         {
-            
+            _airQualityIndex = index;
+            _calculatedAirQualityIndex = value;
+        }
+
+        public IAirQualityIndexValue GetAirQualityIndexValue()
+        {
+            return _calculatedAirQualityIndex;
         }
     }
 
     public interface IAirPollutionParticle
     {
         string ParticleName { get; }
-        decimal Value { get; }
+        double Value { get; }
     }
 
     //???Replace with AirPollution.TryParseParticle(name, value, out IAirPollutionParticle);
     public class UnknownParticle
     {
-        public static IAirPollutionParticle CreateInstance(string name, decimal value)
+        public static IAirPollutionParticle CreateInstance(string name, double value)
         {
             if (name == "PM2.5")
             {
@@ -55,11 +63,11 @@ namespace AirSnitch.Domain.Models
 
     public class Pm25Particle : IAirPollutionParticle
     {
-        public Pm25Particle(decimal value)
+        public Pm25Particle(double value)
         {
             Value = value;
         }
         public string ParticleName => "PM2.5";
-        public decimal Value { get; }
+        public double Value { get; }
     }
 }

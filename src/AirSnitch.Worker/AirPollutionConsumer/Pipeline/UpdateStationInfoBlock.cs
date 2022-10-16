@@ -21,11 +21,12 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
         {
             var monitoringStation = tuple.Item2;
 
-            var station = await _monitoringStationRepository.FindByIdAsync(monitoringStation.Id);
+            var station = await _monitoringStationRepository.FindByProviderNameAsync(monitoringStation.DisplayName);
 
             if (station.IsEmpty)
             {
                 await _monitoringStationRepository.AddAsync(monitoringStation);
+                return tuple.Item1;
             }
             await _monitoringStationRepository.UpdateAsync(monitoringStation);
             return tuple.Item1;

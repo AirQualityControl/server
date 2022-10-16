@@ -1,8 +1,7 @@
-using System;
 using AirSnitch.Domain.Models;
+using AirSnitch.Infrastructure.Persistence.Serializers;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace AirSnitch.Infrastructure.Persistence.StorageModels
 {
@@ -22,6 +21,8 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         public DataProviderStorageModel DataProviderStorageModel { get; set; }
 
+        public GeoLocationStorageModel GeoLocation { get; set; }
+
         public static void RegisterDbMap()
         {
             BsonClassMap.RegisterClassMap<MonitoringStationStorageModel>(cm =>
@@ -30,6 +31,8 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 cm.MapMember(cm => cm.Id).SetElementName("id");
                 cm.MapMember(cm => cm.DisplayName).SetElementName("displayName");
                 cm.MapMember(cm => cm.Location).SetElementName("location");
+                cm.MapMember(cm => cm.GeoLocation).SetElementName("geoLocation")
+                    .SetSerializer(new GeoLocationSerializer());
                 cm.MapMember(cm => cm.AirQualityIndex).SetElementName("airQualityIndex");
                 cm.MapMember(cm => cm.AirPollution).SetElementName("airPollution");
                 cm.MapMember(cm => cm.DataProviderStorageModel).SetElementName("dataProvider");
@@ -38,8 +41,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         public MonitoringStation MapToDomainModel()
         {
-            var station = new MonitoringStation();
-            station.SetId(Id);
+            var station = new MonitoringStation(Id);
             station.SetName(DisplayName);
             station.SetAirPollution(BuildAirPollutionModel());
             station.SetLocation(BuildLocationModel());
@@ -61,8 +63,35 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         private AirPollution BuildAirPollutionModel()
         {
             var airPollution = AirPollution.MapToDomainModel();
-            airPollution.SetAirQualityIndexValue(AirQualityIndex.GetIndex(), AirQualityIndex.GetValue());
+            airPollution.SetAirQualityIndex(new UsaAirQualityIndex(), new UsaAiqIndexValue(AirQualityIndex.Value));
             return airPollution;
+        }
+
+        public static MonitoringStationStorageModel CreateFromDomainModel(MonitoringStation monitoringStation)
+        {
+            var airPollution = monitoringStation.GetAirPollution();
+            var location = monitoringStation.GetLocation();
+            var geolocation = location.GeoCoordinates();
+            var monitoringStationModel = new MonitoringStationStorageModel
+            {
+                PrimaryKey = ObjectId.GenerateNewId(),
+                Id = monitoringStation.Id,
+                DisplayName = monitoringStation.DisplayName,
+                Location = LocationStorageModel.MapFromDomainModel(location),
+                GeoLocation = new GeoLocationStorageModel()
+                {
+                    Latitude = geolocation.Latitude,
+                    Longitude = geolocation.Longitude
+                },
+                AirPollution = AirPollutionStorageModel.MapFromDomainModel(airPollution),
+                AirQualityIndex = new AirQualityIndexStorageModel()
+                {
+                    TypeName = "US_AQI",
+                    Value = airPollution.GetAirQualityIndexValue().NumericValue
+                },
+                DataProviderStorageModel = DataProviderStorageModel.MapFromDomainModel(monitoringStation.GetStationOwner()),
+            };
+            return monitoringStationModel;
         }
     }
 }

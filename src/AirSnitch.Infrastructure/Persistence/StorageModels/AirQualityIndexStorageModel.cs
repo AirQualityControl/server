@@ -7,7 +7,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
     {
         public string TypeName { get; set; }
 
-        public decimal Value { get; set; }
+        public int Value { get; set; }
         
         public static void RegisterDbMap()
         {
@@ -26,6 +26,14 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         public IAirQualityIndex GetIndex()
         {
             return new UsaAirQualityIndex();
+        }
+
+        public static AirQualityIndexStorageModel MapFromDomainModel(IAirQualityIndexValue index)
+        {
+            return new AirQualityIndexStorageModel()
+            {
+                Value = index.NumericValue
+            };
         }
     }
 }

@@ -10,7 +10,7 @@ namespace AirSnitch.Domain.Models
             
         }
         
-        internal City(string name, string code)
+        internal City(string name, string code = "N/A")
         {
             _name = name;
             _code = code;

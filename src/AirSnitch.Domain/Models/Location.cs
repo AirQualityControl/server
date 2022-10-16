@@ -10,7 +10,7 @@ namespace AirSnitch.Domain.Models
 
         public string GetAddress()
         {
-            return "";
+            return _addressValue;
         }
 
         public City GetCity()
@@ -30,7 +30,7 @@ namespace AirSnitch.Domain.Models
 
         internal void SetGeoCoordinates(GeoCoordinates coordinates)
         {
-            _geoCoordinates = _geoCoordinates;
+            _geoCoordinates = coordinates;
         }
 
         internal void SetCountry(Country country)

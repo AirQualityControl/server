@@ -21,13 +21,25 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
             var particles = Particles.Select(p => UnknownParticle.CreateInstance(p.Name, p.Value)).ToList();
             return new AirPollution(particles);
         }
+
+        public static AirPollutionStorageModel MapFromDomainModel(AirPollution airPollution)
+        {
+            return new AirPollutionStorageModel()
+            {
+                Particles = airPollution.Particles.Select(
+                    p => new ParticleStorageModel()
+                    {
+                        Name = p.ParticleName, Value = p.Value
+                    }).ToArray()
+            };
+        }
     }
 
     internal class ParticleStorageModel
     {
         public string Name { get; set; }
 
-        public decimal Value { get; set; }
+        public double Value { get; set; }
         
         public static void RegisterDbMap()
         {

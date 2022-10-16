@@ -4,21 +4,36 @@ namespace AirSnitch.Domain.Models
 {
     public class MonitoringStation : IDomainModel<MonitoringStation>
     {
+        private static readonly MonitoringStation EmptyMonitoringStation = new MonitoringStation() { IsEmpty = true };
         private AirPollution _airPollution;
         private Location _location;
         private MonitoringStationOwner _owner;
+        private readonly string _id;
+        public MonitoringStation()
+        {
+            _id = GenerateId();
+        }
 
+        public MonitoringStation(string id)
+        {
+            _id = id;
+        }
 
         /// <summary>
         ///     Returns an internal identifier of monitoring station.
         /// </summary>
-        public string Id { get; private set; }
+        public string Id
+        {
+            get
+            {
+                return _id;
+            }
+        }
 
         /// <summary>
         ///     Returns station display name
         /// </summary>
         public string DisplayName { get; private set; }
-
         
         /// <summary>
         /// 
@@ -29,6 +44,11 @@ namespace AirSnitch.Domain.Models
             _location = location;
         }
 
+        public Location GetLocation()
+        {
+            return _location;
+        }
+
         /// <summary>
         ///     Returns a latest air pollution value from current station 
         /// </summary>
@@ -37,7 +57,7 @@ namespace AirSnitch.Domain.Models
         {
             return _airPollution;
         }
-
+        
         /// <summary>
         ///     Set the latest air pollution values that was collection from station
         /// </summary>
@@ -46,7 +66,7 @@ namespace AirSnitch.Domain.Models
         {
             _airPollution = airPollution;
         }
-
+        
         /// <summary>
         ///     Returns a monitoring station owner.
         /// </summary>
@@ -67,7 +87,8 @@ namespace AirSnitch.Domain.Models
         }
 
         public bool IsEmpty { get; set; }
-        public static MonitoringStation Empty { get; set; }
+
+        public static MonitoringStation Empty => EmptyMonitoringStation;
 
         public bool IsValid()
         {
@@ -78,12 +99,7 @@ namespace AirSnitch.Domain.Models
         {
             
         }
-
-        internal void SetId(string id)
-        {
-            Id = id;
-        }
-
+        
         internal void SetName(string name)
         {
             //TODO:check contracts
@@ -93,6 +109,11 @@ namespace AirSnitch.Domain.Models
         internal void SetOwnerInfo(MonitoringStationOwner owner)
         {
             _owner = owner;
+        }
+        
+        private string GenerateId()
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 }

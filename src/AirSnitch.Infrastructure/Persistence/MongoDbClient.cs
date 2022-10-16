@@ -1,4 +1,7 @@
 using System;
+using AirSnitch.Infrastructure.Persistence.Serializers;
+using AirSnitch.Infrastructure.Persistence.StorageModels;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace AirSnitch.Infrastructure.Persistence
@@ -17,6 +20,8 @@ namespace AirSnitch.Infrastructure.Persistence
         {
             lock (Locker)
             {
+                BsonSerializer.RegisterSerializer(typeof(GeoLocationStorageModel), new GeoLocationSerializer());
+                
                 var settings = new MongoDbClientSettings()
                     .InitConnection(connectionString, dbName)
                     .RegisterMap()

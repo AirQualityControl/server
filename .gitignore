@@ -527,3 +527,4 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/angular,dotnetcore,aspnetcore,visualstudio,visualstudiocode
+appsettings.Development.json
