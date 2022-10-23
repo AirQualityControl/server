@@ -8,6 +8,7 @@ using AirSnitch.Infrastructure.Abstract.Persistence.Repositories;
 using AirSnitch.Infrastructure.Persistence.Query;
 using AirSnitch.Infrastructure.Persistence.Repositories.Common;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
+using MongoDB.Bson;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
@@ -99,6 +100,7 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         public async Task AddAsync(MonitoringStation monitoringStation)
         {
             var storageModel = MonitoringStationStorageModel.CreateFromDomainModel(monitoringStation);
+            storageModel.PrimaryKey = ObjectId.GenerateNewId();
             await _genericRepository.SaveAsync(storageModel);
         }
 

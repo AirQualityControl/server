@@ -30,6 +30,8 @@ namespace AirSnitch.Domain.Models
             }
         }
 
+        public string PrimaryKey { get; set; }
+
         /// <summary>
         ///     Returns station display name
         /// </summary>

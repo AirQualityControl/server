@@ -9,14 +9,14 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         Task<QueryResult> ExecuteQueryFromSchemeAsync(QueryScheme queryScheme);
 
         /// <summary>
-        /// 
+        ///     Try to find station by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public Task<MonitoringStation> FindByIdAsync(string id);
         
         /// <summary>
-        /// 
+        ///     Return AirMonitoringStation by specified Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

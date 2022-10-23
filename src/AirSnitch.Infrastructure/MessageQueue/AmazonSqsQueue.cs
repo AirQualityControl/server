@@ -77,7 +77,8 @@ namespace AirSnitch.Infrastructure.MessageQueue
         {
             var deleteMessageRequest = new DeleteMessageRequest()
             {
-                ReceiptHandle = msg.Attributes["RECIPE_HANDLER"]
+                ReceiptHandle = msg.Attributes["RECIPE_HANDLER"],
+                QueueUrl = _settings.QueueUrl
             };
 
             await _sqsClient.DeleteMessageAsync(deleteMessageRequest);

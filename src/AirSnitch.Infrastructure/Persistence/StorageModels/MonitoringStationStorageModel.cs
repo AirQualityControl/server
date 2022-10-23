@@ -1,13 +1,15 @@
+using System;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Persistence.Serializers;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace AirSnitch.Infrastructure.Persistence.StorageModels
 {
     internal class MonitoringStationStorageModel
     {
-        public ObjectId PrimaryKey { get; internal set; }
+        public ObjectId PrimaryKey { get; set; }
         
         public string Id { get; set; }
 
@@ -46,7 +48,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
             station.SetAirPollution(BuildAirPollutionModel());
             station.SetLocation(BuildLocationModel());
             station.SetOwnerInfo(BuildOwnerInfo());
-
+            station.PrimaryKey = PrimaryKey.ToString();
             return station;
         }
 
@@ -74,8 +76,8 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
             var geolocation = location.GeoCoordinates();
             var monitoringStationModel = new MonitoringStationStorageModel
             {
-                PrimaryKey = ObjectId.GenerateNewId(),
                 Id = monitoringStation.Id,
+                PrimaryKey = String.IsNullOrEmpty(monitoringStation.PrimaryKey) ? ObjectId.GenerateNewId() : ObjectId.Parse(monitoringStation.PrimaryKey),
                 DisplayName = monitoringStation.DisplayName,
                 Location = LocationStorageModel.MapFromDomainModel(location),
                 GeoLocation = new GeoLocationStorageModel()

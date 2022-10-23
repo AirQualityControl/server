@@ -30,28 +30,21 @@ namespace AirSnitch.Worker.AirPollutionConsumer
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var messageCount = await _sensorsDataQueue.GetApproximateMessageCount();
-                    while (messageCount > 0)
+                    var messages = await _sensorsDataQueue.GetMessageBatchAsync(batchSize:10);
+                    if (messages.Any())
                     {
-                        var messages = await _sensorsDataQueue.GetMessageBatchAsync(batchSize:10);
-                        if (messages.Any())
+                        foreach (var msg in messages)
                         {
-                            foreach (var msg in messages)
-                            {
-                                _airPollutionDataProcessingPipeline.PostMessage(msg);
-                            }
-                            await _sensorsDataQueue.DeleteMessageBatchAsync(messages);
-                            messageCount -= 10;
-                            _logger.LogInformation($"batch was successfully processed and deleted! {messageCount} messages left");
+                            _airPollutionDataProcessingPipeline.PostMessage(msg);
                         }
-                        else
-                        {
-                            messageCount = 0;
-                        }
+                        _logger.LogInformation($"Batch of messages ({messages.Count}) was pasted to pipeline, {DateTime.UtcNow}");
                     }
-                    await Task.Delay(300000, token);
+                    else
+                    {
+                        await Task.Delay(60000, token);
+                    }
                 }
-            });
+            }, token);
         }
     }
 }
