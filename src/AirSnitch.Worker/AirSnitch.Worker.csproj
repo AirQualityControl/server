@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <UserSecretsId>dotnet-AirSnitch.MessageConsumer-1368FCBB-4992-4B91-BB85-649C6464EB4B</UserSecretsId>
         <AssemblyName>AirSnitch.Worker</AssemblyName>
         <RootNamespace>AirSnitch.Worker</RootNamespace>
