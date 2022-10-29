@@ -37,5 +37,5 @@ jobs:
         dotnet build --no-restore
     - name: Run Unit Tests
       run: |
-        cd test/unit
+        cd test/unit/AirSnitch.UnitTests
         dotnet test --no-build --verbosity normal
