@@ -29,6 +29,7 @@ jobs:
     - name: Restore AirSnitch.Worker dependencies
       run: |
         cd src/AirSnitch.Worker
+        dotnet nuget add source --username [ArturLavrov] --password ${{ secrets.NUGET_REGISTRY_API_KEY }} --name github https://nuget.pkg.github.com/AirQualityControl/index.json
         dotnet restore
     - name: Build AirSnitch.Worker
       run: |
