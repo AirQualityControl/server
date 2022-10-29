@@ -19,22 +19,22 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore AirSnitch.API dependencies
-      run: 
+      run: |
         cd src/AirSnitch.API
         dotnet restore
     - name: Build AirSnitch.API
-      run: 
+      run: |
         cd src/AirSnitch.API
         dotnet build --no-restore
     - name: Restore AirSnitch.Worker dependencies
-      run: 
+      run: |
         cd src/AirSnitch.Worker
         dotnet restore
     - name: Build AirSnitch.Worker
-      run: 
+      run: |
         cd src/AirSnitch.Worker
         dotnet build --no-restore
     - name: Run Unit Tests
-      run: 
+      run: |
         cd test/unit
         dotnet test --no-build --verbosity normal
