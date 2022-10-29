@@ -20,8 +20,8 @@ namespace AirSnitch.Di
             services.AddTransient<IMonitoringStationRepository, MonitoringStationRepository>();
             services.AddSingleton(
                 MongoDbClient.Create(
-                    configuration["MongoDbConnectionString"], 
-                    configuration["MongoDbName"]
+                    configuration["MongoDbSettings:ConnectionString"], 
+                    configuration["MongoDbSettings:DbName"]
                 )
             );
             services.AddSingleton(_ => configuration.GetSection("AmazonSqsSettings").Get<AmazonSqsSettings>());
