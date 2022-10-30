@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.MessageQueue;
-using AirSnitch.SDK;
 using Newtonsoft.Json;
 using City = AirSnitch.Domain.Models.City;
-using GeoCoordinates = AirSnitch.Domain.Models.GeoCoordinates;
 
 namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
 {
@@ -65,7 +63,7 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
             stationLocation.SetAddress(dataPoint.StationInfo.Address);
             stationLocation.SetCountry(new Country(dataPoint.StationInfo.CountryCode));
             stationLocation.SetGeoCoordinates(
-                new GeoCoordinates() 
+                new AirSnitch.Domain.Models.GeoCoordinates() 
                 { 
                     Latitude = dataPoint.StationInfo.GeoCoordinates.Latitude, 
                     Longitude = dataPoint.StationInfo.GeoCoordinates.Longitude 
