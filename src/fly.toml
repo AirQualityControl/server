@@ -1,0 +1,14 @@
+# fly.toml file generated for airsnitch-worker on 2022-10-30T11:26:51+02:00
+
+app = "airsnitch-worker"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[build]
+  dockerfile = "Dockerfile_Worker"
+
+[env]
+
+[experimental]
+  auto_rollback = false
