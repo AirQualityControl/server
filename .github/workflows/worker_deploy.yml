@@ -17,6 +17,6 @@ jobs:
         - name: Go to right directory
           run: |
             cd src 
-            dotnet restore
+            ls
         - uses: superfly/flyctl-actions/setup-flyctl@master
         - run: flyctl deploy -e MongoDbSettings__ConnectionString=${{ secrets.MONGO_CONNECTIONSTRING_EU_CUSTER }} MongoDbSettings__DbName=${{ secrets.MONGO_DBNAME_EU_CUSTER }} AmazonSqsSettings__ServiceUrl=${{ secrets.AMZ_SQS_SERVICE_URL }} AmazonSqsSettings__QueueUrl=${{ secrets.AMZ_SQS_QUEUE_URL }} AmazonSqsSettings__AccessKey=${{ secrets.AMZ_SQS_ACCESS_KEY }} AmazonSqsSettings__AccessSecrete=${{ secrets.AMZ_SQS_ACCESS_SECRETE }} --remote-only 
