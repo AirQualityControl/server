@@ -24,7 +24,14 @@ namespace AirSnitch.Di
                     configuration["MongoDbSettings:DbName"]
                 )
             );
-            services.AddSingleton(_ => configuration.GetSection("AmazonSqsSettings").Get<AmazonSqsSettings>());
+            services.AddSingleton(new AmazonSqsSettings()
+            {
+                QueueUrl = configuration["AmazonSqsSettings:QueueUrl"],
+                ServiceUrl = configuration["AmazonSqsSettings:ServiceUrl"],
+                AccessKey = configuration["AmazonSqsSettings:AccessKey"],
+                AccessSecrete = configuration["AmazonSqsSettings:AccessSecrete"]
+            });
+            //services.AddSingleton(_ => configuration.GetSection("AmazonSqsSettings").Get<AmazonSqsSettings>());
             services.AddTransient<IDistributedMessageQueue, AmazonSqsQueue>();
         }
     }
