@@ -26,6 +26,7 @@ namespace AirSnitch.Worker.AirPollutionConsumer
         
         public void Start(CancellationToken token)
         {
+            _logger.LogInformation($"Worker is started now: {DateTime.UtcNow}");
             Console.WriteLine($"Worker is started now: {DateTime.UtcNow}");
             Task.Run(async () =>
             {

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AirSnitch.Worker.AirPollutionConsumer;
@@ -19,6 +20,7 @@ namespace AirSnitch.Worker
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation($"Worker is going to start: {DateTime.UtcNow}");
             _airPollutionDataConsumer.Start(stoppingToken);
             return Task.CompletedTask;
         }
