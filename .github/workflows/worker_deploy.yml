@@ -1,4 +1,4 @@
-name: Deploy worker
+n  ame: Deploy worker
 
 on:
    push:
@@ -17,10 +17,5 @@ jobs:
         - uses: superfly/flyctl-actions/setup-flyctl@master
         - run: |
             cd src
-            flyctl secrets set MongoDbSettings__ConnectionString=${{ secrets.MONGO_CONNECTIONSTRING_EU_CUSTER }}
-            flyctl secrets set MongoDbSettings__DbName=${{ secrets.MONGO_DBNAME_EU_CUSTER }} 
-            flyctl secrets set AmazonSqsSettings__ServiceUrl=${{ secrets.AMZ_SQS_SERVICE_URL }}
-            flyctl secrets set AmazonSqsSettings__QueueUrl=${{ secrets.AMZ_SQS_QUEUE_URL }}
-            flyctl secrets set AmazonSqsSettings__AccessKey=${{ secrets.AMZ_SQS_ACCESS_KEY }}
-            flyctl secrets set AmazonSqsSettings__AccessSecrete=${{ secrets.AMZ_SQS_ACCESS_SECRETE }} 
+            flyctl secrets set MongoDbSettings__ConnectionString=${{ secrets.MONGO_CONNECTIONSTRING_EU_CUSTER }} MongoDbSettings__DbName=${{ secrets.MONGO_DBNAME_EU_CUSTER }} AmazonSqsSettings__ServiceUrl=${{ secrets.AMZ_SQS_SERVICE_URL }} AmazonSqsSettings__QueueUrl=${{ secrets.AMZ_SQS_QUEUE_URL }} AmazonSqsSettings__AccessKey=${{ secrets.AMZ_SQS_ACCESS_KEY }} AmazonSqsSettings__AccessSecrete=${{ secrets.AMZ_SQS_ACCESS_SECRETE }}
             flyctl deploy --remote-only
