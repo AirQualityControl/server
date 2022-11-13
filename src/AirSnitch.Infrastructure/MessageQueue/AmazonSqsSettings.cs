@@ -17,7 +17,7 @@ namespace AirSnitch.Infrastructure.MessageQueue
             set
             {
                 _queueUrl = value;
-                Console.WriteLine($"This is a value {value}");
+                Console.WriteLine($"This is a queue url value {value}");
             }
         }
 
