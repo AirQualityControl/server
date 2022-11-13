@@ -1,4 +1,4 @@
-n  ame: Deploy worker
+name: Deploy worker
 
 on:
    push:
