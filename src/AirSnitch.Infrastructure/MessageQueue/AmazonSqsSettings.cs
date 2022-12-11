@@ -6,9 +6,7 @@ namespace AirSnitch.Infrastructure.MessageQueue
     public class AmazonSqsSettings
     {
         public string QueueUrl { get; set; }
-
         public string ServiceUrl { get; set; }
-
         public string AccessKey { get; set; }
         public string AccessSecrete { get; set; }
 
