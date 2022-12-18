@@ -1,5 +1,8 @@
 # syntax=docker/dockerfile:1
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+
+EXPOSE 8080
+
 WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT=Production
