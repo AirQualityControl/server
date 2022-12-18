@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-buster-slim AS base
 WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT=Development
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-buster-slim AS build
 WORKDIR /src
 # Copy csproj and restore as distinct layers
 COPY ["AirSnitch.API/AirSnitch.API.csproj", "AirSnitch.API/"]
