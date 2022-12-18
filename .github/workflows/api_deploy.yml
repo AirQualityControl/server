@@ -17,5 +17,6 @@ jobs:
         - uses: superfly/flyctl-actions/setup-flyctl@master
         - run: |
             cd src
+            flyctl secrets set -a airsnith-api
             flyctl secrets set MongoDbSettings__ConnectionString=${{ secrets.MONGO_CONNECTIONSTRING_EU_CUSTER }} MongoDbSettings__DbName=${{ secrets.MONGO_DBNAME_EU_CUSTER }}
             flyctl deploy --config fly-api.toml
