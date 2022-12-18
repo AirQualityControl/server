@@ -1,0 +1,21 @@
+name: Deploy API
+
+on:
+   push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - '*'
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+jobs:
+  deploy:
+      name: Deploy app
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: superfly/flyctl-actions/setup-flyctl@master
+        - run: |
+            cd src
+            flyctl secrets set MongoDbSettings__ConnectionString=${{ secrets.MONGO_CONNECTIONSTRING_EU_CUSTER }} MongoDbSettings__DbName=${{ secrets.MONGO_DBNAME_EU_CUSTER }}
+            flyctl deploy --config fly-api.toml
