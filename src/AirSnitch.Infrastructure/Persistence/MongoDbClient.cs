@@ -18,6 +18,8 @@ namespace AirSnitch.Infrastructure.Persistence
 
         public static MongoDbClient Create(string connectionString, string dbName)
         {
+            Console.WriteLine($"connstring: {connectionString}, and name is {dbName}");
+
             lock (Locker)
             {
                 BsonSerializer.RegisterSerializer(typeof(GeoLocationStorageModel), new GeoLocationSerializer());
