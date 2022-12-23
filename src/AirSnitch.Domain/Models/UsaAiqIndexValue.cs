@@ -1,12 +1,16 @@
+using System;
+
 namespace AirSnitch.Domain.Models
 {
     public class UsaAiqIndexValue : IAirQualityIndexValue
     {
         private readonly int _calculatedValue;
+        private readonly DateTime _measurementDateTime;
 
-        internal UsaAiqIndexValue(int calculatedValue)
+        internal UsaAiqIndexValue(int calculatedValue, DateTime measurementDateTime)
         {
             _calculatedValue = calculatedValue;
+            _measurementDateTime = measurementDateTime;
         }
         
         public int NumericValue => _calculatedValue;
@@ -30,6 +34,11 @@ namespace AirSnitch.Domain.Models
             {
                 Text = "Don't hesitate to go out today"
             };
+        }
+
+        public DateTime GetMeasurementDateTime()
+        {
+            return _measurementDateTime;
         }
     }
 }

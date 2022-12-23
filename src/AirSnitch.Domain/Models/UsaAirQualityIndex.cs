@@ -1,3 +1,5 @@
+using System;
+
 namespace AirSnitch.Domain.Models
 {
     public class UsaAirQualityIndex : IAirQualityIndex
@@ -22,7 +24,7 @@ namespace AirSnitch.Domain.Models
         {
             if (_calculatedValue == null)
             {
-                return new UsaAiqIndexValue(34);
+                return new UsaAiqIndexValue(34, DateTime.UtcNow);
             }
             return _calculatedValue;
         }

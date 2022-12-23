@@ -65,7 +65,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         private AirPollution BuildAirPollutionModel()
         {
             var airPollution = AirPollution.MapToDomainModel();
-            airPollution.SetAirQualityIndex(new UsaAirQualityIndex(), new UsaAiqIndexValue(AirQualityIndex.Value));
+            airPollution.SetAirQualityIndex(new UsaAirQualityIndex(), new UsaAiqIndexValue(AirQualityIndex.Value, AirQualityIndex.DateTime));
             return airPollution;
         }
 
@@ -89,7 +89,8 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 AirQualityIndex = new AirQualityIndexStorageModel()
                 {
                     TypeName = "US_AQI",
-                    Value = airPollution.GetAirQualityIndexValue().NumericValue
+                    Value = airPollution.GetAirQualityIndexValue().NumericValue,
+                    DateTime = airPollution.GetMeasurementsDateTime(),
                 },
                 DataProviderStorageModel = DataProviderStorageModel.MapFromDomainModel(monitoringStation.GetStationOwner()),
             };

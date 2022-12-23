@@ -50,8 +50,8 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
                 }
             }
             
-            var airPollution = new AirPollution(particlesCollection);
-            airPollution.SetAirQualityIndex(new UsaAirQualityIndex(), new UsaAiqIndexValue(dataPoint.IndexValue.IndexValue));
+            var airPollution = new AirPollution(particlesCollection, dataPoint.DateTime);
+            airPollution.SetAirQualityIndex(new UsaAirQualityIndex(), new UsaAiqIndexValue(dataPoint.IndexValue.IndexValue, dataPoint.DateTime));
             return airPollution;
         }
 

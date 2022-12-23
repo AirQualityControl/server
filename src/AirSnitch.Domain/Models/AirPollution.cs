@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.VisualBasic;
 
 namespace AirSnitch.Domain.Models
 {
@@ -8,10 +9,12 @@ namespace AirSnitch.Domain.Models
         private readonly IReadOnlyCollection<IAirPollutionParticle> _particles;
         private IAirQualityIndex _airQualityIndex;
         private IAirQualityIndexValue _calculatedAirQualityIndex;
+        private DateTime _dateTime;
 
-        public AirPollution(IReadOnlyCollection<IAirPollutionParticle> particles)
+        public AirPollution(IReadOnlyCollection<IAirPollutionParticle> particles, DateTime dateTime)
         {
             _particles = particles;
+            _dateTime = dateTime;
         }
 
         public IReadOnlyCollection<IAirPollutionParticle> Particles => _particles;
@@ -22,7 +25,7 @@ namespace AirSnitch.Domain.Models
         /// <returns></returns>
         public DateTime GetMeasurementsDateTime()
         {
-            return DateTime.UtcNow;
+            return _dateTime;
         }
 
         /// <summary>
@@ -35,7 +38,7 @@ namespace AirSnitch.Domain.Models
             _airQualityIndex = index;
             _calculatedAirQualityIndex = value;
         }
-
+        
         public IAirQualityIndexValue GetAirQualityIndexValue()
         {
             return _calculatedAirQualityIndex;
