@@ -15,21 +15,30 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
 
         private async Task<(Message, MonitoringStation)> Transform(Message receivedMsg)
         {
-            var dataPoint = JsonConvert.DeserializeObject<DataPoint>(receivedMsg.Body);
-            if (dataPoint == null)
+            MonitoringStation airMonitoringStation = null;
+            try
             {
-                throw new ArgumentException("");
-            }
+                var dataPoint = JsonConvert.DeserializeObject<DataPoint>(receivedMsg.Body);
+                if (dataPoint == null)
+                {
+                    throw new ArgumentException("");
+                }
 
-            var airMonitoringStation = new MonitoringStation { IsEmpty = false };
-            airMonitoringStation.SetName(dataPoint.StationInfo.StationName);
-            airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
-            airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
-            //TODO: change with a real data
-            var saveDniproStationOwner =
-                new MonitoringStationOwner("89c0ef61-c92e-4b78-9e3b-13d502baaac7", "SaveDnipro");
-            saveDniproStationOwner.SetWebSite(new Uri("https://www.savednipro.org/en/"));
-            airMonitoringStation.SetOwnerInfo(saveDniproStationOwner);
+                airMonitoringStation = new MonitoringStation { IsEmpty = false };
+                airMonitoringStation.SetName(dataPoint.StationInfo.StationName);
+                airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
+                airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
+                //TODO: change with a real data
+                var saveDniproStationOwner =
+                    new MonitoringStationOwner("89c0ef61-c92e-4b78-9e3b-13d502baaac7", "SaveDnipro");
+                saveDniproStationOwner.SetWebSite(new Uri("https://www.savednipro.org/en/"));
+                airMonitoringStation.SetOwnerInfo(saveDniproStationOwner);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message, ex.InnerException, ex.StackTrace);
+            }
+            
             return (receivedMsg, airMonitoringStation);
         }
 

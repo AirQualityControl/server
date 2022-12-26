@@ -19,17 +19,25 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
 
         private async Task<Message> Transform((Message, MonitoringStation) tuple)
         {
-            var monitoringStation = tuple.Item2;
-
-            var existingStation = await _monitoringStationRepository.FindByProviderNameAsync(monitoringStation.DisplayName);
-
-            if (existingStation.IsEmpty)
+            try
             {
-                await _monitoringStationRepository.AddAsync(monitoringStation);
-                return tuple.Item1;
+                var monitoringStation = tuple.Item2;
+
+                var existingStation = await _monitoringStationRepository.FindByProviderNameAsync(monitoringStation.DisplayName);
+
+                if (existingStation.IsEmpty)
+                {
+                    await _monitoringStationRepository.AddAsync(monitoringStation);
+                    return tuple.Item1;
+                }
+                monitoringStation.PrimaryKey = existingStation.PrimaryKey;
+                await _monitoringStationRepository.UpdateAsync(monitoringStation);
+                
             }
-            monitoringStation.PrimaryKey = existingStation.PrimaryKey;
-            await _monitoringStationRepository.UpdateAsync(monitoringStation);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message, ex.InnerException, ex.StackTrace);
+            }
             return tuple.Item1;
         }
     }

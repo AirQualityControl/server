@@ -26,7 +26,7 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
             var updateStationBlockInstance = _updateStationInfoBlock.Instance;
             var acknowledgeMessageBlockMessageBlockInstance = _acknowledgeMessageBlock.Instance;
             
-            var linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
+            var linkOptions = new DataflowLinkOptions { PropagateCompletion = false, };
             _pipelineHead.LinkTo(updateStationBlockInstance, linkOptions);
             updateStationBlockInstance.LinkTo(acknowledgeMessageBlockMessageBlockInstance, linkOptions);
         }
