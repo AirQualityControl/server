@@ -13,8 +13,8 @@ AirSnitch has a dependecy for AWS SQS service.For local developemnt you coudl us
 
 5. Send Message to queue:
 
-   aws --endpoint http://localhost:4566 sqs send-message --queue-url http://localhost:4566/00000000000/SensorsMeasurements --message-body "{\"station\":{\"id\":\"SAVEDNIPRO_136\",\"name\":\"SAVEDNIPRO_136\",\"cityName\":\"Dnipro\",\"countryCode\":\"UA\",\"address\":\"Forest Park of Friendship of Peoples\",\"geoCoordinates\":{\"long\":35.092615,\"lat\":48.5403}},\"measurements\":[{\"value\":27,\"name\":\"PM10\"},{\"value\":14.68,\"name\":\"PM25\"},{\"value\":73.19,\"name\":\"Humidity\"},{\"value\":16.3,\"name\":\"Temperature\"}],\"dateTime\":\"2022-10-29T13:00:00\",\"index\":{\"value\":69,\"type\":\"US_AIQ\"}}"
-
+aws --endpoint http://localhost:4566 sqs send-message --queue-url http://localhost:4566/00000000000/SensorsMeasurements --message-body "{\"station\":{\"id\":\"SAVEDNIPRO_136\",\"name\":\"SAVEDNIPRO_136\",\"cityName\":\"Dnipro\",\"countryCode\":\"UA\",\"address\":\"Forest Park of Friendship of Peoples\",\"geoCoordinates\":{\"long\":35.092615,\"lat\":48.5403}},\"measurements\":[{\"value\":27,\"name\":\"PM10\"},{\"value\":14.68,\"name\":\"PM25\"},{\"value\":73.19,\"name\":\"Humidity\"},{\"value\":16.3,\"name\":\"Temperature\"}],\"dateTime\":\"2022-10-29T13:00:00\",\"index\":{\"value\":69,\"type\":\"US_AIQ\"}}" --region "us-east-1"
+  
 A list of test stations:
 
 ```json
