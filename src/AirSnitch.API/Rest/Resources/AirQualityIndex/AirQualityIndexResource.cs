@@ -14,6 +14,7 @@ namespace AirSnitch.Api.Rest.Resources.AirQualityIndex
             {
                 new ApiResourceColumn("type", "type"),
                 new ApiResourceColumn("value", "value"),
+                new ApiResourceColumn("dateTime", "dateTime"),
             };
 
         public QueryColumn QueryColumn => new PrimaryColumn();

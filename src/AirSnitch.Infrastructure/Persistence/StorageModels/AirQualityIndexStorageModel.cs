@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using AirSnitch.Domain.Models;
 using MongoDB.Bson.Serialization;
 
@@ -10,7 +11,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         public int Value { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; }
 
         public static void RegisterDbMap()
         {
@@ -24,7 +25,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         public IAirQualityIndexValue GetValue()
         {
-            return new UsaAiqIndexValue(Value, DateTime);
+            return new UsaAiqIndexValue(Value, System.DateTime.Parse(DateTime, CultureInfo.InvariantCulture));
         }
 
         public IAirQualityIndex GetIndex()

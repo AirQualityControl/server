@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using AirSnitch.Domain.Models;
 using MongoDB.Bson.Serialization;
@@ -9,21 +11,23 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
     {
         public ParticleStorageModel[] Particles { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; }
 
         public static void RegisterDbMap()
         {
             BsonClassMap.RegisterClassMap<AirPollutionStorageModel>(cm =>
             {
                 cm.MapMember(cm => cm.Particles).SetElementName("particles");
-                cm.MapMember(cm => cm.Particles).SetElementName("dateTime");
+                cm.MapMember(cm => cm.DateTime).SetElementName("dateTime");
             });
         }
 
         public AirPollution MapToDomainModel()
         {
-            var particles = Particles.Select(p => UnknownParticle.CreateInstance(p.Name, p.Value)).ToList();
-            return new AirPollution(particles, DateTime);
+            var particles = Particles == null 
+                ? new List<IAirPollutionParticle>() : 
+                Particles?.Select(p => UnknownParticle.CreateInstance(p.Name, p.Value)).ToList();
+            return new AirPollution(particles, System.DateTime.Parse(DateTime, CultureInfo.InvariantCulture));
         }
 
         public static AirPollutionStorageModel MapFromDomainModel(AirPollution airPollution)
@@ -33,9 +37,10 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 Particles = airPollution.Particles.Select(
                     p => new ParticleStorageModel()
                     {
-                        Name = p.ParticleName, Value = p.Value
+                        Name = p.ParticleName, 
+                        Value = p.Value
                     }).ToArray(),
-                DateTime = airPollution.GetMeasurementsDateTime()
+                DateTime = airPollution.GetMeasurementsDateTime().ToString(CultureInfo.InvariantCulture)
             };
         }
     }

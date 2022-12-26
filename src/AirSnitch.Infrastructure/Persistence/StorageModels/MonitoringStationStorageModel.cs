@@ -1,9 +1,9 @@
 using System;
+using System.Globalization;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Persistence.Serializers;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace AirSnitch.Infrastructure.Persistence.StorageModels
 {
@@ -65,7 +65,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
         private AirPollution BuildAirPollutionModel()
         {
             var airPollution = AirPollution.MapToDomainModel();
-            airPollution.SetAirQualityIndex(new UsaAirQualityIndex(), new UsaAiqIndexValue(AirQualityIndex.Value, AirQualityIndex.DateTime));
+            airPollution.SetAirQualityIndex(new UsaAirQualityIndex(), new UsaAiqIndexValue(AirQualityIndex.Value, DateTime.Parse(AirQualityIndex.DateTime, CultureInfo.InvariantCulture)));
             return airPollution;
         }
 
@@ -90,7 +90,7 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
                 {
                     TypeName = "US_AQI",
                     Value = airPollution.GetAirQualityIndexValue().NumericValue,
-                    DateTime = airPollution.GetMeasurementsDateTime(),
+                    DateTime = airPollution.GetMeasurementsDateTime().ToString(CultureInfo.InvariantCulture),
                 },
                 DataProviderStorageModel = DataProviderStorageModel.MapFromDomainModel(monitoringStation.GetStationOwner()),
             };

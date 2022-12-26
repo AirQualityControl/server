@@ -10,7 +10,8 @@ namespace AirSnitch.Api.Rest.Resources.AirPollution
         public IReadOnlyCollection<ApiResourceColumn> Columns =>
             new List<ApiResourceColumn>()
             {
-                new ApiResourceColumn("particles", "particles")
+                new ApiResourceColumn("particles", "particles"),
+                new ApiResourceColumn("dateTime", "dateTime")
             };
 
         public QueryColumn QueryColumn => new PrimaryColumn();
