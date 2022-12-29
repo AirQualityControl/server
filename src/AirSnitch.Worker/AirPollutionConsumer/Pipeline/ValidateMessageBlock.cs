@@ -15,30 +15,21 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
 
         private async Task<(Message, MonitoringStation)> Transform(Message receivedMsg)
         {
-            MonitoringStation airMonitoringStation = null;
-            try
+            var dataPoint = JsonConvert.DeserializeObject<DataPoint>(receivedMsg.Body);
+            if (dataPoint == null)
             {
-                var dataPoint = JsonConvert.DeserializeObject<DataPoint>(receivedMsg.Body);
-                if (dataPoint == null)
-                {
-                    throw new ArgumentException("");
-                }
+                throw new ArgumentException("");
+            }
 
-                airMonitoringStation = new MonitoringStation { IsEmpty = false };
-                airMonitoringStation.SetName(dataPoint.StationInfo.StationName);
-                airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
-                airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
-                //TODO: change with a real data
-                var saveDniproStationOwner =
-                    new MonitoringStationOwner("89c0ef61-c92e-4b78-9e3b-13d502baaac7", "SaveDnipro");
-                saveDniproStationOwner.SetWebSite(new Uri("https://www.savednipro.org/en/"));
-                airMonitoringStation.SetOwnerInfo(saveDniproStationOwner);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message, ex.InnerException, ex.StackTrace);
-            }
-            
+            var airMonitoringStation = new MonitoringStation { IsEmpty = false };
+            airMonitoringStation.SetName(dataPoint.StationInfo.StationName);
+            airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
+            airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
+            //TODO: change with a real data
+            var saveDniproStationOwner =
+                new MonitoringStationOwner("89c0ef61-c92e-4b78-9e3b-13d502baaac7", "SaveDnipro");
+            saveDniproStationOwner.SetWebSite(new Uri("https://www.savednipro.org/en/"));
+            airMonitoringStation.SetOwnerInfo(saveDniproStationOwner);
             return (receivedMsg, airMonitoringStation);
         }
 

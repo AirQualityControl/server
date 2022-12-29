@@ -64,8 +64,13 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         private AirPollution BuildAirPollutionModel()
         {
+            var dateTimeToSet = !DateTime.TryParse(AirQualityIndex.DateTime, out DateTime dateTime) ? DateTime.MinValue : dateTime;
             var airPollution = AirPollution.MapToDomainModel();
-            airPollution.SetAirQualityIndex(new UsaAirQualityIndex(), new UsaAiqIndexValue(AirQualityIndex.Value, DateTime.Parse(AirQualityIndex.DateTime, CultureInfo.InvariantCulture)));
+            airPollution.SetAirQualityIndex(
+                new UsaAirQualityIndex(),
+                new UsaAiqIndexValue(
+                    AirQualityIndex.Value,
+                    dateTimeToSet));
             return airPollution;
         }
 

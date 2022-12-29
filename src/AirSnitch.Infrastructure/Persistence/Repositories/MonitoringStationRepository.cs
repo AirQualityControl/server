@@ -61,11 +61,11 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
         {
             Guid.Parse(id);
             
-            var users =  await _genericRepository.GetByAsync(
+            var stations =  await _genericRepository.GetByAsync(
                 u => u.Id == id
             );
 
-            var monitoringStationStorageModel = users.SingleOrDefault();
+            var monitoringStationStorageModel = stations.SingleOrDefault();
             
             if (monitoringStationStorageModel != default(MonitoringStationStorageModel))
             {
