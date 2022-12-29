@@ -24,10 +24,11 @@ namespace AirSnitch.Infrastructure.Persistence.StorageModels
 
         public AirPollution MapToDomainModel()
         {
+            var dateTimeToSet = !System.DateTime.TryParse(DateTime, out DateTime dateTime) ? System.DateTime.MinValue : dateTime;
             var particles = Particles == null 
                 ? new List<IAirPollutionParticle>() : 
                 Particles?.Select(p => UnknownParticle.CreateInstance(p.Name, p.Value)).ToList();
-            return new AirPollution(particles, System.DateTime.Parse(DateTime, CultureInfo.InvariantCulture));
+            return new AirPollution(particles, dateTimeToSet);
         }
 
         public static AirPollutionStorageModel MapFromDomainModel(AirPollution airPollution)
