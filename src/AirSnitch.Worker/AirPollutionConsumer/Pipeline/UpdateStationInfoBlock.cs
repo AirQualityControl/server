@@ -26,6 +26,7 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
                 await _monitoringStationRepository.AddAsync(monitoringStation);
                 return tuple.Item1;
             }
+
             monitoringStation.Id = existingStation.Id;
             monitoringStation.PrimaryKey = existingStation.PrimaryKey;
             await _monitoringStationRepository.UpdateAsync(monitoringStation);

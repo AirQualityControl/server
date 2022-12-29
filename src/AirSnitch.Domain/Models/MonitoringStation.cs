@@ -8,15 +8,15 @@ namespace AirSnitch.Domain.Models
         private AirPollution _airPollution;
         private Location _location;
         private MonitoringStationOwner _owner;
-        private readonly string _id;
+
         public MonitoringStation()
         {
-            _id = GenerateId();
+            Id = GenerateId();
         }
 
         public MonitoringStation(string id)
         {
-            _id = id;
+            Id = id;
         }
 
         /// <summary>
