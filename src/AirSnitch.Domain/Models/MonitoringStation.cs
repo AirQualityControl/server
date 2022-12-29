@@ -22,13 +22,7 @@ namespace AirSnitch.Domain.Models
         /// <summary>
         ///     Returns an internal identifier of monitoring station.
         /// </summary>
-        public string Id
-        {
-            get
-            {
-                return _id;
-            }
-        }
+        public string Id { get; set; }
 
         public string PrimaryKey { get; set; }
 

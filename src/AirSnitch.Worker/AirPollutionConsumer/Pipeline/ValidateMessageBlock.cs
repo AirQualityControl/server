@@ -21,8 +21,8 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
                 throw new ArgumentException("");
             }
 
-            var airMonitoringStation = new MonitoringStation { IsEmpty = false };
-            airMonitoringStation.SetName(dataPoint.StationInfo.StationName);
+            var airMonitoringStation = new MonitoringStation() { IsEmpty = false };
+            airMonitoringStation.SetName(dataPoint.StationInfo?.StationName);
             airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
             airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
             //TODO: change with a real data
