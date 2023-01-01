@@ -1,3 +1,5 @@
+using System;
+
 namespace AirSnitch.Infrastructure.MessageQueue
 {
     /// <summary>
@@ -5,8 +7,28 @@ namespace AirSnitch.Infrastructure.MessageQueue
     /// </summary>
     public class AmazonSqsSettings
     {
-        public string QueueUrl { get; set; }
-        public string ServiceUrl { get; set; }
+        private string _queueUrl = "";
+        public string QueueUrl {
+            get => _queueUrl;
+            set
+            {
+                _queueUrl = value;
+                Console.WriteLine($"Queue url is {_queueUrl}");
+            }
+        }
+
+        private string _serviceUrl = "";
+
+        public string ServiceUrl
+        {
+            get => _serviceUrl;
+            set
+            {
+                _serviceUrl = value;
+                Console.WriteLine($"Service url is {_serviceUrl}");
+            }
+        }
+
         public string AccessKey { get; set; }
         public string AccessSecrete { get; set; }
 
