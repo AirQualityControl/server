@@ -25,11 +25,9 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
             airMonitoringStation.SetName(dataPoint.StationInfo?.StationName);
             airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
             airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
-            //TODO: change with a real data
-            var saveDniproStationOwner =
-                new MonitoringStationOwner("89c0ef61-c92e-4b78-9e3b-13d502baaac7", "SaveDnipro");
-            saveDniproStationOwner.SetWebSite(new Uri("https://www.savednipro.org/en/"));
-            airMonitoringStation.SetOwnerInfo(saveDniproStationOwner);
+            var stationOwner = new MonitoringStationOwner(dataPoint.DataProviderInfo?.Tag, dataPoint.DataProviderInfo?.Name);
+            stationOwner.SetWebSite(new Uri(dataPoint.DataProviderInfo?.Uri));
+            airMonitoringStation.SetOwnerInfo(stationOwner);
             return (receivedMsg, airMonitoringStation);
         }
 
