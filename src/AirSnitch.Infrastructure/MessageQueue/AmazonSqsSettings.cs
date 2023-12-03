@@ -13,7 +13,7 @@ namespace AirSnitch.Infrastructure.MessageQueue
             set
             {
                 _queueUrl = value;
-                Console.WriteLine($"Queue url is {_queueUrl} ");
+                Console.WriteLine($"Queue url is: {_queueUrl} ");
             }
         }
 
@@ -25,7 +25,7 @@ namespace AirSnitch.Infrastructure.MessageQueue
             set
             {
                 _serviceUrl = value;
-                Console.WriteLine($"Service url is {_serviceUrl} ");
+                Console.WriteLine($"Service url is: {_serviceUrl} ");
             }
         }
 
