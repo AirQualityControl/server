@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
@@ -60,13 +61,16 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
             
             var airPollution = activeStation.GetAirPollution();
 
-            var usaAqi = new UsaAirQualityIndex();
+            var index = airPollution.GetAirQualityIndexValue();
 
-            var indexValue = usaAqi.Calculate(airPollution);
-            
+            if (index == null)
+            {
+                throw new Exception("Index needs to be calculated");
+            }
+
             var aqiViewModel = new AirQualityIndexViewModel(
-                index: usaAqi,
-                indexValue:indexValue,
+                index: new UsaAirQualityIndex(),
+                indexValue:index,
                 Request);
             
             aqiViewModel.SetMeasurementDateTime(airPollution.GetMeasurementsDateTime());
