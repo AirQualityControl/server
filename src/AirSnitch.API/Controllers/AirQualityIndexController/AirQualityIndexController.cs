@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Api.Controllers.AirQualityIndexController.ViewModel;
 using AirSnitch.Api.Rest;
@@ -42,16 +43,22 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetIndexValue([FromQuery]AirQualityIndexRequestParams requestParams)
         {
-            //TODO:https://github.com/AirQualityControl/server/issues/93
-            var nearestStation =
-                await _monitoringStationRepository.GetNearestStation(requestParams.Geolocation, requestParams.Radius);
+            var nearestStations =
+                await _monitoringStationRepository.GetNearestStations(requestParams.Geolocation, numberOfStations:10);
 
-            if (nearestStation.IsEmpty)
+            if (!nearestStations.Any())
             {
                 return NotFound();
             }
-
-            var airPollution = nearestStation.GetAirPollution();
+            
+            var activeStation = nearestStations.FirstOrDefault(station => station.HasActualData());
+            
+            if (activeStation == null)
+            {
+                return NotFound();
+            }
+            
+            var airPollution = activeStation.GetAirPollution();
 
             var usaAqi = new UsaAirQualityIndex();
 
@@ -61,12 +68,11 @@ namespace AirSnitch.Api.Controllers.AirQualityIndexController
                 index: usaAqi,
                 indexValue:indexValue,
                 Request);
-
             
-            //aqiViewModel.SetMeasurementDateTime(airPollution.GetMeasurementsDateTime());
+            aqiViewModel.SetMeasurementDateTime(airPollution.GetMeasurementsDateTime());
             
-            aqiViewModel.SetStationId("5480d666-cd1e-45ff-9e63-f283592c72e2");
-
+            aqiViewModel.SetStationId(activeStation.Id);
+            
             return new RestApiResult(
                 new RestResponseBody(
                     Request, 
