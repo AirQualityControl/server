@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
@@ -9,15 +11,17 @@ using AirSnitch.Infrastructure.Persistence.Query;
 using AirSnitch.Infrastructure.Persistence.Repositories.Common;
 using AirSnitch.Infrastructure.Persistence.StorageModels;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace AirSnitch.Infrastructure.Persistence.Repositories
 {
     public class MonitoringStationRepository : IMonitoringStationRepository
     {
         private readonly IGenericRepository<MonitoringStationStorageModel> _genericRepository;
-
+        private readonly MongoDbClient _client;
         public MonitoringStationRepository(MongoDbClient client)
         {
+            _client = client;
             _genericRepository = new MongoDbGenericRepository<MonitoringStationStorageModel>(client, "airMonitoringStation");
         }
         
@@ -91,10 +95,30 @@ namespace AirSnitch.Infrastructure.Persistence.Repositories
             return MonitoringStation.Empty;
         }
 
-        public Task<MonitoringStation> GetNearestStation(GeoCoordinates geoCoordinates, int radius = default)
+        public async Task<MonitoringStation> GetNearestStation(GeoCoordinates geoCoordinates, int radius = default, int numberOfStations = 10)
         {
-            var monitoringStation = new MonitoringStation();
-            return Task.FromResult(monitoringStation);
+            throw new NotImplementedException();
+        }
+
+        public async Task<ICollection<MonitoringStation>> GetNearestStations(GeoCoordinates geoCoordinates,
+            int numberOfStations = 10)
+        {
+            var monitoringStations = new List<MonitoringStation>(numberOfStations);
+
+            var pipeline = NearestStationsAggregationPipeline.Create(geoCoordinates, numberOfStations);
+
+            var collection = _client.Db.GetCollection<MonitoringStationStorageModel>("airMonitoringStation");
+
+            var cursor = collection.Aggregate<MonitoringStationStorageModel>(pipeline);
+            
+            Action<MonitoringStationStorageModel> cursorAction = st =>
+            {
+                monitoringStations.Add(st.MapToDomainModel());
+            };
+
+            await cursor.ForEachAsync(cursorAction);
+
+            return monitoringStations;
         }
 
         public async Task AddAsync(MonitoringStation monitoringStation)

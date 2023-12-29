@@ -111,5 +111,12 @@ namespace AirSnitch.Domain.Models
         {
             return Guid.NewGuid().ToString();
         }
+
+        public bool HasActualData()
+        {
+            var measurementsDateInUtc = GetAirPollution().GetMeasurementsDateTime();
+
+            return DateTime.UtcNow - measurementsDateInUtc <= TimeSpan.FromHours(2);
+        }
     }
 }

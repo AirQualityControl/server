@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.Persistence.Query;
@@ -26,7 +27,7 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        Task<MonitoringStation> GetNearestStation(GeoCoordinates geoCoordinates, int radius = default);
+        Task<MonitoringStation> GetNearestStation(GeoCoordinates geoCoordinates, int radius = 5, int numberOfStations = 10);
 
         /// <summary>
         ///     Search station by provider station name
@@ -35,6 +36,15 @@ namespace AirSnitch.Infrastructure.Abstract.Persistence.Repositories
         /// <returns></returns>
         Task<MonitoringStation> FindByProviderNameAsync(string providerStationName);
 
+        /// <summary>
+        /// Returns n nearest stations by geolocation
+        /// </summary>
+        /// <param name="geoCoordinates"></param>
+        /// <param name="numberOfStations"></param>
+        /// <returns></returns>
+        Task<ICollection<MonitoringStation>> GetNearestStations(GeoCoordinates geoCoordinates,
+            int numberOfStations = 10);
+        
         Task AddAsync(MonitoringStation monitoringStation);
         Task UpdateAsync(MonitoringStation monitoringStation);
     }
