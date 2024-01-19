@@ -2,6 +2,10 @@ name: Deploy API
 
 on:
    workflow_dispatch:
+      inputs:
+         release_version:
+           description: 'Release version'     
+           required: true
    push:
     # Sequence of patterns matched against refs/tags
     tags:
@@ -37,7 +41,7 @@ jobs:
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: 0.10.0
+          tag: ${{ github.event.inputs.release_version }}
         run: |
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
