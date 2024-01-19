@@ -24,29 +24,36 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
 
         private async Task<Message> Transform((Message, MonitoringStation) tuple)
         {
-            var monitoringStation = tuple.Item2;
-            var existingStation = await _monitoringStationRepository.FindByProviderNameAsync(monitoringStation.DisplayName);
-            if (existingStation.IsEmpty)
+            try
             {
-                _logger.LogInformation($"new station was added {monitoringStation.DisplayName}");
-                await _monitoringStationRepository.AddAsync(monitoringStation);
-                return tuple.Item1;
+                var monitoringStation = tuple.Item2;
+                var existingStation = await _monitoringStationRepository.FindByProviderNameAsync(monitoringStation.DisplayName);
+                if (existingStation.IsEmpty)
+                {
+                    _logger.LogInformation($"new station was added {monitoringStation.DisplayName}");
+                    await _monitoringStationRepository.AddAsync(monitoringStation);
+                    return tuple.Item1;
+                }
+
+                var existingAirPollution = existingStation.GetAirPollution();
+                if(existingAirPollution == null)
+                {
+                    _logger.LogWarning($"Air pollution for existing station {existingStation.DisplayName} is empty");
+                    await UpdateStation(monitoringStation, existingStation);
+                }
+
+                var existingStationDateTime = existingStation.GetAirPollution()?.GetMeasurementsDateTime();
+                var receivedStationDateTime = monitoringStation.GetAirPollution()?.GetMeasurementsDateTime();
+
+                if (receivedStationDateTime > existingStationDateTime)
+                {
+                    await UpdateStation(monitoringStation, existingStation);
+                    _logger.LogInformation($"A new monitoring data for station {monitoringStation.DisplayName} received. New measurement date: {receivedStationDateTime}");
+                }
             }
-
-            var existingAirPollution = existingStation.GetAirPollution();
-            if(existingAirPollution == null)
+            catch (Exception ex)
             {
-                _logger.LogWarning($"Air pollution for existing station {existingStation.DisplayName} is empty");
-                await UpdateStation(monitoringStation, existingStation);
-            }
-
-            var existingStationDateTime = existingStation.GetAirPollution()?.GetMeasurementsDateTime();
-            var receivedStationDateTime = monitoringStation.GetAirPollution()?.GetMeasurementsDateTime();
-
-            if (receivedStationDateTime > existingStationDateTime)
-            {
-                await UpdateStation(monitoringStation, existingStation);
-                _logger.LogInformation($"A new monitoring data for station {monitoringStation.DisplayName} received. New measurement date: {receivedStationDateTime}");
+                _logger.LogError($"Error occured: {ex.Message}, {ex.StackTrace}");
             }
             
             return tuple.Item1;

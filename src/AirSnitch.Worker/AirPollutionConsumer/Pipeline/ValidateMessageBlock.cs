@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using AirSnitch.Domain.Models;
 using AirSnitch.Infrastructure.Abstract.MessageQueue;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using City = AirSnitch.Domain.Models.City;
 
@@ -11,24 +12,36 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
 {
     public class ValidateMessageBlock
     {
+        private readonly ILogger<AirPollutionDataConsumer> _logger;
+        public ValidateMessageBlock(ILogger<AirPollutionDataConsumer> logger)
+        {
+            _logger = logger;
+        }
         public TransformBlock<Message, ValueTuple<Message, MonitoringStation>> Instance => new TransformBlock<Message, ValueTuple<Message, MonitoringStation>>(Transform);
 
         private async Task<(Message, MonitoringStation)> Transform(Message receivedMsg)
         {
-            var dataPoint = JsonConvert.DeserializeObject<DataPoint>(receivedMsg.Body);
-            if (dataPoint == null)
-            {
-                throw new ArgumentException("");
-            }
-
             var airMonitoringStation = new MonitoringStation() { IsEmpty = false };
-            airMonitoringStation.SetName(dataPoint.StationInfo?.StationName);
-            airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
-            airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
-            var stationOwner = new MonitoringStationOwner(dataPoint.DataProviderInfo?.Tag, dataPoint.DataProviderInfo?.Name);
-            stationOwner.SetWebSite(new Uri(dataPoint.DataProviderInfo?.Uri));
-            airMonitoringStation.SetOwnerInfo(stationOwner);
+            try
+            {
+                var dataPoint = JsonConvert.DeserializeObject<DataPoint>(receivedMsg.Body);
+                if (dataPoint == null)
+                {
+                    throw new ArgumentException("");
+                }
+                airMonitoringStation.SetName(dataPoint.StationInfo?.StationName);
+                airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
+                airMonitoringStation.SetAirPollution(GetAirPollution(dataPoint));
+                var stationOwner = new MonitoringStationOwner(dataPoint.DataProviderInfo?.Tag, dataPoint.DataProviderInfo?.Name);
+                stationOwner.SetWebSite(new Uri(dataPoint.DataProviderInfo?.Uri));
+                airMonitoringStation.SetOwnerInfo(stationOwner);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error occured: {ex.Message}, {ex.StackTrace}");
+            }
             return (receivedMsg, airMonitoringStation);
+            
         }
 
         private AirPollution GetAirPollution(DataPoint dataPoint)
