@@ -27,7 +27,7 @@ namespace AirSnitch.Worker.AirPollutionConsumer.Pipeline
                 var dataPoint = JsonConvert.DeserializeObject<DataPoint>(receivedMsg.Body);
                 if (dataPoint == null)
                 {
-                    throw new ArgumentException("");
+                    throw new ArgumentException("Deserialized object is null");
                 }
                 airMonitoringStation.SetName(dataPoint.StationInfo?.StationName);
                 airMonitoringStation.SetLocation(GetStationLocation(dataPoint));
